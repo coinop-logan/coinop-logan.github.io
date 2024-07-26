@@ -64,7 +64,7 @@ view model =
     <|
         Element.column
             [ Element.width Element.fill
-            , Element.spacing 15
+            , Element.spacing 60
             , Element.padding 30
             ]
             [ headerElement dProfile
@@ -76,7 +76,7 @@ headerElement : DisplayProfile -> Element Msg
 headerElement dProfile =
     Element.column
         [ Element.centerX
-        , Element.spacing 10
+        , Element.spacing 20
         ]
         [ nameElement dProfile
         , summaryElement dProfile
@@ -87,7 +87,7 @@ nameElement : DisplayProfile -> Element Msg
 nameElement dProfile =
     Element.el
         [ Element.centerX
-        , Font.size 50
+        , Font.size 80
         ]
     <|
         Element.text "Logan Brutsche"
@@ -97,7 +97,7 @@ summaryElement : DisplayProfile -> Element Msg
 summaryElement dProfile =
     Element.el
         [ Element.centerX
-        , Font.size 18
+        , Font.size 24
         ]
     <|
         Element.text "summary here summary here summary here summary here "
@@ -118,7 +118,7 @@ tabsElement : DisplayProfile -> TabState -> Element Msg
 tabsElement dProfile tabState =
     Element.row
         [ Element.centerX
-        , Element.spacing 30
+        , Element.spacing 50
         , Font.size 30
         ]
         [ tabElement dProfile "Current Work" CurrentWorkClicked
@@ -129,7 +129,7 @@ tabsElement dProfile tabState =
 tabElement : DisplayProfile -> String -> Msg -> Element Msg
 tabElement dProfile label onPress =
     Input.button
-        []
+        [ Font.size 36 ]
         { onPress = Just onPress
         , label = Element.text label
         }
