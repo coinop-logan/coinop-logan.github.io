@@ -25,6 +25,7 @@ initLoadedModel dProfile now =
     ( Loaded
         { dProfile = dProfile
         , time_bySecond = now
+        , tabState = CurrentWork
         }
     , Cmd.none
     )
@@ -82,6 +83,22 @@ updateLoadedModel msg model =
 
         UpdateNow newNow ->
             ( { model | time_bySecond = newNow }
+            , Cmd.none
+            )
+
+        CurrentWorkClicked ->
+            ( { model
+                | tabState =
+                    CurrentWork
+              }
+            , Cmd.none
+            )
+
+        PortfolioClicked ->
+            ( { model
+                | tabState =
+                    Portfolio
+              }
             , Cmd.none
             )
 

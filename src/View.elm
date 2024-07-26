@@ -5,6 +5,7 @@ import Config
 import Element exposing (Attribute, Element)
 import Element.Background as Background
 import Element.Font as Font
+import Element.Input as Input
 import Responsive exposing (DisplayProfile)
 import Types exposing (..)
 
@@ -67,7 +68,7 @@ view model =
             , Element.padding 30
             ]
             [ headerElement dProfile
-            , bodyElement dProfile
+            , bodyElement dProfile model.tabState
             ]
 
 
@@ -102,6 +103,55 @@ summaryElement dProfile =
         Element.text "summary here summary here summary here summary here "
 
 
-bodyElement : DisplayProfile -> Element Msg
-bodyElement dProfile =
-    Element.text "body"
+bodyElement : DisplayProfile -> TabState -> Element Msg
+bodyElement dProfile tabState =
+    Element.column
+        [ Element.width Element.fill
+        , Element.spacing 20
+        ]
+        [ tabsElement dProfile tabState
+        , tabBody dProfile tabState
+        ]
+
+
+tabsElement : DisplayProfile -> TabState -> Element Msg
+tabsElement dProfile tabState =
+    Element.row
+        [ Element.centerX
+        , Element.spacing 30
+        , Font.size 30
+        ]
+        [ tabElement dProfile "Current Work" CurrentWorkClicked
+        , tabElement dProfile "Portfolio" PortfolioClicked
+        ]
+
+
+tabElement : DisplayProfile -> String -> Msg -> Element Msg
+tabElement dProfile label onPress =
+    Input.button
+        []
+        { onPress = Just onPress
+        , label = Element.text label
+        }
+
+
+tabBody : DisplayProfile -> TabState -> Element Msg
+tabBody dProfile tabState =
+    case tabState of
+        CurrentWork ->
+            currentWorkBody dProfile
+
+        Portfolio ->
+            portfolioBody dProfile
+
+
+currentWorkBody : DisplayProfile -> Element Msg
+currentWorkBody dProfile =
+    Element.el [ Element.centerX ] <|
+        Element.text "currentWorkBody"
+
+
+portfolioBody : DisplayProfile -> Element Msg
+portfolioBody dProfile =
+    Element.el [ Element.centerX ] <|
+        Element.text "portfolioBody"
