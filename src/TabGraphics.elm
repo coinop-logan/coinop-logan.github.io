@@ -2,6 +2,7 @@ module TabGraphics exposing (..)
 
 import Element exposing (Element)
 import Element.Background as Background
+import Element.Font as Font
 import Point exposing (Point)
 import Svg exposing (Svg)
 import Svg.Attributes
@@ -24,13 +25,39 @@ type alias TabSpec =
     }
 
 
-viewRenderTest : Element Msg
-viewRenderTest =
+tabElement : TabSpec -> Element msg -> Element msg -> Element msg
+tabElement tabSpec tabEl innerEl =
+    let
+        tabWidth =
+            floor <|
+                tabSpec.tabTopEndX
+                    - tabSpec.tabTopStartX
+
+        bodyWidth =
+            tabWidth + (tabSpec.maybeBodyExtendsLeft |> Maybe.withDefault 0 |> floor) + (tabSpec.maybeBodyExtendsRight |> Maybe.withDefault 0 |> floor)
+
+        innerElContained =
+            Element.el
+                [ Element.moveRight <| tabSpec.tabTopStartX - (tabSpec.maybeBodyExtendsLeft |> Maybe.withDefault 0)
+                , Element.moveDown <| tabSpec.bodyTopY
+                , Element.width <| Element.px bodyWidth
+                ]
+                innerEl
+
+        tabElContained =
+            Element.el
+                [ Element.moveRight <| tabSpec.tabTopStartX
+                , Element.moveDown <| tabSpec.tabTopY
+                , Element.width <| Element.px tabWidth
+                ]
+                tabEl
+    in
     Element.el
         [ Element.width <| Element.px 600
         , Element.height <| Element.px 600
         , Element.centerX
-        , Background.color <| Element.rgb 0.5 0.5 0.5
+        , Element.inFront tabElContained
+        , Element.inFront innerElContained
         ]
     <|
         Element.html <|
@@ -40,7 +67,7 @@ viewRenderTest =
                     []
                     []
                 , drawTabShape
-                    tabShapeSpecTest
+                    tabSpec
                 ]
 
 
@@ -60,7 +87,7 @@ tabShapeSpecTest =
     }
 
 
-drawTabShape : TabSpec -> Svg Msg
+drawTabShape : TabSpec -> Svg msg
 drawTabShape tabSpec =
     let
         shapeStartX =

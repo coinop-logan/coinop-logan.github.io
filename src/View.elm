@@ -112,7 +112,27 @@ bodyElement dProfile tabState =
         ]
         [ tabsElement dProfile tabState
         , tabBody dProfile tabState
-        , TabGraphics.viewRenderTest
+        , TabGraphics.tabElement
+            { tabTopStartX = 100
+            , tabTopEndX = 300
+            , maybeBodyExtendsLeft = Just 50
+            , maybeBodyExtendsRight = Just 50
+            , shapeBottomY = 500
+            , bodyTopY = 100
+            , tabTopY = 20
+            , fillColor = Element.rgb 0 0 1
+            , strokeColor = Element.rgb 1 0 0
+            , pathThickness = 3
+            , cornerRadius = 20
+            }
+            (Element.el [ Element.centerX, Element.padding 10 ] <| Element.text "tab")
+            (Element.column [ Element.spacing 4 ]
+                [ Element.text "hi"
+                , Element.text "hi"
+                , Element.text "hi"
+                , Element.text "hi"
+                ]
+            )
         ]
 
 
