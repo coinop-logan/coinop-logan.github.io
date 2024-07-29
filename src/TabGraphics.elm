@@ -1,8 +1,6 @@
 module TabGraphics exposing (..)
 
 import Element exposing (Element)
-import Element.Background as Background
-import Element.Font as Font
 import Point exposing (Point)
 import Svg exposing (Svg)
 import Svg.Attributes
