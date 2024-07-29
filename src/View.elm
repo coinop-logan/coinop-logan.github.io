@@ -2,12 +2,14 @@ module View exposing (..)
 
 import Browser
 import Config
+import Convert exposing (..)
 import Element exposing (Attribute, Element)
 import Element.Background as Background
 import Element.Font as Font
 import Element.Input as Input
 import Responsive exposing (DisplayProfile)
 import TabGraphics
+import Time
 import Types exposing (..)
 
 
@@ -69,7 +71,7 @@ view model =
             , Element.padding 30
             ]
             [ headerElement dProfile
-            , bodyElement dProfile model.tabState
+            , bodyElement dProfile model.tabState model.animateTime
             ]
 
 
@@ -104,19 +106,64 @@ summaryElement dProfile =
         Element.text "summary here summary here summary here summary here "
 
 
-bodyElement : DisplayProfile -> TabState -> Element Msg
-bodyElement dProfile tabState =
+bodyElement : DisplayProfile -> TabState -> Time.Posix -> Element Msg
+bodyElement dProfile tabState animateTime =
+    let
+        tabOnTop =
+            case tabState of
+                OnTab tab ->
+                    tab
+
+                SwitchingTo targetTab animateStartTime ->
+                    let
+                        progressFloat =
+                            animationProgressFloat animateStartTime animateTime
+                    in
+                    if progressFloat < 0.5 then
+                        otherTab targetTab
+
+                    else
+                        targetTab
+
+        xOffsetAbs =
+            let
+                easingFunction x =
+                    if x == 1 then
+                        1
+
+                    else
+                        1 - (2 ^ (-20 * x))
+
+                offsetMultiplier =
+                    case tabState of
+                        OnTab _ ->
+                            0
+
+                        SwitchingTo _ animateStartTime ->
+                            let
+                                progressFloat =
+                                    animationProgressFloat animateStartTime animateTime
+                            in
+                            if progressFloat < 0.5 then
+                                easingFunction (progressFloat * 2)
+
+                            else
+                                1 - easingFunction ((progressFloat - 0.5) * 2)
+            in
+            offsetMultiplier * (100.0 / 2)
+    in
     Element.column
         [ Element.width Element.fill
         , Element.spacing 20
         ]
         [ tabsElement dProfile tabState
-        , tabBody dProfile tabState
+
+        -- , tabBody dProfile tabState
         , TabGraphics.tabElement
             { tabTopStartX = 100
             , tabTopEndX = 300
-            , maybeBodyExtendsLeft = Just 50
-            , maybeBodyExtendsRight = Just 50
+            , maybeBodyExtendsLeft = Just xOffsetAbs
+            , maybeBodyExtendsRight = Just <| 100 - xOffsetAbs
             , shapeBottomY = 500
             , bodyTopY = 100
             , tabTopY = 20
@@ -157,14 +204,16 @@ tabElement dProfile label onPress =
         }
 
 
-tabBody : DisplayProfile -> TabState -> Element Msg
-tabBody dProfile tabState =
-    case tabState of
-        CurrentWork ->
-            currentWorkBody dProfile
 
-        Portfolio ->
-            portfolioBody dProfile
+-- tabBody : DisplayProfile -> TabState -> Element Msg
+-- tabBody dProfile tabState =
+--     case tabState of
+--         OnTab tab ->
+--             case tab of
+--                 CurrentWork ->
+--                     currentWorkBody dProfile
+--                 Portfolio ->
+--                     portfolioBody dProfile
 
 
 currentWorkBody : DisplayProfile -> Element Msg

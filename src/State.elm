@@ -1,6 +1,9 @@
 module State exposing (..)
 
 import Browser.Dom
+import Browser.Events
+import Config
+import Convert exposing (..)
 import Responsive exposing (DisplayProfile)
 import Task
 import Time
@@ -25,7 +28,8 @@ initLoadedModel dProfile now =
     ( Loaded
         { dProfile = dProfile
         , time_bySecond = now
-        , tabState = CurrentWork
+        , animateTime = now
+        , tabState = OnTab CurrentWork
         }
     , Cmd.none
     )
@@ -81,28 +85,108 @@ updateLoadedModel msg model =
             , Cmd.none
             )
 
+        Resize width _ ->
+            ( { model
+                | dProfile =
+                    Responsive.screenWidthToDisplayProfile width
+              }
+            , Cmd.none
+            )
+
         UpdateNow newNow ->
             ( { model | time_bySecond = newNow }
             , Cmd.none
             )
 
-        CurrentWorkClicked ->
-            ( { model
-                | tabState =
-                    CurrentWork
-              }
+        Animate time ->
+            ( { model | animateTime = time }
+                |> endAnimationIfNecessary
             , Cmd.none
             )
 
+        CurrentWorkClicked ->
+            case model.tabState of
+                OnTab Portfolio ->
+                    ( { model
+                        | tabState =
+                            SwitchingTo CurrentWork model.animateTime
+                      }
+                    , Cmd.none
+                    )
+
+                SwitchingTo CurrentWork _ ->
+                    ( model, Cmd.none )
+
+                OnTab CurrentWork ->
+                    ( model, Cmd.none )
+
+                SwitchingTo Portfolio startTime ->
+                    ( model |> reverseAnimation
+                    , Cmd.none
+                    )
+
         PortfolioClicked ->
-            ( { model
+            case model.tabState of
+                OnTab CurrentWork ->
+                    ( { model
+                        | tabState =
+                            SwitchingTo Portfolio model.animateTime
+                      }
+                    , Cmd.none
+                    )
+
+                SwitchingTo Portfolio _ ->
+                    ( model, Cmd.none )
+
+                OnTab Portfolio ->
+                    ( model, Cmd.none )
+
+                SwitchingTo CurrentWork startTime ->
+                    ( model |> reverseAnimation
+                    , Cmd.none
+                    )
+
+
+endAnimationIfNecessary : LoadedModel -> LoadedModel
+endAnimationIfNecessary model =
+    case model.tabState of
+        OnTab _ ->
+            model
+
+        SwitchingTo targetTab animateStartTime ->
+            if animationProgressFloat animateStartTime model.animateTime >= 1 then
+                { model | tabState = OnTab targetTab }
+
+            else
+                model
+
+
+reverseAnimation : LoadedModel -> LoadedModel
+reverseAnimation model =
+    case model.tabState of
+        OnTab _ ->
+            model
+
+        SwitchingTo targetTab animateStartTime ->
+            let
+                targetAnimationProgressFloat =
+                    1 - animationProgressFloat animateStartTime model.animateTime
+
+                newStartTime =
+                    ((toFloat <| Time.posixToMillis model.animateTime) - (toFloat <| Time.posixToMillis Config.tabSwitchAnimationInterval) * targetAnimationProgressFloat)
+                        |> round
+                        |> Time.millisToPosix
+            in
+            { model
                 | tabState =
-                    Portfolio
-              }
-            , Cmd.none
-            )
+                    SwitchingTo (otherTab targetTab) newStartTime
+            }
 
 
 subscriptions : Model -> Sub Msg
 subscriptions _ =
-    Time.every 1000 UpdateNow
+    Sub.batch
+        [ Time.every 1000 UpdateNow
+        , Browser.Events.onAnimationFrame Animate
+        , Browser.Events.onResize Resize
+        ]

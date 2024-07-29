@@ -23,6 +23,7 @@ type alias LoadingModel =
 type alias LoadedModel =
     { dProfile : DisplayProfile
     , time_bySecond : Time.Posix
+    , animateTime : Time.Posix
     , tabState : TabState
     }
 
@@ -30,14 +31,21 @@ type alias LoadedModel =
 type Msg
     = NoOp
     | GotViewport Browser.Dom.Viewport
+    | Resize Int Int
     | UpdateNow Time.Posix
+    | Animate Time.Posix
     | CurrentWorkClicked
     | PortfolioClicked
 
 
-type TabState
+type Tab
     = CurrentWork
     | Portfolio
+
+
+type TabState
+    = OnTab Tab
+    | SwitchingTo Tab Time.Posix
 
 
 type alias RGB =

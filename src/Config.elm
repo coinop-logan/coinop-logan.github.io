@@ -1,6 +1,7 @@
 module Config exposing (..)
 
 import Element
+import Time
 
 
 bgColor : Element.Color
@@ -11,3 +12,8 @@ bgColor =
 defaultFontColor : Element.Color
 defaultFontColor =
     Element.rgb 1 1 1
+
+
+tabSwitchAnimationInterval : Time.Posix
+tabSwitchAnimationInterval =
+    Time.millisToPosix 500
