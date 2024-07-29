@@ -38,3 +38,10 @@ type Msg
 type TabState
     = CurrentWork
     | Portfolio
+
+
+type alias RGB =
+    { red : Float
+    , green : Float
+    , blue : Float
+    }

@@ -7,6 +7,7 @@ import Element.Background as Background
 import Element.Font as Font
 import Element.Input as Input
 import Responsive exposing (DisplayProfile)
+import TabGraphics
 import Types exposing (..)
 
 
@@ -111,6 +112,7 @@ bodyElement dProfile tabState =
         ]
         [ tabsElement dProfile tabState
         , tabBody dProfile tabState
+        , TabGraphics.viewRenderTest
         ]
 
 
