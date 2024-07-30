@@ -217,7 +217,7 @@ bodyElement dProfile tabState animateTime =
 
         elsToStack =
             case tabOnTop of
-                Portfolio ->
+                CurrentWork ->
                     [ portfolioTabEls.tabShape
                     , portfolioTabEls.bodyEl
                     , currentWorkTabEls.tabShape
@@ -226,7 +226,7 @@ bodyElement dProfile tabState animateTime =
                     , currentWorkTabEls.tabEl
                     ]
 
-                CurrentWork ->
+                Portfolio ->
                     [ currentWorkTabEls.tabShape
                     , currentWorkTabEls.bodyEl
                     , portfolioTabEls.tabShape
@@ -248,18 +248,6 @@ currentWorkContentEl =
     Element.text "current work waow"
 
 
-tabsElement : DisplayProfile -> TabState -> Element Msg
-tabsElement dProfile tabState =
-    Element.row
-        [ Element.centerX
-        , Element.spacing 50
-        , Font.size 30
-        ]
-        [ tabElement dProfile "Current Work" CurrentWorkClicked
-        , tabElement dProfile "Portfolio" PortfolioClicked
-        ]
-
-
 tabElement : DisplayProfile -> String -> Msg -> Element Msg
 tabElement dProfile label onPress =
     Input.button
@@ -267,15 +255,3 @@ tabElement dProfile label onPress =
         { onPress = Just onPress
         , label = Element.text label
         }
-
-
-currentWorkBody : DisplayProfile -> Element Msg
-currentWorkBody dProfile =
-    Element.el [ Element.centerX ] <|
-        Element.text "currentWorkBody"
-
-
-portfolioBody : DisplayProfile -> Element Msg
-portfolioBody dProfile =
-    Element.el [ Element.centerX ] <|
-        Element.text "portfolioBody"
