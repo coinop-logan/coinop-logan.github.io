@@ -1,6 +1,8 @@
 module TabGraphics exposing (..)
 
-import Element exposing (Element)
+import CommonView
+import Element exposing (Attribute, Element)
+import Html.Attributes
 import Point exposing (Point)
 import Svg exposing (Svg)
 import Svg.Attributes
@@ -11,8 +13,8 @@ import Utils
 type alias TabSpec =
     { tabTopStartX : Float
     , tabTopEndX : Float
-    , maybeBodyExtendsLeft : Maybe Float
-    , maybeBodyExtendsRight : Maybe Float
+    , bodyExtendsLeft : Float
+    , bodyExtendsRight : Float
     , shapeBottomY : Float
     , bodyTopY : Float
     , tabTopY : Float
@@ -20,11 +22,12 @@ type alias TabSpec =
     , strokeColor : Element.Color
     , pathThickness : Float
     , cornerRadius : Float
+    , canvasWidth : Element.Length
     }
 
 
-tabElement : TabSpec -> Element msg -> Element msg -> Element msg
-tabElement tabSpec tabEl innerEl =
+createTabElementComponentsToStack : TabSpec -> Element msg -> Element msg -> { tabShape : Element msg, tabEl : Element msg, bodyEl : Element msg }
+createTabElementComponentsToStack tabSpec tabEl innerEl =
     let
         tabWidth =
             floor <|
@@ -32,11 +35,11 @@ tabElement tabSpec tabEl innerEl =
                     - tabSpec.tabTopStartX
 
         bodyWidth =
-            tabWidth + (tabSpec.maybeBodyExtendsLeft |> Maybe.withDefault 0 |> floor) + (tabSpec.maybeBodyExtendsRight |> Maybe.withDefault 0 |> floor)
+            tabWidth + (tabSpec.bodyExtendsLeft |> floor) + (tabSpec.bodyExtendsRight |> floor)
 
         innerElContained =
             Element.el
-                [ Element.moveRight <| tabSpec.tabTopStartX - (tabSpec.maybeBodyExtendsLeft |> Maybe.withDefault 0)
+                [ Element.moveRight <| tabSpec.tabTopStartX - tabSpec.bodyExtendsLeft
                 , Element.moveDown <| tabSpec.bodyTopY
                 , Element.width <| Element.px bodyWidth
                 ]
@@ -47,52 +50,52 @@ tabElement tabSpec tabEl innerEl =
                 [ Element.moveRight <| tabSpec.tabTopStartX
                 , Element.moveDown <| tabSpec.tabTopY
                 , Element.width <| Element.px tabWidth
+                , Element.height <| Element.px <| floor <| tabSpec.bodyTopY - tabSpec.tabTopY
                 ]
                 tabEl
     in
-    Element.el
-        [ Element.width <| Element.px 600
-        , Element.height <| Element.px 600
-        , Element.centerX
-        , Element.inFront tabElContained
-        , Element.inFront innerElContained
-        ]
-    <|
-        Element.html <|
-            Svg.svg
-                [ Svg.Attributes.height "100%" ]
-                [ Svg.defs
-                    []
-                    []
-                , drawTabShape
-                    tabSpec
-                ]
-
-
-tabShapeSpecTest : TabSpec
-tabShapeSpecTest =
-    { tabTopStartX = 100
-    , tabTopEndX = 300
-    , maybeBodyExtendsLeft = Just 20
-    , maybeBodyExtendsRight = Just 15
-    , shapeBottomY = 500
-    , bodyTopY = 100
-    , tabTopY = 20
-    , fillColor = Element.rgb 0 0 1
-    , strokeColor = Element.rgb 1 0 0
-    , pathThickness = 3
-    , cornerRadius = 20
+    { tabShape =
+        Element.el [ Element.width tabSpec.canvasWidth ] <|
+            Element.html <|
+                Svg.svg
+                    [ Svg.Attributes.height "100%"
+                    ]
+                    [ Svg.defs
+                        []
+                        []
+                    , drawTabShape
+                        tabSpec
+                    ]
+    , tabEl = tabElContained
+    , bodyEl = innerElContained
     }
+
+
+
+-- tabShapeSpecTest : TabSpec
+-- tabShapeSpecTest =
+--     { tabTopStartX = 100
+--     , tabTopEndX = 300
+--     , bodyExtendsLeft = 20
+--     , bodyExtendsRight = 15
+--     , shapeBottomY = 500
+--     , bodyTopY = 100
+--     , tabTopY = 20
+--     , fillColor = Element.rgb 0 0 1
+--     , strokeColor = Element.rgb 1 0 0
+--     , pathThickness = 3
+--     , cornerRadius = 20
+--     }
 
 
 drawTabShape : TabSpec -> Svg msg
 drawTabShape tabSpec =
     let
         shapeStartX =
-            tabSpec.tabTopStartX - (tabSpec.maybeBodyExtendsLeft |> Maybe.withDefault 0)
+            tabSpec.tabTopStartX - tabSpec.bodyExtendsLeft
 
         shapeEndX =
-            tabSpec.tabTopEndX + (tabSpec.maybeBodyExtendsRight |> Maybe.withDefault 0)
+            tabSpec.tabTopEndX + tabSpec.bodyExtendsRight
 
         shapeStartPoint =
             { x = shapeStartX, y = tabSpec.shapeBottomY }
@@ -101,65 +104,61 @@ drawTabShape tabSpec =
             String.join " "
                 [ moveToPointString shapeStartPoint
                 , drawToPointString { x = shapeStartPoint.x, y = tabSpec.bodyTopY + tabSpec.cornerRadius }
-                , case tabSpec.maybeBodyExtendsLeft of
-                    Nothing ->
-                        drawToPointString { x = shapeStartPoint.x, y = tabSpec.bodyTopY - tabSpec.cornerRadius }
+                , if tabSpec.bodyExtendsLeft == 0 then
+                    drawToPointString { x = shapeStartPoint.x, y = tabSpec.bodyTopY - tabSpec.cornerRadius }
 
-                    Just extendsLeftAmount ->
-                        if extendsLeftAmount > tabSpec.cornerRadius * 2 then
-                            String.join " "
-                                [ drawThroughElbowString True { x = shapeStartX + tabSpec.cornerRadius, y = tabSpec.bodyTopY } tabSpec.cornerRadius
-                                , drawToPointString { x = tabSpec.tabTopStartX - tabSpec.cornerRadius, y = tabSpec.bodyTopY }
-                                , drawThroughElbowString False { x = tabSpec.tabTopStartX, y = tabSpec.bodyTopY - tabSpec.cornerRadius } tabSpec.cornerRadius
-                                ]
+                  else if tabSpec.bodyExtendsLeft > tabSpec.cornerRadius * 2 then
+                    String.join " "
+                        [ drawThroughElbowString True { x = shapeStartX + tabSpec.cornerRadius, y = tabSpec.bodyTopY } tabSpec.cornerRadius
+                        , drawToPointString { x = tabSpec.tabTopStartX - tabSpec.cornerRadius, y = tabSpec.bodyTopY }
+                        , drawThroughElbowString False { x = tabSpec.tabTopStartX, y = tabSpec.bodyTopY - tabSpec.cornerRadius } tabSpec.cornerRadius
+                        ]
 
-                        else
-                            let
-                                startPoint =
-                                    { x = shapeStartPoint.x, y = tabSpec.bodyTopY + tabSpec.cornerRadius }
+                  else
+                    let
+                        startPoint =
+                            { x = shapeStartPoint.x, y = tabSpec.bodyTopY + tabSpec.cornerRadius }
 
-                                endPoint =
-                                    { x = tabSpec.tabTopStartX, y = tabSpec.bodyTopY - tabSpec.cornerRadius }
+                        endPoint =
+                            { x = tabSpec.tabTopStartX, y = tabSpec.bodyTopY - tabSpec.cornerRadius }
 
-                                midPoint =
-                                    Point.getMidpoint startPoint endPoint
-                            in
-                            String.join " "
-                                [ drawThroughArcWithVerticalEnd startPoint midPoint True
-                                , drawThroughArcWithVerticalEnd midPoint endPoint False
-                                ]
+                        midPoint =
+                            Point.getMidpoint startPoint endPoint
+                    in
+                    String.join " "
+                        [ drawThroughArcWithVerticalEnd startPoint midPoint True
+                        , drawThroughArcWithVerticalEnd midPoint endPoint False
+                        ]
                 , drawToPointString { x = tabSpec.tabTopStartX, y = tabSpec.tabTopY + tabSpec.cornerRadius }
                 , drawThroughElbowString True { x = tabSpec.tabTopStartX + tabSpec.cornerRadius, y = tabSpec.tabTopY } tabSpec.cornerRadius
                 , drawToPointString { x = tabSpec.tabTopEndX - tabSpec.cornerRadius, y = tabSpec.tabTopY }
                 , drawThroughElbowString True { x = tabSpec.tabTopEndX, y = tabSpec.tabTopY + tabSpec.cornerRadius } tabSpec.cornerRadius
                 , drawToPointString { x = tabSpec.tabTopEndX, y = tabSpec.bodyTopY - tabSpec.cornerRadius }
-                , case tabSpec.maybeBodyExtendsRight of
-                    Nothing ->
-                        drawToPointString { x = shapeEndX, y = tabSpec.bodyTopY + tabSpec.cornerRadius }
+                , if tabSpec.bodyExtendsRight == 0 then
+                    drawToPointString { x = shapeEndX, y = tabSpec.bodyTopY + tabSpec.cornerRadius }
 
-                    Just extendsRightAmount ->
-                        if extendsRightAmount > tabSpec.cornerRadius * 2 then
-                            String.join " "
-                                [ drawThroughElbowString False { x = tabSpec.tabTopEndX + tabSpec.cornerRadius, y = tabSpec.bodyTopY } tabSpec.cornerRadius
-                                , drawToPointString { x = shapeEndX - tabSpec.cornerRadius, y = tabSpec.bodyTopY }
-                                , drawThroughElbowString True { x = shapeEndX, y = tabSpec.bodyTopY + tabSpec.cornerRadius } tabSpec.cornerRadius
-                                ]
+                  else if tabSpec.bodyExtendsRight > tabSpec.cornerRadius * 2 then
+                    String.join " "
+                        [ drawThroughElbowString False { x = tabSpec.tabTopEndX + tabSpec.cornerRadius, y = tabSpec.bodyTopY } tabSpec.cornerRadius
+                        , drawToPointString { x = shapeEndX - tabSpec.cornerRadius, y = tabSpec.bodyTopY }
+                        , drawThroughElbowString True { x = shapeEndX, y = tabSpec.bodyTopY + tabSpec.cornerRadius } tabSpec.cornerRadius
+                        ]
 
-                        else
-                            let
-                                startPoint =
-                                    { x = tabSpec.tabTopEndX, y = tabSpec.bodyTopY - tabSpec.cornerRadius }
+                  else
+                    let
+                        startPoint =
+                            { x = tabSpec.tabTopEndX, y = tabSpec.bodyTopY - tabSpec.cornerRadius }
 
-                                endPoint =
-                                    { x = shapeEndX, y = tabSpec.bodyTopY + tabSpec.cornerRadius }
+                        endPoint =
+                            { x = shapeEndX, y = tabSpec.bodyTopY + tabSpec.cornerRadius }
 
-                                midPoint =
-                                    Point.getMidpoint startPoint endPoint
-                            in
-                            String.join " "
-                                [ drawThroughArcWithVerticalEnd startPoint midPoint False
-                                , drawThroughArcWithVerticalEnd midPoint endPoint True
-                                ]
+                        midPoint =
+                            Point.getMidpoint startPoint endPoint
+                    in
+                    String.join " "
+                        [ drawThroughArcWithVerticalEnd startPoint midPoint False
+                        , drawThroughArcWithVerticalEnd midPoint endPoint True
+                        ]
                 , drawToPointString { x = shapeEndX, y = tabSpec.shapeBottomY }
                 , "Z"
                 ]

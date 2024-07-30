@@ -1,6 +1,7 @@
 module View exposing (..)
 
 import Browser
+import CommonView exposing (..)
 import Config
 import Convert exposing (..)
 import Element exposing (Attribute, Element)
@@ -125,21 +126,27 @@ bodyElement dProfile tabState animateTime =
                     else
                         targetTab
 
+        canvasWidth =
+            1000
+
+        tabBodyWidth =
+            canvasWidth / 2
+
         xOffsetAbs =
-            let
-                easingFunction x =
-                    if x == 1 then
-                        1
+            case tabState of
+                OnTab _ ->
+                    0
 
-                    else
-                        1 - (2 ^ (-20 * x))
+                SwitchingTo _ animateStartTime ->
+                    let
+                        easingFunction x =
+                            if x == 1 then
+                                1
 
-                offsetMultiplier =
-                    case tabState of
-                        OnTab _ ->
-                            0
+                            else
+                                1 - (2 ^ (-20 * x))
 
-                        SwitchingTo _ animateStartTime ->
+                        offsetMultiplier =
                             let
                                 progressFloat =
                                     animationProgressFloat animateStartTime animateTime
@@ -149,38 +156,96 @@ bodyElement dProfile tabState animateTime =
 
                             else
                                 1 - easingFunction ((progressFloat - 0.5) * 2)
-            in
-            offsetMultiplier * (100.0 / 2)
-    in
-    Element.column
-        [ Element.width Element.fill
-        , Element.spacing 20
-        ]
-        [ tabsElement dProfile tabState
+                    in
+                    offsetMultiplier * (tabBodyWidth / 2)
 
-        -- , tabBody dProfile tabState
-        , TabGraphics.tabElement
-            { tabTopStartX = 100
-            , tabTopEndX = 300
-            , maybeBodyExtendsLeft = Just xOffsetAbs
-            , maybeBodyExtendsRight = Just <| 100 - xOffsetAbs
-            , shapeBottomY = 500
-            , bodyTopY = 100
-            , tabTopY = 20
-            , fillColor = Element.rgb 0 0 1
-            , strokeColor = Element.rgb 1 0 0
-            , pathThickness = 3
-            , cornerRadius = 20
-            }
-            (Element.el [ Element.centerX, Element.padding 10 ] <| Element.text "tab")
-            (Element.column [ Element.spacing 4 ]
-                [ Element.text "hi"
-                , Element.text "hi"
-                , Element.text "hi"
-                , Element.text "hi"
-                ]
-            )
-        ]
+        portfolioTabEls =
+            let
+                tabTopWidth =
+                    240
+            in
+            TabGraphics.createTabElementComponentsToStack
+                { shapeBottomY = 400
+                , bodyTopY = 100
+                , tabTopY = 10
+                , fillColor = Element.rgb 0 0 1
+                , strokeColor = Element.rgb 1 0 0
+                , pathThickness = 10
+                , cornerRadius = 40
+                , tabTopStartX = (canvasWidth / 2) - tabTopWidth
+                , tabTopEndX = canvasWidth / 2
+                , bodyExtendsLeft = ((tabBodyWidth / 2) - tabTopWidth) + xOffsetAbs
+                , bodyExtendsRight = tabBodyWidth / 2 - xOffsetAbs
+                , canvasWidth = Element.px <| canvasWidth
+                }
+                (Element.el
+                    [ Element.centerX
+                    , Element.centerY
+                    ]
+                 <|
+                    tabElement dProfile "Portfolio" PortfolioClicked
+                )
+                portfolioContentEl
+
+        currentWorkTabEls =
+            let
+                tabTopWidth =
+                    240
+            in
+            TabGraphics.createTabElementComponentsToStack
+                { shapeBottomY = 400
+                , bodyTopY = 100
+                , tabTopY = 10
+                , fillColor = Element.rgb 0 0 1
+                , strokeColor = Element.rgb 1 0 0
+                , pathThickness = 10
+                , cornerRadius = 40
+                , tabTopStartX = canvasWidth / 2
+                , tabTopEndX = (canvasWidth / 2) + tabTopWidth
+                , bodyExtendsLeft = tabBodyWidth / 2 - xOffsetAbs
+                , bodyExtendsRight = ((tabBodyWidth / 2) - tabTopWidth) + xOffsetAbs
+                , canvasWidth = Element.px <| canvasWidth
+                }
+                (Element.el
+                    [ Element.centerX
+                    , Element.centerY
+                    ]
+                 <|
+                    tabElement dProfile "Current Work" CurrentWorkClicked
+                )
+                currentWorkContentEl
+
+        elsToStack =
+            case tabOnTop of
+                Portfolio ->
+                    [ portfolioTabEls.tabShape
+                    , portfolioTabEls.bodyEl
+                    , currentWorkTabEls.tabShape
+                    , currentWorkTabEls.bodyEl
+                    , portfolioTabEls.tabEl
+                    , currentWorkTabEls.tabEl
+                    ]
+
+                CurrentWork ->
+                    [ currentWorkTabEls.tabShape
+                    , currentWorkTabEls.bodyEl
+                    , portfolioTabEls.tabShape
+                    , portfolioTabEls.bodyEl
+                    , currentWorkTabEls.tabEl
+                    , portfolioTabEls.tabEl
+                    ]
+    in
+    stackElementsInZ2 <| elsToStack
+
+
+portfolioContentEl : Element Msg
+portfolioContentEl =
+    Element.text "portfoliooooo"
+
+
+currentWorkContentEl : Element Msg
+currentWorkContentEl =
+    Element.text "current work waow"
 
 
 tabsElement : DisplayProfile -> TabState -> Element Msg
@@ -202,18 +267,6 @@ tabElement dProfile label onPress =
         { onPress = Just onPress
         , label = Element.text label
         }
-
-
-
--- tabBody : DisplayProfile -> TabState -> Element Msg
--- tabBody dProfile tabState =
---     case tabState of
---         OnTab tab ->
---             case tab of
---                 CurrentWork ->
---                     currentWorkBody dProfile
---                 Portfolio ->
---                     portfolioBody dProfile
 
 
 currentWorkBody : DisplayProfile -> Element Msg
