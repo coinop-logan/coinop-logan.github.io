@@ -235,7 +235,7 @@ bodyElement dProfile tabState animateTime =
                     , portfolioTabEls.tabEl
                     ]
     in
-    stackElementsInZ2 <| elsToStack
+    stackElementsInZ [ Element.centerX ] <| elsToStack
 
 
 portfolioContentEl : Element Msg
