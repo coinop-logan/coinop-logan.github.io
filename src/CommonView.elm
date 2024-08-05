@@ -48,3 +48,19 @@ fontMontserrat =
     Font.family
         [ Font.typeface "montserrat"
         ]
+
+
+linkAttributes : List (Attribute msg)
+linkAttributes =
+    [ Font.color <| Element.rgb 0.2 0.2 1
+    , Font.underline
+    ]
+
+
+newTabLink : List (Attribute msg) -> String -> String -> Element msg
+newTabLink extraAttributes url labelText =
+    Element.newTabLink
+        (linkAttributes ++ extraAttributes)
+        { url = url
+        , label = Element.text labelText
+        }

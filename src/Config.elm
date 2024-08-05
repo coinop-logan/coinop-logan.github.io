@@ -5,4 +5,4 @@ import Time
 
 tabSwitchAnimationInterval : Time.Posix
 tabSwitchAnimationInterval =
-    Time.millisToPosix 1000
+    Time.millisToPosix 850

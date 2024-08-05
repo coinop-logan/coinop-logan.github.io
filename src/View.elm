@@ -192,7 +192,7 @@ bodyElement dProfile tabState animateTime =
                  <|
                     tabElement dProfile "Portfolio" PortfolioClicked
                 )
-                portfolioContentEl
+                (portfolioContentEl dProfile)
 
         currentWorkTabEls =
             let
@@ -245,15 +245,71 @@ bodyElement dProfile tabState animateTime =
     stackElementsInZ [ Element.centerX, Element.height Element.fill ] <| elsToStack
 
 
-portfolioContentEl : Element Msg
-portfolioContentEl =
-    Element.text "portfoliooooo"
+portfolioContentEl : DisplayProfile -> Element Msg
+portfolioContentEl dProfile =
+    Element.column
+        [ Element.width Element.fill
+        , Element.padding 45
+        , Element.spacing 35
+        ]
+        [ portfolioEntryEl dProfile
+            (Element.image
+                [ Element.height <| Element.px 60 ]
+                { src = "/public/coinfight-title.png"
+                , description = "coinfight"
+                }
+            )
+            "2022 / 2023"
+            [ "An RTS game where users fight over crypto in-game. Players must invest real crypto into their armies, which if killed is dropped onto the battlefield for anyone else to pick up, capture, and withdraw. This is a zero-sum game where the goal is to get more out than you put in. \"Like Poker, but the chips shoot at each other!\""
+            , "The goal of Coinfight was to give players the tangible experience of fighting in a virtual match over real money in real time. This was achieved without invoking the usual cumbersome blockchain constraints by treating the blockchain more as a clearing house than as a place for game state, contrary to the usual approach for web3 gaming."
+            ]
+            [ newTabLink [] "https://coinfight.io/" "coinfight.io"
+            , newTabLink [] "https://www.youtube.com/watch?v=7tw10KUO1_U" "demo video"
+            , newTabLink [] "https://medium.com/p/472636deec57" "dev blog post"
+            ]
+        ]
 
 
 currentWorkContentEl : Element Msg
 currentWorkContentEl =
     Element.column [ Element.spacing 5 ]
         (List.repeat 10 <| Element.text "current work waoww")
+
+
+portfolioEntryEl : DisplayProfile -> Element Msg -> String -> List String -> List (Element Msg) -> Element Msg
+portfolioEntryEl dProfile titleEl dateString bodyStrings linkOutEls =
+    Element.column
+        [ Element.width Element.fill
+        , Element.spacing 20
+        ]
+        [ Element.row
+            [ Element.width Element.fill ]
+            [ titleEl
+            , Element.el
+                [ Element.alignRight
+                , Element.centerY
+                , Font.size 28
+                ]
+              <|
+                Element.text dateString
+            ]
+        , Element.column
+            [ Element.width Element.fill
+            , Element.spacing 15
+            , Font.size 18
+            ]
+            (bodyStrings
+                |> List.map
+                    (\bodyString ->
+                        Element.paragraph
+                            [ Element.paddingXY 30 0 ]
+                            [ Element.text bodyString ]
+                    )
+            )
+        , Element.row
+            [ Element.spacing 30 ]
+            linkOutEls
+        ]
 
 
 tabElement : DisplayProfile -> String -> Msg -> Element Msg
