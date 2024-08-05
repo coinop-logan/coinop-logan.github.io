@@ -94,6 +94,8 @@ nameElement dProfile =
     Element.el
         [ Element.centerX
         , Font.size 80
+        , Font.semiBold
+        , fontMontserrat
         ]
     <|
         Element.text "Logan Brutsche"

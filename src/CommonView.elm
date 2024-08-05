@@ -1,6 +1,7 @@
 module CommonView exposing (..)
 
 import Element exposing (Attribute, Element)
+import Element.Font as Font
 import Html exposing (Html)
 import Html.Attributes
 import List.Extra as List
@@ -40,3 +41,10 @@ stackElementsInZ attributes elements =
         foldHelper
         elements
         |> Maybe.withDefault Element.none
+
+
+fontMontserrat : Attribute msg
+fontMontserrat =
+    Font.family
+        [ Font.typeface "montserrat"
+        ]
