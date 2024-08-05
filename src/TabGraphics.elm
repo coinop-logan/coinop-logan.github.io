@@ -42,6 +42,7 @@ createTabElementComponentsToStack tabSpec tabEl innerEl =
                 [ Element.moveRight <| tabSpec.tabTopStartX - tabSpec.bodyExtendsLeft
                 , Element.moveDown <| tabSpec.bodyTopY
                 , Element.width <| Element.px bodyWidth
+                , Element.height <| Element.px <| floor <| tabSpec.shapeBottomY - tabSpec.bodyTopY
                 ]
                 innerEl
 
@@ -55,7 +56,7 @@ createTabElementComponentsToStack tabSpec tabEl innerEl =
                 tabEl
     in
     { tabShape =
-        Element.el [ Element.width tabSpec.canvasWidth ] <|
+        Element.el [ Element.width tabSpec.canvasWidth, Element.height Element.fill ] <|
             Element.html <|
                 Svg.svg
                     [ Svg.Attributes.height "100%"
@@ -63,29 +64,11 @@ createTabElementComponentsToStack tabSpec tabEl innerEl =
                     [ Svg.defs
                         []
                         []
-                    , drawTabShape
-                        tabSpec
+                    , drawTabShape tabSpec
                     ]
     , tabEl = tabElContained
     , bodyEl = innerElContained
     }
-
-
-
--- tabShapeSpecTest : TabSpec
--- tabShapeSpecTest =
---     { tabTopStartX = 100
---     , tabTopEndX = 300
---     , bodyExtendsLeft = 20
---     , bodyExtendsRight = 15
---     , shapeBottomY = 500
---     , bodyTopY = 100
---     , tabTopY = 20
---     , fillColor = Element.rgb 0 0 1
---     , strokeColor = Element.rgb 1 0 0
---     , pathThickness = 3
---     , cornerRadius = 20
---     }
 
 
 drawTabShape : TabSpec -> Svg msg

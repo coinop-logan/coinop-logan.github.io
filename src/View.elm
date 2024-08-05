@@ -29,6 +29,7 @@ root model =
             }
             [ Element.width Element.fill
             , Element.height Element.fill
+            , Background.color Config.bgColor
 
             -- , robotoFont
             ]
@@ -62,12 +63,12 @@ view model =
     Element.el
         [ Element.width Element.fill
         , Element.height Element.fill
-        , Background.color Config.bgColor
         , Font.color Config.defaultFontColor
         ]
     <|
         Element.column
             [ Element.width Element.fill
+            , Element.height Element.fill
             , Element.spacing 60
             , Element.padding 30
             ]
@@ -165,7 +166,7 @@ bodyElement dProfile tabState animateTime =
                     240
             in
             TabGraphics.createTabElementComponentsToStack
-                { shapeBottomY = 400
+                { shapeBottomY = 500
                 , bodyTopY = 100
                 , tabTopY = 10
                 , fillColor = Element.rgb 0 0 1
@@ -193,7 +194,7 @@ bodyElement dProfile tabState animateTime =
                     240
             in
             TabGraphics.createTabElementComponentsToStack
-                { shapeBottomY = 400
+                { shapeBottomY = 500
                 , bodyTopY = 100
                 , tabTopY = 10
                 , fillColor = Element.rgb 0 0 1
@@ -235,7 +236,7 @@ bodyElement dProfile tabState animateTime =
                     , portfolioTabEls.tabEl
                     ]
     in
-    stackElementsInZ [ Element.centerX ] <| elsToStack
+    stackElementsInZ [ Element.centerX, Element.height Element.fill ] <| elsToStack
 
 
 portfolioContentEl : Element Msg
@@ -245,7 +246,8 @@ portfolioContentEl =
 
 currentWorkContentEl : Element Msg
 currentWorkContentEl =
-    Element.text "current work waow"
+    Element.column [ Element.spacing 5 ]
+        (List.repeat 10 <| Element.text "current work waoww")
 
 
 tabElement : DisplayProfile -> String -> Msg -> Element Msg
