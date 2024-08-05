@@ -84,31 +84,21 @@ headerElement dProfile =
         [ Element.centerX
         , Element.spacing 20
         ]
-        [ nameElement dProfile
-        , summaryElement dProfile
+        [ Element.el
+            [ Element.centerX
+            , Font.size 80
+            , Font.semiBold
+            , fontMontserrat
+            ]
+          <|
+            Element.text "Logan Brutsche"
+        , Element.el
+            [ Element.centerX
+            , Font.size 36
+            ]
+          <|
+            Element.text "Current and Past Projects"
         ]
-
-
-nameElement : DisplayProfile -> Element Msg
-nameElement dProfile =
-    Element.el
-        [ Element.centerX
-        , Font.size 80
-        , Font.semiBold
-        , fontMontserrat
-        ]
-    <|
-        Element.text "Logan Brutsche"
-
-
-summaryElement : DisplayProfile -> Element Msg
-summaryElement dProfile =
-    Element.el
-        [ Element.centerX
-        , Font.size 24
-        ]
-    <|
-        Element.text "summary here summary here summary here summary here "
 
 
 bodyElement : DisplayProfile -> TabState -> Time.Posix -> Element Msg
