@@ -10,6 +10,7 @@ import Element.Font as Font
 import Element.Input as Input
 import Responsive exposing (DisplayProfile)
 import TabGraphics
+import Theme
 import Time
 import Types exposing (..)
 
@@ -62,12 +63,12 @@ view model =
     Element.el
         [ Element.width Element.fill
         , Element.height Element.fill
-        , Font.color Config.defaultFontColor
+        , Font.color Theme.defaultFontColor
         ]
     <|
         Element.column
             [ Element.width Element.fill
-            , Background.color Config.bgColor
+            , Background.color Theme.bgColor
             , Element.height Element.fill
             , Element.spacing 60
             , Element.padding 30
@@ -128,10 +129,13 @@ bodyElement dProfile tabState animateTime =
                         targetTab
 
         canvasWidth =
-            1000
+            1600
 
         tabBodyWidth =
             canvasWidth / 2
+
+        tabSeparation =
+            10
 
         xOffsetAbs =
             case tabState of
@@ -169,12 +173,12 @@ bodyElement dProfile tabState animateTime =
                 { shapeBottomY = 1500
                 , bodyTopY = 100
                 , tabTopY = 10
-                , fillColor = Element.rgb 0 0 1
-                , strokeColor = Element.rgb 1 0 0
-                , pathThickness = 10
+                , fillColor = Theme.portfolioTabBackgroundColor
+                , strokeColor = Theme.tabBorderColor
+                , pathThickness = 6
                 , cornerRadius = 40
-                , tabTopStartX = (canvasWidth / 2) - tabTopWidth
-                , tabTopEndX = canvasWidth / 2
+                , tabTopStartX = (canvasWidth / 2) - tabTopWidth - (tabSeparation / 2)
+                , tabTopEndX = canvasWidth / 2 - (tabSeparation / 2)
                 , bodyExtendsLeft = ((tabBodyWidth / 2) - tabTopWidth) + xOffsetAbs
                 , bodyExtendsRight = tabBodyWidth / 2 - xOffsetAbs
                 , canvasWidth = Element.px <| canvasWidth
@@ -197,12 +201,12 @@ bodyElement dProfile tabState animateTime =
                 { shapeBottomY = 1500
                 , bodyTopY = 100
                 , tabTopY = 10
-                , fillColor = Element.rgb 0 0 1
-                , strokeColor = Element.rgb 1 0 0
-                , pathThickness = 10
+                , fillColor = Theme.currentWorkTabBackgroundColor
+                , strokeColor = Theme.tabBorderColor
+                , pathThickness = 6
                 , cornerRadius = 40
-                , tabTopStartX = canvasWidth / 2
-                , tabTopEndX = (canvasWidth / 2) + tabTopWidth
+                , tabTopStartX = canvasWidth / 2 + (tabSeparation / 2)
+                , tabTopEndX = (canvasWidth / 2) + tabTopWidth + (tabSeparation / 2)
                 , bodyExtendsLeft = tabBodyWidth / 2 - xOffsetAbs
                 , bodyExtendsRight = ((tabBodyWidth / 2) - tabTopWidth) + xOffsetAbs
                 , canvasWidth = Element.px <| canvasWidth
