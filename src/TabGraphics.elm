@@ -2,6 +2,7 @@ module TabGraphics exposing (..)
 
 import CommonView
 import Element exposing (Attribute, Element)
+import Element.Background as Background
 import Html.Attributes
 import Point exposing (Point)
 import Svg exposing (Svg)
@@ -59,7 +60,7 @@ createTabElementComponentsToStack tabSpec tabEl innerEl =
         Element.el [ Element.width tabSpec.canvasWidth, Element.height Element.fill ] <|
             Element.html <|
                 Svg.svg
-                    [ Svg.Attributes.height "100%"
+                    [ Svg.Attributes.height <| String.fromFloat <| tabSpec.shapeBottomY + (tabSpec.pathThickness / 2)
                     ]
                     [ Svg.defs
                         []

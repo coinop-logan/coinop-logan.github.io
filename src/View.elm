@@ -29,7 +29,6 @@ root model =
             }
             [ Element.width Element.fill
             , Element.height Element.fill
-            , Background.color Config.bgColor
 
             -- , robotoFont
             ]
@@ -68,6 +67,7 @@ view model =
     <|
         Element.column
             [ Element.width Element.fill
+            , Background.color Config.bgColor
             , Element.height Element.fill
             , Element.spacing 60
             , Element.padding 30
@@ -166,7 +166,7 @@ bodyElement dProfile tabState animateTime =
                     240
             in
             TabGraphics.createTabElementComponentsToStack
-                { shapeBottomY = 500
+                { shapeBottomY = 1500
                 , bodyTopY = 100
                 , tabTopY = 10
                 , fillColor = Element.rgb 0 0 1
@@ -194,7 +194,7 @@ bodyElement dProfile tabState animateTime =
                     240
             in
             TabGraphics.createTabElementComponentsToStack
-                { shapeBottomY = 500
+                { shapeBottomY = 1500
                 , bodyTopY = 100
                 , tabTopY = 10
                 , fillColor = Element.rgb 0 0 1
