@@ -263,9 +263,9 @@ portfolioContentEl dProfile =
             [ "An RTS game where users fight over crypto in-game. Players must invest real crypto into their armies, which if killed is dropped onto the battlefield for anyone else to pick up, capture, and withdraw. This is a zero-sum game where the goal is to get more out than you put in. \"Like Poker, but the chips shoot at each other!\""
             , "The goal of Coinfight was to give players the tangible experience of fighting in a virtual match over real money in real time. This was achieved without invoking the usual cumbersome blockchain constraints by treating the blockchain more as a clearing house than as a place for game state, contrary to the usual approach for web3 gaming."
             ]
-            [ newTabLink [] "https://coinfight.io/" "coinfight.io"
-            , newTabLink [] "https://www.youtube.com/watch?v=7tw10KUO1_U" "demo video"
+            [ newTabLink [] "https://www.youtube.com/watch?v=7tw10KUO1_U" "demo video"
             , newTabLink [] "https://medium.com/p/472636deec57" "dev blog post"
+            , newTabLink [] "https://coinfight.io/" "coinfight.io"
             ]
         ]
 
