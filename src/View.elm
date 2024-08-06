@@ -290,7 +290,7 @@ portfolioContentEl dProfile =
             , "As with DAIHard, a major goal of SmokeSignal was to be both radically free and unkillable. In other words, it was to boldly challenge some constraints of traditional systems (in this case, rejecting the idea that moderation and censorship are unavoidable and necessary) while surviving any backlash this might create (lawsuits, nation-state attacks, etc)."
             , "Thus, the main technical challenge was in making something suitably decentralized so as not to not be attackable, while still integrating with traditional frameworks and services for the purposes of marketing and usability. As an example, all conversational data was stored in Ethereum contract event logs, but a traditional HTTP server was used to serve SEO information for such posts."
             ]
-            [ newTabLink [] "https://medium.com/daihard-buidlers/introducing-smokesignal-da8f19bc27af" "introduction post"
+            [ newTabLink [] "https://medium.com/daihard-buidlers/introducing-smokesignal-da8f19bc27af" "intro post"
             , newTabLink [] "https://www.youtube.com/watch?v=pV70Q0wgnnU" "demo video"
             , newTabLink [] "https://github.com/team-toast/SmokeSignal" "github"
             ]
@@ -302,21 +302,22 @@ portfolioContentEl dProfile =
             , "As part of this project, I spent two months in Zimbabwe researching the viability of crypto adoption in the face of a hyperinflated currency. A summary of my findings can be found in the below-linked ZimDai paper \"ZimDai: Blueprint for an Economic Jailbreak\"."
             , "Note that visual design for this project was contracted out."
             ]
-            [ newTabLink [] "https://www.youtube.com/watch?v=WR4WovM0qwg" "Demo Video"
+            [ newTabLink [] "https://www.youtube.com/watch?v=WR4WovM0qwg" "demo video"
             , newTabLink [] "https://medium.com/@coinop.logan/daihard-game-theory-21a456ef224e" "game theory writeup"
             , newTabLink [] "https://github.com/team-toast/DAIHard" "github"
             , newTabLink [] "https://github.com/coinop-logan/ZimDai/blob/master/whitepaper.pdf" "ZimDai paper"
             ]
         , portfolioEntryEl dProfile
             (Element.el [ Font.size 38 ] <| Element.text "Toastycoin")
-            "2019 / 2020"
+            "2017"
             "Solo Project"
             [ "Toastycoin was an experimental dapp that used \"burnable payment\" contracts on the Ethereum blockchain to allow users to contract work from strangers on the Internet, without any previous trust or association. The burnable payment contracts used game theory to facilitate this: while loss of funds was not guaranteed, what was guaranteed was that scammers attempting to game the system would be punished and would not make a profit."
             , "See the \"game theory writeup\" link under the DAIHard project above, to read more about this game theory, as DAIHard was simply a narrowed use-case of the burnable payments developed for Toastycoin."
             , "All work (burnable payment smart contract, Javascript webpage interface) done by me."
             ]
             [ newTabLink [] "https://medium.com/@coinop.logan/preventing-scammer-profit-with-burnable-payments-ad2e9b632ef2" "Burnable Payments proposal"
-            , newTabLink [] "https://medium.com/@coinop.logan/toasted-money-part-2-b5dfd0b1e946" "Experiment Conclusion"
+            , newTabLink [] "https://medium.com/@coinop.logan/toasted-money-part-2-b5dfd0b1e946" "experiment conclusion"
+            , newTabLink [] "https://github.com/coinop-logan/toastycoin" "github"
             ]
         ]
 
@@ -343,7 +344,7 @@ portfolioEntryEl dProfile titleEl dateString roleString bodyStrings linkOutEls =
     Element.column
         [ Element.width Element.fill
         , Element.spacing 20
-        , Element.padding 15
+        , Element.padding 20
         , Border.width 1
         , Border.rounded 8
         , Border.color Theme.portfolioEntryBorderColor
@@ -374,7 +375,9 @@ portfolioEntryEl dProfile titleEl dateString roleString bodyStrings linkOutEls =
                     )
             )
         , Element.row
-            [ Element.spacing 30 ]
+            [ Element.spacing 30
+            , Font.size 16
+            ]
             linkOutEls
         ]
 
