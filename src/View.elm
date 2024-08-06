@@ -18,7 +18,7 @@ import Types exposing (..)
 
 root : Model -> Browser.Document Msg
 root model =
-    { title = "Logan Brutsche"
+    { title = "Logan Brutsche - Portfolio"
     , body =
         [ Element.layoutWith
             { options =
@@ -93,12 +93,13 @@ headerElement dProfile =
             ]
           <|
             Element.text "Logan Brutsche"
-        , Element.el
-            [ Element.centerX
-            , Font.size 36
-            ]
-          <|
-            Element.text "Current Work and Some Past Projects"
+
+        -- , Element.el
+        --     [ Element.centerX
+        --     , Font.size 36
+        --     ]
+        --   <|
+        --     Element.text "Current Work and Some Past Projects"
         ]
 
 
@@ -181,9 +182,9 @@ bodyElement dProfile tabState animateTime =
                     , Element.centerY
                     ]
                  <|
-                    tabElement dProfile "Portfolio" PortfolioClicked
+                    tabElement dProfile "Past Work" PortfolioClicked
                 )
-                (portfolioContentEl dProfile)
+                (pastWorkEl dProfile)
 
         currentWorkTabEls =
             let
@@ -209,9 +210,9 @@ bodyElement dProfile tabState animateTime =
                     , Element.centerY
                     ]
                  <|
-                    tabElement dProfile "Current Work" CurrentWorkClicked
+                    tabElement dProfile "About Me" CurrentWorkClicked
                 )
-                currentWorkContentEl
+                aboutMeEl
 
         elsToStack =
             case tabOnTop of
@@ -236,8 +237,8 @@ bodyElement dProfile tabState animateTime =
     stackElementsInZ [ Element.centerX, Element.height Element.fill ] <| elsToStack
 
 
-portfolioContentEl : DisplayProfile -> Element Msg
-portfolioContentEl dProfile =
+pastWorkEl : DisplayProfile -> Element Msg
+pastWorkEl dProfile =
     Element.column
         [ Element.width Element.fill
         , Element.spacing 35
@@ -322,6 +323,34 @@ portfolioContentEl dProfile =
         ]
 
 
+aboutMeEl : Element Msg
+aboutMeEl =
+    Element.column
+        [ Element.width Element.fill
+        , Element.spacing 35
+        , Element.padding 45
+        ]
+        [ Element.el
+            [ Element.width <| Element.px 500
+            , Element.height <| Element.px 300
+            , Element.centerX
+            , Background.color <| Element.rgb 0.5 0 0
+            ]
+            (Element.text "YT vid intro")
+        , Element.paragraph [ Font.center ]
+            [ Element.text "You might also be interested "
+            , newTabLink [] "https://www.youtube.com/watch?v=rH7mjNDD448" "the recording of a workshop"
+            , Element.text " I ran in 2021 on Bitcoin and crypto."
+            ]
+        , currentWorkEl
+        ]
+
+
+currentWorkEl : Element Msg
+currentWorkEl =
+    Element.text "currentWorkEl"
+
+
 daihardLogoEl : Element Msg
 daihardLogoEl =
     Element.row
@@ -331,12 +360,6 @@ daihardLogoEl =
         [ Element.el [ Font.color <| Element.rgb 1 1 1 ] <| Element.text "DAI"
         , Element.el [ Font.color <| Element.rgb255 255 0 110 ] <| Element.text "Hard"
         ]
-
-
-currentWorkContentEl : Element Msg
-currentWorkContentEl =
-    Element.column [ Element.spacing 5 ]
-        (List.repeat 10 <| Element.text "current work waoww")
 
 
 portfolioEntryEl : DisplayProfile -> Element Msg -> String -> String -> List String -> List (Element Msg) -> Element Msg
