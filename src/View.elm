@@ -163,7 +163,7 @@ bodyElement dProfile tabState animateTime =
                     240
             in
             TabGraphics.createTabElementComponentsToStack
-                { shapeBottomY = 2300
+                { shapeBottomY = 2600
                 , bodyTopY = 100
                 , tabTopY = 10
                 , fillColor = Theme.portfolioTabBackgroundColor
@@ -191,7 +191,7 @@ bodyElement dProfile tabState animateTime =
                     240
             in
             TabGraphics.createTabElementComponentsToStack
-                { shapeBottomY = 2300
+                { shapeBottomY = 2600
                 , bodyTopY = 100
                 , tabTopY = 10
                 , fillColor = Theme.currentWorkTabBackgroundColor
@@ -240,69 +240,83 @@ portfolioContentEl : DisplayProfile -> Element Msg
 portfolioContentEl dProfile =
     Element.column
         [ Element.width Element.fill
-        , Element.padding 45
         , Element.spacing 35
+        , Element.padding 45
         ]
-        [ Element.column
-            [ Element.centerX
-            , Font.size 16
-            , Element.spacing 4
+        [ portfolioEntryEl dProfile
+            (Element.image
+                [ Element.height <| Element.px 50 ]
+                { src = "eestisse-title.png"
+                , description = "eestisse"
+                }
+            )
+            "2024"
+            "Solo Project"
+            [ "An LLM-powered tool that explains the counter-intuitive Estonian grammar to English speakers (for example, why \"eestisse\" means \"into Estonia\"). The tool takes English or Estonian text, translates it, and explains word by word how the Estonian is constructed."
+            , "The central feature was almost shockingly easy to build, partially because LLMs tend to do well with language tasks."
+            , "Built with Lamdera, a fascinating and beautiful platform that extends the rock-solid type-safety of Elm into the backend. This made innovation very fast and pleasant, but made more traditional intevrations (i.e. Google Sign In, Stripe integration) harder than they'd have otherwise been."
             ]
-            [ Element.el [ Element.centerX ] <| Element.text "Except otherwise noted, the projects below were fully"
-            , Element.el [ Element.centerX ] <| Element.text "implemented by myself, including most visual design."
+            [ newTabLink [] "https://eestisse.ee" "eestisse.ee"
+            , newTabLink [] "https://github.com/eestisse/eestisse" "github"
             ]
-        , Element.column
-            [ Element.width Element.fill
-            , Element.spacing 35
+        , portfolioEntryEl dProfile
+            (Element.image
+                [ Element.height <| Element.px 50 ]
+                { src = "coinfight-title.png"
+                , description = "coinfight"
+                }
+            )
+            "2022 / 2023"
+            "Solo Project"
+            [ "An RTS game where users fight over crypto in-game. Players must invest real crypto into their armies, which if killed is dropped onto the battlefield for anyone else to pick up, capture, and withdraw. This is a zero-sum game where the goal is to get more out than you put in. \"Like Poker, but the chips shoot at each other!\""
+            , "The goal of Coinfight was to give players the tangible experience of fighting in a virtual match over real money in real time. This necessitated building a unique architecture among web3 games, where the blockchain was only used to clear deposits and withdrawals, and most money movement was tracked in the game server."
+            , "All work (webpage, game server and client, launcher, web3 integration, UX design, visual design) done by me."
             ]
-            [ portfolioEntryEl dProfile
-                (Element.image
-                    [ Element.height <| Element.px 50 ]
-                    { src = "eestisse-title.png"
-                    , description = "eestisse"
-                    }
-                )
-                "2024"
-                [ "An LLM-powered tool that explains the counter-intuitive Estonian grammar to English speakers (for example, why \"eestisse\" means \"into Estonia\"). The tool takes English or Estonian text, translates it, and explains word by word how the Estonian is constructed."
-                , "The central feature was almost shockingly easy to build, partially because LLMs tend to do well with language tasks."
-                , "Built with Lamdera, a fascinating and beautiful platform that extends the rock-solid type-safety of Elm into the backend. This innovation very fast and pleasant, but made \"normal integrations\" (Google Sign in and Stripe integration) more difficult."
-                ]
-                [ newTabLink [] "https://eestisse.ee" "eestisse.ee"
-                , newTabLink [] "https://github.com/eestisse/eestisse" "github"
-                ]
-            , portfolioEntryEl dProfile
-                (Element.image
-                    [ Element.height <| Element.px 50 ]
-                    { src = "coinfight-title.png"
-                    , description = "coinfight"
-                    }
-                )
-                "2022 / 2023"
-                [ "An RTS game where users fight over crypto in-game. Players must invest real crypto into their armies, which if killed is dropped onto the battlefield for anyone else to pick up, capture, and withdraw. This is a zero-sum game where the goal is to get more out than you put in. \"Like Poker, but the chips shoot at each other!\""
-                , "The goal of Coinfight was to give players the tangible experience of fighting in a virtual match over real money in real time. This was achieved without invoking the usual cumbersome blockchain constraints by treating the blockchain more as a clearing house than as a place for game state, contrary to the usual approach for web3 gaming."
-                ]
-                [ newTabLink [] "https://www.youtube.com/watch?v=7tw10KUO1_U" "demo video"
-                , newTabLink [] "https://medium.com/p/472636deec57" "dev blog post"
-                , newTabLink [] "https://coinfight.io/" "coinfight.io"
-                , newTabLink [] "https://github.com/coinop-logan/coinfight" "github"
-                ]
-            , portfolioEntryEl dProfile
-                (Element.image
-                    [ Element.height <| Element.px 50 ]
-                    { src = "smokesignal-title.svg"
-                    , description = "smokesignal"
-                    }
-                )
-                "2020 / 2021"
-                [ "Bla bla bla a bunch of silly text Bla bla bla a bunch of silly text Bla bla bla a bunch of silly text Bla bla bla a bunch of silly text Bla bla bla a bunch of silly text Bla bla bla a bunch of silly text Bla bla bla a bunch of silly text Bla bla bla a bunch of silly text Bla bla bla a bunch of silly text Bla bla bla a bunch of silly text Bla bla bla a bunch of silly text Bla bla bla a bunch of silly text "
-                ]
-                []
-            , portfolioEntryEl dProfile
-                daihardLogoEl
-                "2019 / 2020"
-                [ "Bla bla bla a bunch of silly text Bla bla bla a bunch of silly text Bla bla bla a bunch of silly text Bla bla bla a bunch of silly text Bla bla bla a bunch of silly text Bla bla bla a bunch of silly text Bla bla bla a bunch of silly text Bla bla bla a bunch of silly text Bla bla bla a bunch of silly text Bla bla bla a bunch of silly text Bla bla bla a bunch of silly text Bla bla bla a bunch of silly text "
-                ]
-                []
+            [ newTabLink [] "https://www.youtube.com/watch?v=7tw10KUO1_U" "demo video"
+            , newTabLink [] "https://medium.com/p/472636deec57" "dev blog post"
+            , newTabLink [] "https://coinfight.io/" "coinfight.io"
+            , newTabLink [] "https://github.com/coinop-logan/coinfight" "github"
+            ]
+        , portfolioEntryEl dProfile
+            (Element.image
+                [ Element.height <| Element.px 50 ]
+                { src = "smokesignal-title.svg"
+                , description = "smokesignal"
+                }
+            )
+            "2020 / 2021"
+            "Tech Lead"
+            [ "SmokeSignal was an uncensorable, global chat forum that implemented Reddit-like functionality (nested comments in topical forums) fully on the Ethereum blockchain and accessed via an Elm/Javascript frontend, hosted on IPFS. Users were able to tip each other ETH for posts, as well as burn crypto for theirs or other posts as a sort of decentralized, unfakeable alternative to upvotes."
+            , "As with DAIHard, a major goal of SmokeSignal was to be both radically free and unkillable. In other words, it was to boldly challenge some constraints of traditional systems (in this case, rejecting the idea that moderation and censorship are unavoidable and necessary) while surviving any backlash this might create (lawsuits, nation-state attacks, etc)."
+            , "Thus, the main technical challenge was in making something suitably decentralized so as not to not be attackable, while still integrating with traditional frameworks and services for the purposes of marketing and usability. As an example, all conversational data was stored in Ethereum contract event logs, but a traditional HTTP server was used to serve SEO information for such posts."
+            ]
+            [ newTabLink [] "https://medium.com/daihard-buidlers/introducing-smokesignal-da8f19bc27af" "introduction post"
+            , newTabLink [] "https://www.youtube.com/watch?v=pV70Q0wgnnU" "demo video"
+            , newTabLink [] "https://github.com/team-toast/SmokeSignal" "github"
+            ]
+        , portfolioEntryEl dProfile
+            daihardLogoEl
+            "2019 / 2020"
+            "Solo Developer"
+            [ "DAIHard was a crypto/fiat exchange built entirely with Ethereum smart contracts, so that there was no central server anyone could take down. The application was designed to continue to function even in adversarial jurisdictions. note this app uses no backend server at all, even for encrypted chat between users."
+            , "As part of this project, I spent two months in Zimbabwe researching the viability of crypto adoption in the face of a hyperinflated currency. A summary of my findings can be found in the below-linked ZimDai paper \"ZimDai: Blueprint for an Economic Jailbreak\"."
+            , "Note that visual design for this project was contracted out."
+            ]
+            [ newTabLink [] "https://www.youtube.com/watch?v=WR4WovM0qwg" "Demo Video"
+            , newTabLink [] "https://medium.com/@coinop.logan/daihard-game-theory-21a456ef224e" "game theory writeup"
+            , newTabLink [] "https://github.com/team-toast/DAIHard" "github"
+            , newTabLink [] "https://github.com/coinop-logan/ZimDai/blob/master/whitepaper.pdf" "ZimDai paper"
+            ]
+        , portfolioEntryEl dProfile
+            (Element.el [ Font.size 38 ] <| Element.text "Toastycoin")
+            "2019 / 2020"
+            "Solo Project"
+            [ "Toastycoin was an experimental dapp that used \"burnable payment\" contracts on the Ethereum blockchain to allow users to contract work from strangers on the Internet, without any previous trust or association. The burnable payment contracts used game theory to facilitate this: while loss of funds was not guaranteed, what was guaranteed was that scammers attempting to game the system would be punished and would not make a profit."
+            , "See the \"game theory writeup\" link under the DAIHard project above, to read more about this game theory, as DAIHard was simply a narrowed use-case of the burnable payments developed for Toastycoin."
+            , "All work (burnable payment smart contract, Javascript webpage interface) done by me."
+            ]
+            [ newTabLink [] "https://medium.com/@coinop.logan/preventing-scammer-profit-with-burnable-payments-ad2e9b632ef2" "Burnable Payments proposal"
+            , newTabLink [] "https://medium.com/@coinop.logan/toasted-money-part-2-b5dfd0b1e946" "Experiment Conclusion"
             ]
         ]
 
@@ -324,8 +338,8 @@ currentWorkContentEl =
         (List.repeat 10 <| Element.text "current work waoww")
 
 
-portfolioEntryEl : DisplayProfile -> Element Msg -> String -> List String -> List (Element Msg) -> Element Msg
-portfolioEntryEl dProfile titleEl dateString bodyStrings linkOutEls =
+portfolioEntryEl : DisplayProfile -> Element Msg -> String -> String -> List String -> List (Element Msg) -> Element Msg
+portfolioEntryEl dProfile titleEl dateString roleString bodyStrings linkOutEls =
     Element.column
         [ Element.width Element.fill
         , Element.spacing 20
@@ -338,13 +352,13 @@ portfolioEntryEl dProfile titleEl dateString bodyStrings linkOutEls =
         [ Element.row
             [ Element.width Element.fill ]
             [ titleEl
-            , Element.el
+            , Element.column
                 [ Element.alignRight
                 , Element.centerY
-                , Font.size 28
                 ]
-              <|
-                Element.text dateString
+                [ Element.el [ Font.size 28, Element.alignRight ] <| Element.text dateString
+                , Element.el [ Font.size 18, Element.alignRight ] <| Element.text roleString
+                ]
             ]
         , Element.column
             [ Element.width Element.fill
