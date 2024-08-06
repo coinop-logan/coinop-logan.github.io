@@ -6,6 +6,7 @@ import Config
 import Convert exposing (..)
 import Element exposing (Attribute, Element)
 import Element.Background as Background
+import Element.Border as Border
 import Element.Font as Font
 import Element.Input as Input
 import Responsive exposing (DisplayProfile)
@@ -97,7 +98,7 @@ headerElement dProfile =
             , Font.size 36
             ]
           <|
-            Element.text "Current and Past Projects"
+            Element.text "Current Work and Some Past Projects"
         ]
 
 
@@ -162,7 +163,7 @@ bodyElement dProfile tabState animateTime =
                     240
             in
             TabGraphics.createTabElementComponentsToStack
-                { shapeBottomY = 1500
+                { shapeBottomY = 2300
                 , bodyTopY = 100
                 , tabTopY = 10
                 , fillColor = Theme.portfolioTabBackgroundColor
@@ -190,7 +191,7 @@ bodyElement dProfile tabState animateTime =
                     240
             in
             TabGraphics.createTabElementComponentsToStack
-                { shapeBottomY = 1500
+                { shapeBottomY = 2300
                 , bodyTopY = 100
                 , tabTopY = 10
                 , fillColor = Theme.currentWorkTabBackgroundColor
@@ -242,21 +243,78 @@ portfolioContentEl dProfile =
         , Element.padding 45
         , Element.spacing 35
         ]
-        [ portfolioEntryEl dProfile
-            (Element.image
-                [ Element.height <| Element.px 60 ]
-                { src = "/public/coinfight-title.png"
-                , description = "coinfight"
-                }
-            )
-            "2022 / 2023"
-            [ "An RTS game where users fight over crypto in-game. Players must invest real crypto into their armies, which if killed is dropped onto the battlefield for anyone else to pick up, capture, and withdraw. This is a zero-sum game where the goal is to get more out than you put in. \"Like Poker, but the chips shoot at each other!\""
-            , "The goal of Coinfight was to give players the tangible experience of fighting in a virtual match over real money in real time. This was achieved without invoking the usual cumbersome blockchain constraints by treating the blockchain more as a clearing house than as a place for game state, contrary to the usual approach for web3 gaming."
+        [ Element.column
+            [ Element.centerX
+            , Font.size 16
+            , Element.spacing 4
             ]
-            [ newTabLink [] "https://www.youtube.com/watch?v=7tw10KUO1_U" "demo video"
-            , newTabLink [] "https://medium.com/p/472636deec57" "dev blog post"
-            , newTabLink [] "https://coinfight.io/" "coinfight.io"
+            [ Element.el [ Element.centerX ] <| Element.text "Except otherwise noted, the projects below were fully"
+            , Element.el [ Element.centerX ] <| Element.text "implemented by myself, including most visual design."
             ]
+        , Element.column
+            [ Element.width Element.fill
+            , Element.spacing 35
+            ]
+            [ portfolioEntryEl dProfile
+                (Element.image
+                    [ Element.height <| Element.px 50 ]
+                    { src = "eestisse-title.png"
+                    , description = "eestisse"
+                    }
+                )
+                "2024"
+                [ "An LLM-powered tool that explains the counter-intuitive Estonian grammar to English speakers (for example, why \"eestisse\" means \"into Estonia\"). The tool takes English or Estonian text, translates it, and explains word by word how the Estonian is constructed."
+                , "The central feature was almost shockingly easy to build, partially because LLMs tend to do well with language tasks."
+                , "Built with Lamdera, a fascinating and beautiful platform that extends the rock-solid type-safety of Elm into the backend. This innovation very fast and pleasant, but made \"normal integrations\" (Google Sign in and Stripe integration) more difficult."
+                ]
+                [ newTabLink [] "https://eestisse.ee" "eestisse.ee"
+                , newTabLink [] "https://github.com/eestisse/eestisse" "github"
+                ]
+            , portfolioEntryEl dProfile
+                (Element.image
+                    [ Element.height <| Element.px 50 ]
+                    { src = "coinfight-title.png"
+                    , description = "coinfight"
+                    }
+                )
+                "2022 / 2023"
+                [ "An RTS game where users fight over crypto in-game. Players must invest real crypto into their armies, which if killed is dropped onto the battlefield for anyone else to pick up, capture, and withdraw. This is a zero-sum game where the goal is to get more out than you put in. \"Like Poker, but the chips shoot at each other!\""
+                , "The goal of Coinfight was to give players the tangible experience of fighting in a virtual match over real money in real time. This was achieved without invoking the usual cumbersome blockchain constraints by treating the blockchain more as a clearing house than as a place for game state, contrary to the usual approach for web3 gaming."
+                ]
+                [ newTabLink [] "https://www.youtube.com/watch?v=7tw10KUO1_U" "demo video"
+                , newTabLink [] "https://medium.com/p/472636deec57" "dev blog post"
+                , newTabLink [] "https://coinfight.io/" "coinfight.io"
+                , newTabLink [] "https://github.com/coinop-logan/coinfight" "github"
+                ]
+            , portfolioEntryEl dProfile
+                (Element.image
+                    [ Element.height <| Element.px 50 ]
+                    { src = "smokesignal-title.svg"
+                    , description = "smokesignal"
+                    }
+                )
+                "2020 / 2021"
+                [ "Bla bla bla a bunch of silly text Bla bla bla a bunch of silly text Bla bla bla a bunch of silly text Bla bla bla a bunch of silly text Bla bla bla a bunch of silly text Bla bla bla a bunch of silly text Bla bla bla a bunch of silly text Bla bla bla a bunch of silly text Bla bla bla a bunch of silly text Bla bla bla a bunch of silly text Bla bla bla a bunch of silly text Bla bla bla a bunch of silly text "
+                ]
+                []
+            , portfolioEntryEl dProfile
+                daihardLogoEl
+                "2019 / 2020"
+                [ "Bla bla bla a bunch of silly text Bla bla bla a bunch of silly text Bla bla bla a bunch of silly text Bla bla bla a bunch of silly text Bla bla bla a bunch of silly text Bla bla bla a bunch of silly text Bla bla bla a bunch of silly text Bla bla bla a bunch of silly text Bla bla bla a bunch of silly text Bla bla bla a bunch of silly text Bla bla bla a bunch of silly text Bla bla bla a bunch of silly text "
+                ]
+                []
+            ]
+        ]
+
+
+daihardLogoEl : Element Msg
+daihardLogoEl =
+    Element.row
+        [ Font.size 38
+        , Font.bold
+        ]
+        [ Element.el [ Font.color <| Element.rgb 1 1 1 ] <| Element.text "DAI"
+        , Element.el [ Font.color <| Element.rgb255 255 0 110 ] <| Element.text "Hard"
         ]
 
 
@@ -271,6 +329,11 @@ portfolioEntryEl dProfile titleEl dateString bodyStrings linkOutEls =
     Element.column
         [ Element.width Element.fill
         , Element.spacing 20
+        , Element.padding 15
+        , Border.width 1
+        , Border.rounded 8
+        , Border.color Theme.portfolioEntryBorderColor
+        , Background.color Theme.portfolioEntryBackgroundColor
         ]
         [ Element.row
             [ Element.width Element.fill ]

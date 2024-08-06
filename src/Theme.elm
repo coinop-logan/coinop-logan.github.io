@@ -26,3 +26,13 @@ portfolioTabBackgroundColor =
 currentWorkTabBackgroundColor : Element.Color
 currentWorkTabBackgroundColor =
     Element.rgb 0 0.1 0.5
+
+
+portfolioEntryBackgroundColor : Element.Color
+portfolioEntryBackgroundColor =
+    Element.rgb 0 0.2 0.5
+
+
+portfolioEntryBorderColor : Element.Color
+portfolioEntryBorderColor =
+    Element.rgb 0.5 0.5 0.5

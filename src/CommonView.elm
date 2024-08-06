@@ -52,7 +52,7 @@ fontMontserrat =
 
 linkAttributes : List (Attribute msg)
 linkAttributes =
-    [ Font.color <| Element.rgb 0.5 0.5 1
+    [ Font.color <| Element.rgb 0.6 0.6 1
     , Font.underline
     ]
 
