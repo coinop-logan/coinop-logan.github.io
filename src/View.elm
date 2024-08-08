@@ -212,7 +212,7 @@ bodyElement dProfile tabState animateTime =
                  <|
                     tabElement dProfile "About Me" CurrentWorkClicked
                 )
-                aboutMeEl
+                (aboutMeEl dProfile)
 
         elsToStack =
             case tabOnTop of
@@ -245,6 +245,7 @@ pastWorkEl dProfile =
         , Element.padding 45
         ]
         [ portfolioEntryEl dProfile
+            (Just "eestisse-bg.png")
             (Element.image
                 [ Element.height <| Element.px 50 ]
                 { src = "eestisse-title.png"
@@ -261,6 +262,7 @@ pastWorkEl dProfile =
             , newTabLink [] "https://github.com/eestisse/eestisse" "github"
             ]
         , portfolioEntryEl dProfile
+            (Just "coinfight-bg.png")
             (Element.image
                 [ Element.height <| Element.px 50 ]
                 { src = "coinfight-title.png"
@@ -271,7 +273,6 @@ pastWorkEl dProfile =
             "Solo Project"
             [ "An RTS game where users fight over crypto in-game. Players must invest real crypto into their armies, which if killed is dropped onto the battlefield for anyone else to pick up, capture, and withdraw. This is a zero-sum game where the goal is to get more out than you put in. \"Like Poker, but the chips shoot at each other!\""
             , "The goal of Coinfight was to give players the tangible experience of fighting in a virtual match over real money in real time. This necessitated building a unique architecture among web3 games, where the blockchain was only used to clear deposits and withdrawals, and most money movement was tracked in the game server."
-            , "All work (webpage, game server and client, launcher, web3 integration, UX design, visual design) done by me."
             ]
             [ newTabLink [] "https://www.youtube.com/watch?v=7tw10KUO1_U" "demo video"
             , newTabLink [] "https://medium.com/p/472636deec57" "dev blog post"
@@ -279,6 +280,7 @@ pastWorkEl dProfile =
             , newTabLink [] "https://github.com/coinop-logan/coinfight" "github"
             ]
         , portfolioEntryEl dProfile
+            (Just "smokesignal-bg.png")
             (Element.image
                 [ Element.height <| Element.px 50 ]
                 { src = "smokesignal-title.svg"
@@ -296,6 +298,7 @@ pastWorkEl dProfile =
             , newTabLink [] "https://github.com/team-toast/SmokeSignal" "github"
             ]
         , portfolioEntryEl dProfile
+            (Just "daihard-bg.png")
             daihardLogoEl
             "2019 / 2020"
             "Solo Developer"
@@ -309,6 +312,7 @@ pastWorkEl dProfile =
             , newTabLink [] "https://github.com/coinop-logan/ZimDai/blob/master/whitepaper.pdf" "ZimDai paper"
             ]
         , portfolioEntryEl dProfile
+            (Just "toastycoin-bg.png")
             (Element.el [ Font.size 38 ] <| Element.text "Toastycoin")
             "2017"
             "Solo Project"
@@ -323,8 +327,8 @@ pastWorkEl dProfile =
         ]
 
 
-aboutMeEl : Element Msg
-aboutMeEl =
+aboutMeEl : DisplayProfile -> Element Msg
+aboutMeEl dProfile =
     Element.column
         [ Element.width Element.fill
         , Element.spacing 35
@@ -342,13 +346,31 @@ aboutMeEl =
             , newTabLink [] "https://www.youtube.com/watch?v=rH7mjNDD448" "the recording of a workshop"
             , Element.text " I ran in 2021 on Bitcoin and crypto."
             ]
-        , currentWorkEl
+        , Element.column
+            [ Element.spacing 15
+            , Element.width Element.fill
+            ]
+            [ currentWorkTitleEl dProfile
+            , portfolioEntryEl dProfile
+                (Just "zaptrails-bg.png")
+                (Element.el [ Font.size 38 ] <| Element.text "Zap Trails")
+                ""
+                "research / experimental"
+                [ "Recently I discovered the Nostr network, a decentralized social media platform. In practice it's something like Twitter or Medium, depending on the client you use, but without any centralized moderation or control. One of the features of this network is \"zapping\" users for content, which is to send a Lightning Bitcoin payment as a sort of financial upvote."
+                , "I'm interested in treating the record of such zaps as a directed graph of socially signaled value. I believe that a set of fairly simple and elegant algorithms is a silver bullet for content curation on Nostr, and further, that a community that primarily uses the zap network to curate content would begin to show some extremely positive and interesting dynamics: valuable content = viral content = profitable content (for the creator)."
+                , "My first goal is to demonstrate the basic utility of one of these algorithms, via a tool or visualizations; then I hope to get some traction from the Nostr community."
+                ]
+                [ newTabLink [] "https://habla.news/a/naddr1qvzqqqr4gupzqyhjp3nd83hxklumz9elp6gmth2zrhr804hrcrktpmplygwtw4jjqqxnzde38q6rwwph8qcrvdpjwz7qav" "writeup on Nostr" ]
+            ]
         ]
 
 
-currentWorkEl : Element Msg
-currentWorkEl =
-    Element.text "currentWorkEl"
+currentWorkTitleEl : DisplayProfile -> Element Msg
+currentWorkTitleEl dProfile =
+    Element.el
+        [ Font.size 44
+        ]
+        (Element.text "Current Work")
 
 
 daihardLogoEl : Element Msg
@@ -362,8 +384,8 @@ daihardLogoEl =
         ]
 
 
-portfolioEntryEl : DisplayProfile -> Element Msg -> String -> String -> List String -> List (Element Msg) -> Element Msg
-portfolioEntryEl dProfile titleEl dateString roleString bodyStrings linkOutEls =
+portfolioEntryEl : DisplayProfile -> Maybe String -> Element Msg -> String -> String -> List String -> List (Element Msg) -> Element Msg
+portfolioEntryEl dProfile maybeBGImgSrc titleEl dateString roleString bodyStrings linkOutEls =
     Element.column
         [ Element.width Element.fill
         , Element.spacing 20
@@ -371,7 +393,12 @@ portfolioEntryEl dProfile titleEl dateString roleString bodyStrings linkOutEls =
         , Border.width 1
         , Border.rounded 8
         , Border.color Theme.portfolioEntryBorderColor
-        , Background.color Theme.portfolioEntryBackgroundColor
+        , case maybeBGImgSrc of
+            Just imgSrc ->
+                Background.image imgSrc
+
+            Nothing ->
+                Background.color Theme.portfolioEntryBackgroundColor
         ]
         [ Element.row
             [ Element.width Element.fill ]
