@@ -9,6 +9,8 @@ import Element.Background as Background
 import Element.Border as Border
 import Element.Font as Font
 import Element.Input as Input
+import Embed.Youtube
+import Embed.Youtube.Attributes
 import Responsive exposing (DisplayProfile)
 import TabGraphics
 import Theme
@@ -334,18 +336,13 @@ aboutMeEl dProfile =
         , Element.spacing 35
         , Element.padding 45
         ]
-        [ Element.el
-            [ Element.width <| Element.px 500
-            , Element.height <| Element.px 300
-            , Element.centerX
-            , Background.color <| Element.rgb 0.5 0 0
-            ]
-            (Element.text "YT vid intro")
-        , Element.paragraph [ Font.center ]
-            [ Element.text "You might also be interested "
-            , newTabLink [] "https://www.youtube.com/watch?v=rH7mjNDD448" "the recording of a workshop"
-            , Element.text " I ran in 2021 on Bitcoin and crypto."
-            ]
+        [ ytVidEl dProfile
+
+        -- , Element.paragraph [ Font.center ]
+        --     [ Element.text "You might also be interested "
+        --     , newTabLink [] "https://www.youtube.com/watch?v=rH7mjNDD448" "the recording of a workshop"
+        --     , Element.text " I ran in 2021 on Bitcoin and crypto."
+        --     ]
         , Element.column
             [ Element.spacing 15
             , Element.width Element.fill
@@ -362,6 +359,29 @@ aboutMeEl dProfile =
                 ]
                 [ newTabLink [] "https://habla.news/a/naddr1qvzqqqr4gupzqyhjp3nd83hxklumz9elp6gmth2zrhr804hrcrktpmplygwtw4jjqqxnzde38q6rwwph8qcrvdpjwz7qav" "writeup on Nostr" ]
             ]
+        ]
+
+
+ytVidEl : DisplayProfile -> Element Msg
+ytVidEl dProfile =
+    Element.column
+        [ Element.width Element.fill
+        , Element.spacing 15
+        ]
+        [ Element.paragraph [ Font.size 18 ]
+            [ Element.text "For vibe-checking purposes, here's a recording of a workshop I ran on crypto in 2021." ]
+        , Element.el
+            [ Element.centerX ]
+          <|
+            Element.html <|
+                Embed.Youtube.toHtml <|
+                    Embed.Youtube.attributes
+                        [ Embed.Youtube.Attributes.width 600
+                        , Embed.Youtube.Attributes.height 335
+
+                        -- , Embed.Youtube.Attributes.start
+                        ]
+                        (Embed.Youtube.fromString "rH7mjNDD448")
         ]
 
 
