@@ -19,3 +19,10 @@ getMidpoint a b =
     { x = (a.x + b.x) / 2
     , y = (a.y + b.y) / 2
     }
+
+
+scale : Float -> Point -> Point
+scale c p =
+    { x = p.x * c
+    , y = p.y * c
+    }

@@ -1,14 +1,11 @@
 module TabGraphics exposing (..)
 
-import CommonView
 import Element exposing (Attribute, Element)
-import Element.Background as Background
-import Html.Attributes
 import Point exposing (Point)
 import Svg exposing (Svg)
 import Svg.Attributes
+import SvgHelpers exposing (colorToSvgString, drawToPointString, moveToPointString)
 import Types exposing (..)
-import Utils
 
 
 type alias TabSpec =
@@ -182,55 +179,8 @@ drawThroughElbowString clockwise toPoint r =
     , String.fromFloat r
     , String.fromInt 0 -- rotation
     , String.fromInt 0
-    , String.fromInt <| boolToInt clockwise
+    , String.fromInt <| SvgHelpers.boolToInt clockwise
     , String.fromFloat toPoint.x
     , String.fromFloat toPoint.y
     ]
         |> String.join " "
-
-
-pointToString : Point -> String
-pointToString p =
-    String.fromFloat p.x ++ "," ++ String.fromFloat p.y
-
-
-rgbToSvgString : RGB -> String
-rgbToSvgString rgb =
-    let
-        numbersString =
-            [ rgb.red
-            , rgb.green
-            , rgb.blue
-            ]
-                |> List.map
-                    (\f ->
-                        f * 255 |> floor
-                    )
-                |> List.map String.fromInt
-                |> String.join " "
-    in
-    "rgb(" ++ numbersString ++ ")"
-
-
-colorToSvgString : Element.Color -> String
-colorToSvgString =
-    Utils.elementColorToRgb >> rgbToSvgString
-
-
-boolToInt : Bool -> Int
-boolToInt flag =
-    if flag then
-        1
-
-    else
-        0
-
-
-moveToPointString : Point -> String
-moveToPointString point =
-    "M " ++ pointToString point
-
-
-drawToPointString : Point -> String
-drawToPointString point =
-    "L " ++ pointToString point

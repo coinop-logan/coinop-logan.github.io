@@ -1,5 +1,6 @@
 module State exposing (..)
 
+import Bricks.State as Bricks
 import Browser.Dom
 import Browser.Events
 import Config
@@ -30,6 +31,7 @@ initLoadedModel dProfile now =
         , time_bySecond = now
         , animateTime = now
         , tabState = OnTab CurrentWork
+        , bricksModel = Bricks.init
         }
     , Cmd.none
     )

@@ -1,5 +1,6 @@
 module Utils exposing (..)
 
+import CommonTypes exposing (..)
 import Element exposing (Element)
 import Types exposing (..)
 

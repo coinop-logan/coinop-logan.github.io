@@ -1,5 +1,6 @@
 module View exposing (..)
 
+import Bricks.Draw
 import Browser
 import CommonView exposing (..)
 import Config
@@ -77,7 +78,9 @@ view model =
             , Element.padding 30
             ]
             [ headerElement dProfile
-            , bodyElement dProfile model.tabState model.animateTime
+
+            -- , bodyElement dProfile model.tabState model.animateTime
+            , Element.el [ Element.centerX ] <| Bricks.Draw.view model.bricksModel
             ]
 
 

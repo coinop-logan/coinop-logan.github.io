@@ -1,6 +1,8 @@
 module Types exposing (..)
 
+import Bricks.Types as Bricks
 import Browser.Dom
+import CommonTypes exposing (..)
 import Responsive exposing (DisplayProfile)
 import Time
 
@@ -25,6 +27,7 @@ type alias LoadedModel =
     , time_bySecond : Time.Posix
     , animateTime : Time.Posix
     , tabState : TabState
+    , bricksModel : Bricks.Model
     }
 
 
@@ -46,10 +49,3 @@ type Tab
 type TabState
     = OnTab Tab
     | SwitchingTo Tab Time.Posix
-
-
-type alias RGB =
-    { red : Float
-    , green : Float
-    , blue : Float
-    }
