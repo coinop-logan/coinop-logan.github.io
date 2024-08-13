@@ -1,4 +1,4 @@
-module Bricks.Config exposing (..)
+module BrickWall.Config exposing (..)
 
 import Element exposing (Color, Element)
 

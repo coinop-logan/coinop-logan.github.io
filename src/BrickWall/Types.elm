@@ -1,4 +1,4 @@
-module Bricks.Brick exposing (..)
+module BrickWall.Types exposing (..)
 
 import Point exposing (Point)
 import Random
@@ -7,6 +7,11 @@ import Time
 
 type alias Brick =
     { homePoint : Point
-    , spawnTime : Time.Posix
+    , state : BrickState
     , seed : Random.Seed
     }
+
+
+type BrickState
+    = Placed
+    | Moving Time.Posix

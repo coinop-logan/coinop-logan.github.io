@@ -1,11 +1,11 @@
-module Bricks.Draw exposing (..)
+module BrickWall.Draw exposing (..)
 
-import Bricks.Brick exposing (Brick)
-import Bricks.Config as Config
-import Bricks.Convert as Convert
-import Bricks.Types exposing (..)
-import Bricks.Wall as BrickWall exposing (BrickWall)
+import BrickWall.BrickWall as BrickWall exposing (BrickWall)
+import BrickWall.Config as Config
+import BrickWall.State as State
+import BrickWall.Types exposing (..)
 import Element exposing (Element)
+import Maybe.Extra as Maybe
 import Point exposing (Point)
 import Svg exposing (Svg)
 import Svg.Attributes
@@ -13,7 +13,7 @@ import SvgHelpers exposing (colorToSvgString, drawToPointString, moveToPointStri
 import Time
 
 
-view : Time.Posix -> Model -> Element msg
+view : Time.Posix -> BrickWall -> Element msg
 view now model =
     Element.el [ Element.explain Debug.todo ] <|
         Element.html <|
@@ -28,13 +28,14 @@ view now model =
                 ]
 
 
-draw : Time.Posix -> Model -> Svg msg
+draw : Time.Posix -> BrickWall -> Svg msg
 draw now model =
     let
         drawnBricks =
             model.bricks
                 |> BrickWall.toList
-                |> List.map (drawBrick now)
+                |> List.map (Maybe.map (drawBrick now))
+                |> Maybe.values
     in
     Svg.g [] drawnBricks
 
@@ -43,7 +44,7 @@ drawBrick : Time.Posix -> Brick -> Svg msg
 drawBrick now brick =
     let
         ( position, rotation ) =
-            Convert.getBrickPosAndRot now brick
+            State.getBrickPosAndRot now brick
 
         transformString =
             String.join " "

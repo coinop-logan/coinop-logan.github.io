@@ -1,6 +1,6 @@
 module View exposing (..)
 
-import Bricks.Draw
+import BrickWall.Draw
 import Browser
 import CommonView exposing (..)
 import Config
@@ -80,7 +80,7 @@ view model =
             [ headerElement dProfile
 
             -- , bodyElement dProfile model.tabState model.animateTime
-            , Element.el [ Element.centerX ] <| Bricks.Draw.view model.animateTime model.bricksModel
+            , Element.el [ Element.centerX ] <| BrickWall.Draw.view model.animateTime model.brickWall
             ]
 
 

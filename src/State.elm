@@ -1,6 +1,7 @@
 module State exposing (..)
 
-import Bricks.State as Bricks
+import BrickWall.BrickWall as BrickWall exposing (Bricks)
+import BrickWall.State as BrickWall
 import Browser.Dom
 import Browser.Events
 import Config
@@ -32,7 +33,7 @@ initLoadedModel dProfile now =
         , time_bySecond = now
         , animateTime = now
         , tabState = OnTab CurrentWork
-        , bricksModel = Bricks.init (Time.posixToMillis now) 10
+        , brickWall = BrickWall.init now 10
         }
     , Cmd.none
     )
@@ -150,16 +151,18 @@ updateLoadedModel msg model =
                     )
 
         TestBrickShit now ->
+            let
+                updatedBrickWall =
+                    model.brickWall
+                        |> BrickWall.updateBrickStates now
+
+                newBrickPosCandidateList =
+                    BrickWall.getNewBrickCandidatePositions updatedBrickWall.bricks
+            in
             ( { model
-                | bricksModel =
-                    let
-                        oldBricksModel =
-                            model.bricksModel
-                    in
-                    { oldBricksModel
-                        | bricks =
-                            oldBricksModel.bricks
-                                |> Bricks.addNewBrick oldBricksModel.seedSeed now
+                | brickWall =
+                    { bricks = Debug.todo ""
+                    , masterSeed = Debug.todo ""
                     }
               }
             , Cmd.none

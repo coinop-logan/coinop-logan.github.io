@@ -1,6 +1,6 @@
 module Types exposing (..)
 
-import Bricks.Types as Bricks
+import BrickWall.BrickWall as BrickWall exposing (BrickWall)
 import Browser.Dom
 import CommonTypes exposing (..)
 import Responsive exposing (DisplayProfile)
@@ -27,7 +27,7 @@ type alias LoadedModel =
     , time_bySecond : Time.Posix
     , animateTime : Time.Posix
     , tabState : TabState
-    , bricksModel : Bricks.Model
+    , brickWall : BrickWall
     }
 
 
