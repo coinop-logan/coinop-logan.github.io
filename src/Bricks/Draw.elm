@@ -1,10 +1,10 @@
 module Bricks.Draw exposing (..)
 
-import Array exposing (Array)
-import Array2D exposing (Array2D)
+import Bricks.Brick exposing (Brick)
 import Bricks.Config as Config
 import Bricks.Convert as Convert
 import Bricks.Types exposing (..)
+import Bricks.Wall as BrickWall exposing (BrickWall)
 import Element exposing (Element)
 import Point exposing (Point)
 import Svg exposing (Svg)
@@ -33,9 +33,8 @@ draw now model =
     let
         drawnBricks =
             model.bricks
-                |> Array2D.map (drawBrick now)
-                |> Array2D.toFlatArrayRowMajor
-                |> Array.toList
+                |> BrickWall.toList
+                |> List.map (drawBrick now)
     in
     Svg.g [] drawnBricks
 

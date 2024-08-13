@@ -23,11 +23,8 @@ brickStrokeColor =
     Element.rgb 0.8 0.8 0.8
 
 
-numBricksAcross =
-    20
-
-
-numBricksDown =
+wallWidth : Int
+wallWidth =
     20
 
 

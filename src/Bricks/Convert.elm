@@ -1,5 +1,6 @@
 module Bricks.Convert exposing (..)
 
+import Bricks.Brick exposing (Brick)
 import Bricks.Config as Config
 import Bricks.Types exposing (..)
 import Point exposing (Point)
