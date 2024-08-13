@@ -32,7 +32,7 @@ initLoadedModel dProfile now =
         , time_bySecond = now
         , animateTime = now
         , tabState = OnTab CurrentWork
-        , bricksModel = Bricks.init (Time.posixToMillis now)
+        , bricksModel = Bricks.init (Time.posixToMillis now) 10
         }
     , Cmd.none
     )
@@ -149,6 +149,22 @@ updateLoadedModel msg model =
                     , Cmd.none
                     )
 
+        TestBrickShit now ->
+            ( { model
+                | bricksModel =
+                    let
+                        oldBricksModel =
+                            model.bricksModel
+                    in
+                    { oldBricksModel
+                        | bricks =
+                            oldBricksModel.bricks
+                                |> Bricks.addNewBrick oldBricksModel.seedSeed now
+                    }
+              }
+            , Cmd.none
+            )
+
 
 endAnimationIfNecessary : LoadedModel -> LoadedModel
 endAnimationIfNecessary model =
@@ -192,4 +208,5 @@ subscriptions _ =
         [ Time.every 1000 UpdateNow
         , Browser.Events.onAnimationFrame Animate
         , Browser.Events.onResize Resize
+        , Time.every 30 TestBrickShit
         ]

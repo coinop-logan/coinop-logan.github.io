@@ -39,6 +39,7 @@ type Msg
     | Animate Time.Posix
     | CurrentWorkClicked
     | PortfolioClicked
+    | TestBrickShit Time.Posix
 
 
 type Tab

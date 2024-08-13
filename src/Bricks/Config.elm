@@ -30,7 +30,7 @@ wallWidth =
 
 brickAnimationIntervalMillis : Float
 brickAnimationIntervalMillis =
-    6000
+    900
 
 
 brickTravelAngleAbsMax : Float
@@ -45,9 +45,9 @@ brickTravelXAbsMax =
 
 brickTravelYMin : Float
 brickTravelYMin =
-    300
+    600
 
 
 brickTravelYMax : Float
 brickTravelYMax =
-    700
+    1200

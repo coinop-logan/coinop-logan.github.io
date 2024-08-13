@@ -9,23 +9,30 @@ import Random
 import Time
 
 
-init : Int -> Model
-init seedSeed =
-    { bricks = BrickWall.initialize Config.wallWidth 1 (initBrick seedSeed)
+init : Int -> Int -> Model
+init seedSeed numRows =
+    { bricks = BrickWall.initialize Config.wallWidth numRows (initBrick seedSeed (Time.millisToPosix 0))
     , seedSeed = seedSeed
     }
 
 
-initBrick : Int -> ( Int, Int ) -> Brick
-initBrick seedSeed ( i, j ) =
-    let
-        testingSpawnTime =
-            seedSeed + (j * 2000)
-    in
+initBrick : Int -> Time.Posix -> ( Int, Int ) -> Brick
+initBrick seedSeed spawnTime ( i, j ) =
     { homePoint = Convert.gridPosToRealPos i j
-    , spawnTime = Time.millisToPosix testingSpawnTime
+    , spawnTime = spawnTime
     , seed =
         (seedSeed + i + (j * Config.wallWidth))
             -- unique input to each brick based on its grid position, which is immutable and unique
             |> Random.initialSeed
     }
+
+
+addNewBrick : Int -> Time.Posix -> BrickWall -> BrickWall
+addNewBrick seedSeed spawnTime wall =
+    wall
+        |> BrickWall.appendBrick
+            (initBrick
+                seedSeed
+                spawnTime
+                (BrickWall.getNextGridPos wall)
+            )

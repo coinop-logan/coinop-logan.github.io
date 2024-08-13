@@ -17,8 +17,8 @@ initialize i j initFunc =
 
 
 toList : BrickWall -> List Brick
-toList (BrickWall brickWall) =
-    brickWall
+toList (BrickWall bricks) =
+    bricks
 
 
 listPosToGridPos : Int -> ( Int, Int )
@@ -31,3 +31,17 @@ listPosToGridPos h =
 gridPosToListPos : ( Int, Int ) -> Int
 gridPosToListPos ( i, j ) =
     j * Config.wallWidth + i
+
+
+getNextGridPos : BrickWall -> ( Int, Int )
+getNextGridPos (BrickWall bricks) =
+    List.length bricks
+        |> listPosToGridPos
+
+
+appendBrick : Brick -> BrickWall -> BrickWall
+appendBrick brick (BrickWall bricks) =
+    BrickWall <|
+        List.append
+            bricks
+            [ brick ]
