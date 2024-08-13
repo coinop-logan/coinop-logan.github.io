@@ -26,3 +26,15 @@ scale c p =
     { x = p.x * c
     , y = p.y * c
     }
+
+
+interpolate : Float -> Point -> Point -> Point
+interpolate f a b =
+    { x = interpolateFloat f a.x b.x
+    , y = interpolateFloat f a.y b.y
+    }
+
+
+interpolateFloat : Float -> Float -> Float -> Float
+interpolateFloat f a b =
+    (b - a) * f + a

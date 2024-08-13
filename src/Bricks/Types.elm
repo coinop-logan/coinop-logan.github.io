@@ -2,27 +2,18 @@ module Bricks.Types exposing (..)
 
 import Array2D exposing (Array2D)
 import Point exposing (Point)
+import Random
 import Time
 
 
 type alias Model =
-    { bricks : Array2D Brick }
+    { bricks : Array2D Brick
+    , seedSeed : Int -- just one ingredient of each brick's seed, thus a seed of a seed
+    }
 
 
 type alias Brick =
     { homePoint : Point
-    , state : BrickState
-    }
-
-
-type BrickState
-    = Placed
-    | Moving MovingBrickState
-
-
-type alias MovingBrickState =
-    { moveStartTime : Time.Posix
-    , startPoint : Point
-    , startAngle : Float
-    , intermediatePoint : Point
+    , spawnTime : Time.Posix
+    , seed : Random.Seed
     }

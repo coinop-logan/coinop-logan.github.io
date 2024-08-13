@@ -21,3 +21,36 @@ brickFillColor =
 
 brickStrokeColor =
     Element.rgb 0.8 0.8 0.8
+
+
+numBricksAcross =
+    20
+
+
+numBricksDown =
+    20
+
+
+brickAnimationIntervalMillis : Float
+brickAnimationIntervalMillis =
+    6000
+
+
+brickTravelAngleAbsMax : Float
+brickTravelAngleAbsMax =
+    20
+
+
+brickTravelXAbsMax : Float
+brickTravelXAbsMax =
+    200
+
+
+brickTravelYMin : Float
+brickTravelYMin =
+    300
+
+
+brickTravelYMax : Float
+brickTravelYMax =
+    700

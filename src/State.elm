@@ -5,6 +5,7 @@ import Browser.Dom
 import Browser.Events
 import Config
 import Convert exposing (..)
+import Random
 import Responsive exposing (DisplayProfile)
 import Task
 import Time
@@ -31,7 +32,7 @@ initLoadedModel dProfile now =
         , time_bySecond = now
         , animateTime = now
         , tabState = OnTab CurrentWork
-        , bricksModel = Bricks.init
+        , bricksModel = Bricks.init (Time.posixToMillis now)
         }
     , Cmd.none
     )

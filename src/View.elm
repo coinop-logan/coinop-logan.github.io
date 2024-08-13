@@ -80,7 +80,7 @@ view model =
             [ headerElement dProfile
 
             -- , bodyElement dProfile model.tabState model.animateTime
-            , Element.el [ Element.centerX ] <| Bricks.Draw.view model.bricksModel
+            , Element.el [ Element.centerX ] <| Bricks.Draw.view model.animateTime model.bricksModel
             ]
 
 
