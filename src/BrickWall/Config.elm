@@ -4,11 +4,11 @@ import Element exposing (Color, Element)
 
 
 brickWidth =
-    50
+    100
 
 
 brickHeight =
-    20
+    40
 
 
 padding =
@@ -25,12 +25,12 @@ brickStrokeColor =
 
 wallWidth : Int
 wallWidth =
-    15
+    20
 
 
 brickAnimationIntervalMillis : Float
 brickAnimationIntervalMillis =
-    900
+    500
 
 
 brickTravelAngleAbsMax : Float

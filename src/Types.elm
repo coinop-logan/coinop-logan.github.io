@@ -1,7 +1,7 @@
 module Types exposing (..)
 
 import BrickWall.BrickWall as BrickWall exposing (BrickWall)
-import Browser.Dom
+import Browser.Dom exposing (Viewport)
 import CommonTypes exposing (..)
 import Responsive exposing (DisplayProfile)
 import Time
@@ -17,13 +17,13 @@ type Model
 
 
 type alias LoadingModel =
-    { dProfile : Maybe DisplayProfile
+    { viewport : Maybe Viewport
     , time_bySecond : Maybe Time.Posix
     }
 
 
 type alias LoadedModel =
-    { dProfile : DisplayProfile
+    { viewport : Viewport
     , time_bySecond : Time.Posix
     , animateTime : Time.Posix
     , tabState : TabState
@@ -33,8 +33,8 @@ type alias LoadedModel =
 
 type Msg
     = NoOp
-    | GotViewport Browser.Dom.Viewport
-    | Resize Int Int
+    | GotViewport Viewport
+    | TriggerGetViewport
     | UpdateNow Time.Posix
     | Animate Time.Posix
     | CurrentWorkClicked

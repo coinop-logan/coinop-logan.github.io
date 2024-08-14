@@ -9,12 +9,13 @@ gridPosToRealPos : Int -> Int -> Point
 gridPosToRealPos i j =
     { x =
         (toFloat <| i * (Config.brickWidth + Config.padding))
-            + (if modBy 2 j == 1 then
+            - (if modBy 2 j == 0 then
                 Config.brickWidth / 2
 
                else
                 0
               )
+            + (Config.padding / 2)
     , y = toFloat <| j * (Config.brickHeight + Config.padding)
     }
 

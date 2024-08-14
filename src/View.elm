@@ -62,7 +62,7 @@ view : LoadedModel -> Element Msg
 view model =
     let
         dProfile =
-            model.dProfile
+            Responsive.viewportToDisplayProfile model.viewport
     in
     Element.el
         [ Element.width Element.fill
@@ -76,11 +76,11 @@ view model =
             , Element.height Element.fill
             , Element.spacing 60
             , Element.padding 30
+            , Element.behindContent <|
+                BrickWall.Draw.view model.animateTime model.viewport.scene.width model.viewport.scene.height model.brickWall
             ]
             [ headerElement dProfile
-
-            -- , bodyElement dProfile model.tabState model.animateTime
-            , Element.el [ Element.centerX ] <| BrickWall.Draw.view model.animateTime model.brickWall
+            , bodyElement dProfile model.tabState model.animateTime
             ]
 
 

@@ -1,7 +1,7 @@
 module State exposing (..)
 
 import BrickWall.BrickWall as BrickWall exposing (BrickWall)
-import Browser.Dom
+import Browser.Dom exposing (Viewport)
 import Browser.Events
 import Config
 import Convert exposing (..)
@@ -15,7 +15,7 @@ import Types exposing (..)
 init : Flags -> ( Model, Cmd Msg )
 init _ =
     ( Loading
-        { dProfile = Nothing
+        { viewport = Nothing
         , time_bySecond = Nothing
         }
     , Cmd.batch
@@ -25,16 +25,16 @@ init _ =
     )
 
 
-initLoadedModel : DisplayProfile -> Time.Posix -> ( Model, Cmd Msg )
-initLoadedModel dProfile now =
+initLoadedModel : Viewport -> Time.Posix -> ( Model, Cmd Msg )
+initLoadedModel viewport now =
     ( Loaded
-        { dProfile = dProfile
+        { viewport = viewport
         , time_bySecond = now
         , animateTime = now
         , tabState = OnTab CurrentWork
-        , brickWall = BrickWall.init now 10
+        , brickWall = BrickWall.init now 1
         }
-    , Cmd.none
+    , Browser.Dom.getViewport |> Task.perform GotViewport
     )
 
 
@@ -45,8 +45,7 @@ update msg model =
             (case msg of
                 GotViewport viewport ->
                     { loadingModel
-                        | dProfile =
-                            Just <| Responsive.screenWidthToDisplayProfile <| floor viewport.viewport.width
+                        | viewport = Just viewport
                     }
 
                 UpdateNow newNow ->
@@ -59,9 +58,9 @@ update msg model =
             )
                 |> (\loadingModelModified ->
                         -- test if loaded
-                        case ( loadingModelModified.dProfile, loadingModelModified.time_bySecond ) of
-                            ( Just dProfile, Just time_bySecond ) ->
-                                initLoadedModel dProfile time_bySecond
+                        case ( loadingModelModified.viewport, loadingModelModified.time_bySecond ) of
+                            ( Just viewport, Just time_bySecond ) ->
+                                initLoadedModel viewport time_bySecond
 
                             _ ->
                                 ( Loading loadingModelModified
@@ -82,18 +81,15 @@ updateLoadedModel msg model =
 
         GotViewport viewport ->
             ( { model
-                | dProfile =
-                    Responsive.screenWidthToDisplayProfile <| floor viewport.viewport.width
+                | viewport = viewport
               }
             , Cmd.none
             )
 
-        Resize width _ ->
-            ( { model
-                | dProfile =
-                    Responsive.screenWidthToDisplayProfile width
-              }
-            , Cmd.none
+        TriggerGetViewport ->
+            ( model
+            , Browser.Dom.getViewport
+                |> Task.perform GotViewport
             )
 
         UpdateNow newNow ->
@@ -201,6 +197,6 @@ subscriptions _ =
     Sub.batch
         [ Time.every 1000 UpdateNow
         , Browser.Events.onAnimationFrame Animate
-        , Browser.Events.onResize Resize
-        , Time.every 30 TestBrickShit
+        , Browser.Events.onResize (\_ _ -> TriggerGetViewport)
+        , Time.every 15 TestBrickShit
         ]

@@ -13,13 +13,13 @@ import SvgHelpers exposing (colorToSvgString, drawToPointString, moveToPointStri
 import Time
 
 
-view : Time.Posix -> BrickWall -> Element msg
-view now model =
-    Element.el [ Element.explain Debug.todo ] <|
+view : Time.Posix -> Float -> Float -> BrickWall -> Element msg
+view now width height model =
+    Element.el [] <|
         Element.html <|
             Svg.svg
-                [ Svg.Attributes.height <| String.fromFloat <| 800.0
-                , Svg.Attributes.width <| String.fromFloat <| 800.0
+                [ Svg.Attributes.width <| String.fromFloat width
+                , Svg.Attributes.height <| String.fromFloat height
                 ]
                 [ Svg.defs
                     []
