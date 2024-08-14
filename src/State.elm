@@ -1,7 +1,6 @@
 module State exposing (..)
 
-import BrickWall.BrickWall as BrickWall exposing (Bricks)
-import BrickWall.State as BrickWall
+import BrickWall.BrickWall as BrickWall exposing (BrickWall)
 import Browser.Dom
 import Browser.Events
 import Config
@@ -151,19 +150,11 @@ updateLoadedModel msg model =
                     )
 
         TestBrickShit now ->
-            let
-                updatedBrickWall =
-                    model.brickWall
-                        |> BrickWall.updateBrickStates now
-
-                newBrickPosCandidateList =
-                    BrickWall.getNewBrickCandidatePositions updatedBrickWall.bricks
-            in
             ( { model
                 | brickWall =
-                    { bricks = Debug.todo ""
-                    , masterSeed = Debug.todo ""
-                    }
+                    model.brickWall
+                        |> BrickWall.updateBrickStates now
+                        |> BrickWall.spawnNewBrick now
               }
             , Cmd.none
             )

@@ -1,9 +1,9 @@
 module BrickWall.Draw exposing (..)
 
+import BrickWall.Brick as Brick exposing (Brick)
 import BrickWall.BrickWall as BrickWall exposing (BrickWall)
+import BrickWall.BricksContainer as BricksContainer
 import BrickWall.Config as Config
-import BrickWall.State as State
-import BrickWall.Types exposing (..)
 import Element exposing (Element)
 import Maybe.Extra as Maybe
 import Point exposing (Point)
@@ -29,11 +29,11 @@ view now model =
 
 
 draw : Time.Posix -> BrickWall -> Svg msg
-draw now model =
+draw now brickWall =
     let
         drawnBricks =
-            model.bricks
-                |> BrickWall.toList
+            brickWall.bricks
+                |> BricksContainer.toList
                 |> List.map (Maybe.map (drawBrick now))
                 |> Maybe.values
     in
@@ -44,7 +44,7 @@ drawBrick : Time.Posix -> Brick -> Svg msg
 drawBrick now brick =
     let
         ( position, rotation ) =
-            State.getBrickPosAndRot now brick
+            Brick.getBrickPosAndRot now brick
 
         transformString =
             String.join " "

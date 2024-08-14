@@ -25,7 +25,7 @@ brickStrokeColor =
 
 wallWidth : Int
 wallWidth =
-    20
+    15
 
 
 brickAnimationIntervalMillis : Float

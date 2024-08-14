@@ -1,27 +1,23 @@
-module BrickWall.State exposing (..)
+module BrickWall.Brick exposing (..)
 
-import BrickWall.BrickWall as BrickWall exposing (BrickWall, Bricks)
 import BrickWall.Common exposing (..)
 import BrickWall.Config as Config
-import BrickWall.Types exposing (..)
 import Point exposing (Point)
 import Random
 import Time
 import Utils
 
 
-init : Time.Posix -> Int -> BrickWall
-init now numRows =
-    let
-        masterSeed0 =
-            Random.initialSeed (Time.posixToMillis now)
-
-        ( seedSeed, masterSeed1 ) =
-            Random.step (Random.int 0 Random.maxInt) masterSeed0
-    in
-    { bricks = BrickWall.initialize Config.wallWidth numRows (initBrick seedSeed Placed)
-    , masterSeed = masterSeed1
+type alias Brick =
+    { homePoint : Point
+    , state : BrickState
+    , seed : Random.Seed
     }
+
+
+type BrickState
+    = Placed
+    | Moving Time.Posix
 
 
 initBrick : Int -> BrickState -> ( Int, Int ) -> Brick
@@ -47,27 +43,6 @@ updateBrickState now brick =
 
             else
                 brick
-
-
-updateBrickStates : Time.Posix -> BrickWall -> BrickWall
-updateBrickStates now brickWall =
-    { brickWall
-        | bricks =
-            brickWall.bricks
-                |> BrickWall.updateBricks (updateBrickState now)
-    }
-
-
-
--- addNewBrick : Int -> Time.Posix -> BrickWall -> BrickWall
--- addNewBrick seedSeed spawnTime wall =
---     wall
---         |> BrickWall.appendBrick
---             (initBrick
---                 seedSeed
---                 spawnTime
---                 (BrickWall.getNextGridPos wall)
---             )
 
 
 deriveBrickOrigin : Point -> Random.Seed -> ( Point, Float )

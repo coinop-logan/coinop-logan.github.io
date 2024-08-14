@@ -2,6 +2,7 @@ module BrickWall.Common exposing (..)
 
 import BrickWall.Config as Config
 import Point exposing (Point)
+import Random
 
 
 gridPosToRealPos : Int -> Int -> Point
@@ -16,3 +17,8 @@ gridPosToRealPos i j =
               )
     , y = toFloat <| j * (Config.brickHeight + Config.padding)
     }
+
+
+seedSeedGenerator : Random.Generator Int
+seedSeedGenerator =
+    Random.int 0 Random.maxInt

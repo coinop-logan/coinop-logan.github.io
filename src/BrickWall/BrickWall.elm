@@ -1,143 +1,68 @@
 module BrickWall.BrickWall exposing (..)
 
--- import BrickWall.Types exposing (..)
-
+import BrickWall.Brick exposing (..)
+import BrickWall.BricksContainer as BricksContainer exposing (BricksContainer)
+import BrickWall.Common exposing (..)
 import BrickWall.Config as Config
-import BrickWall.Types exposing (..)
-import List.Extra as List
-import Maybe.Extra as Maybe
 import Random
+import Time
 
 
 type alias BrickWall =
-    { bricks : Bricks
+    { bricks : BricksContainer
     , masterSeed : Random.Seed
     }
 
 
-type Bricks
-    = Bricks (List (Maybe Brick))
-
-
-initialize : Int -> Int -> (( Int, Int ) -> Brick) -> Bricks
-initialize i j initFunc =
-    Bricks <|
-        List.initialize (i * j)
-            (listPosToGridPos >> initFunc >> Just)
-
-
-toList : Bricks -> List (Maybe Brick)
-toList (Bricks bricks) =
-    bricks
-
-
-listPosToGridPos : Int -> ( Int, Int )
-listPosToGridPos h =
-    ( h |> modBy Config.wallWidth
-    , h // Config.wallWidth
-    )
-
-
-gridPosToListPos : ( Int, Int ) -> Int
-gridPosToListPos ( i, j ) =
-    j * Config.wallWidth + i
-
-
-getNextGridPos : Bricks -> ( Int, Int )
-getNextGridPos (Bricks bricks) =
-    List.length bricks
-        |> listPosToGridPos
-
-
-getNewBrickCandidatePositions : Bricks -> List ( Int, Int )
-getNewBrickCandidatePositions (Bricks bricks) =
-    bricks
-        |> addEmptyRowIfNeeded
-        |> List.findIndices Maybe.isNothing
-        |> List.map listPosToGridPos
-        |> List.filter (parentsArePlaced bricks)
-
-
-addEmptyRowIfNeeded : List (Maybe Brick) -> List (Maybe Brick)
-addEmptyRowIfNeeded bricks =
+init : Time.Posix -> Int -> BrickWall
+init now numRows =
     let
-        numRowsTarget =
-            getLastRowWithJust bricks + 1
+        masterSeed0 =
+            Random.initialSeed (Time.posixToMillis now)
 
-        listLengthTarget =
-            Debug.log "t" <|
-                numRowsTarget
-                    * Config.wallWidth
+        ( seedSeed, masterSeed1 ) =
+            Random.step seedSeedGenerator masterSeed0
     in
-    if List.length bricks >= listLengthTarget then
-        bricks
-
-    else
-        List.append
-            bricks
-            (List.repeat (listLengthTarget - List.length bricks) Nothing)
+    { bricks = BricksContainer.initialize Config.wallWidth numRows (initBrick seedSeed Placed)
+    , masterSeed = masterSeed1
+    }
 
 
-getLastRowWithJust : List (Maybe Brick) -> Int
-getLastRowWithJust bricks =
-    bricks
-        -- traverse list in reverse order and find first Just
-        |> List.reverse
-        |> List.findIndex Maybe.isJust
-        -- turn "reverse index" into index
-        |> Maybe.map (\rh -> List.length bricks - rh)
-        -- turn list index into grid pos, take only row, and default to 0
-        |> Maybe.map listPosToGridPos
-        |> Maybe.map Tuple.second
-        |> Maybe.withDefault 0
-
-
-parentsArePlaced : List (Maybe Brick) -> ( Int, Int ) -> Bool
-parentsArePlaced bricks ( i, j ) =
-    if j == 0 then
-        True
-
-    else
-        -- are the "parents" placed?
-        let
-            ( a, b ) =
-                getParentsGridPos ( i, j )
-        in
-        brickIsPlacedAt bricks a && brickIsPlacedAt bricks b
-
-
-getParentsGridPos : ( Int, Int ) -> ( ( Int, Int ), ( Int, Int ) )
-getParentsGridPos ( i, j ) =
+spawnNewBrick : Time.Posix -> BrickWall -> BrickWall
+spawnNewBrick now brickWall =
     let
-        ( i1, i2 ) =
-            if modBy 2 j == 0 then
-                ( i - 1, i )
+        candidatePositions =
+            BricksContainer.getNewBrickCandidatePositions brickWall.bricks
 
-            else
-                ( i, i + 1 )
+        ( chosenPos, seed1 ) =
+            case candidatePositions of
+                [] ->
+                    ( ( 0, 0 ), brickWall.masterSeed )
+
+                x :: xs ->
+                    Random.step
+                        (Random.uniform x xs)
+                        brickWall.masterSeed
+
+        ( seedSeed, seed2 ) =
+            Random.step
+                seedSeedGenerator
+                seed1
+
+        brick =
+            initBrick seedSeed (Moving now) chosenPos
     in
-    ( ( i1, j - 1 )
-    , ( i2, j - 1 )
-    )
+    { bricks =
+        brickWall.bricks
+            |> BricksContainer.addNewBrickIfNotExists chosenPos brick
+    , masterSeed = seed2
+    }
 
 
-brickIsPlacedAt : List (Maybe Brick) -> ( Int, Int ) -> Bool
-brickIsPlacedAt bricks gridPos =
-    case getBrick bricks gridPos of
-        Nothing ->
-            False
-
-        Just brick ->
-            brick.state == Placed
-
-
-getBrick : List (Maybe Brick) -> ( Int, Int ) -> Maybe Brick
-getBrick bricks gridPos =
-    bricks
-        |> List.getAt (gridPosToListPos gridPos)
-        |> Maybe.join
-
-
-updateBricks : (Brick -> Brick) -> Bricks -> Bricks
-updateBricks func (Bricks bricks) =
-    Bricks (bricks |> List.map (Maybe.map func))
+updateBrickStates : Time.Posix -> BrickWall -> BrickWall
+updateBrickStates now brickWall =
+    { brickWall
+        | bricks =
+            brickWall.bricks
+                |> BricksContainer.updateBricks (updateBrickState now)
+    }
