@@ -70,7 +70,7 @@ getNewBrickCandidatePositions (Bricks bricks) =
         |> addEmptyRowIfNeeded
         |> List.findIndices Maybe.isNothing
         |> List.map listPosToGridPos
-        |> List.filter (parentsArePlaced bricks)
+        |> List.filter (parentsExist bricks)
 
 
 addEmptyRowIfNeeded : List (Maybe Brick) -> List (Maybe Brick)
@@ -108,6 +108,16 @@ getLastRowWithJust bricks =
         |> Maybe.withDefault 0
 
 
+parentsExist : List (Maybe Brick) -> ( Int, Int ) -> Bool
+parentsExist bricks ( i, j ) =
+    let
+        ( a, b ) =
+            getParentsGridPos ( i, j )
+    in
+    (j < 0 || i < 0 || i >= Config.wallWidth)
+        || (brickExistsAt bricks a && brickExistsAt bricks b)
+
+
 parentsArePlaced : List (Maybe Brick) -> ( Int, Int ) -> Bool
 parentsArePlaced bricks ( i, j ) =
     -- are the "parents" placed?
@@ -132,6 +142,11 @@ getParentsGridPos ( i, j ) =
     ( ( i1, j - 1 )
     , ( i2, j - 1 )
     )
+
+
+brickExistsAt : List (Maybe Brick) -> ( Int, Int ) -> Bool
+brickExistsAt bricks gridPos =
+    Maybe.isJust <| getBrick gridPos bricks
 
 
 brickIsPlacedAt : List (Maybe Brick) -> ( Int, Int ) -> Bool
