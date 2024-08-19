@@ -15,7 +15,7 @@ import Time
 
 view : Time.Posix -> Float -> Float -> BrickWall -> Element msg
 view now width height model =
-    Element.el [] <|
+    Element.el [ Element.clipX, Element.width Element.fill ] <|
         Element.html <|
             Svg.svg
                 [ Svg.Attributes.width <| String.fromFloat width
