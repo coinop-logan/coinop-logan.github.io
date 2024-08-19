@@ -152,10 +152,10 @@ updateLoadedModel msg model =
                     , Cmd.none
                     )
 
-        AddBrick now ->
+        AddBricks now ->
             ( { model
                 | brickWall =
-                    model.brickWall |> BrickWall.maybeSpawnNewBrickUnderTargetY now
+                    model.brickWall |> BrickWall.maybeSpawnNewBricksUnderTargetY 3 now
               }
             , getViewportCmd
             )
@@ -229,7 +229,7 @@ subscriptions _ =
         [ Time.every 1000 UpdateNow
         , Browser.Events.onAnimationFrame Animate
         , Browser.Events.onResize (\_ _ -> TriggerGetViewport)
-        , Time.every 15 AddBrick
+        , Time.every 15 AddBricks
         ]
 
 

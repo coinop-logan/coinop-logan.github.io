@@ -52,6 +52,21 @@ init now targetYPrefill =
     }
 
 
+maybeSpawnNewBricksUnderTargetY : Int -> Time.Posix -> BrickWall -> BrickWall
+maybeSpawnNewBricksUnderTargetY howMany now brickWall =
+    -- I thought for sure there would be a better way to do this, but I can't find one
+    -- I just need to apply a modification function to a type N times...
+    -- anyway, all I could figure out was to use List.mapAccuml and just use a dummy list with N length.
+    List.mapAccuml
+        (\brickWall_ _ ->
+            ( maybeSpawnNewBrickUnderTargetY now brickWall_, () )
+        )
+        brickWall
+        (List.repeat howMany ())
+        -- ignore list
+        |> Tuple.first
+
+
 maybeSpawnNewBrickUnderTargetY : Time.Posix -> BrickWall -> BrickWall
 maybeSpawnNewBrickUnderTargetY now brickWall =
     let

@@ -39,7 +39,7 @@ type Msg
     | Animate Time.Posix
     | CurrentWorkClicked
     | PortfolioClicked
-    | AddBrick Time.Posix
+    | AddBricks Time.Posix
     | NameElementSizingInfoGot (Result Browser.Dom.Error Browser.Dom.Element)
     | Test
 
