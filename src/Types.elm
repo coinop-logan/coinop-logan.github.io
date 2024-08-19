@@ -41,6 +41,7 @@ type Msg
     | PortfolioClicked
     | AddBrick Time.Posix
     | NameElementSizingInfoGot (Result Browser.Dom.Error Browser.Dom.Element)
+    | Test
 
 
 type Tab

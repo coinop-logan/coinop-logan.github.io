@@ -36,16 +36,22 @@ updateBrickState now brick =
                 brick
 
 
-brickGenerator : ( Int, Int ) -> Time.Posix -> Random.Generator Brick
-brickGenerator ( i, j ) now =
+brickGenerator : ( Int, Int ) -> Bool -> Time.Posix -> Random.Generator Brick
+brickGenerator gridPos alreadyPlaced now =
     let
         homePoint =
-            gridPosToRealPos i j
+            gridPosToRealPos gridPos
     in
-    Random.map2
-        (\originInfo fillColor -> Brick homePoint originInfo fillColor Config.brickDefaultStrokeColor)
-        (brickOriginGenerator homePoint |> Random.map (\originInfo -> Moving originInfo now))
-        brickFillColorGenerator
+    if alreadyPlaced then
+        Random.map
+            (\fillColor -> Brick homePoint Placed fillColor Config.brickDefaultStrokeColor)
+            brickFillColorGenerator
+
+    else
+        Random.map2
+            (\brickState fillColor -> Brick homePoint brickState fillColor Config.brickDefaultStrokeColor)
+            (brickOriginGenerator homePoint |> Random.map (\originInfo -> Moving originInfo now))
+            brickFillColorGenerator
 
 
 brickOriginGenerator : Point -> Random.Generator ( Point, Float )

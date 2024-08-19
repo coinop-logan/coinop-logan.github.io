@@ -5,8 +5,8 @@ import Point exposing (Point)
 import Random
 
 
-gridPosToRealPos : Int -> Int -> Point
-gridPosToRealPos i j =
+gridPosToRealPos : ( Int, Int ) -> Point
+gridPosToRealPos ( i, j ) =
     { x =
         (toFloat <| i * (Config.brickWidth + Config.padding))
             - (if modBy 2 j == 0 then
@@ -16,8 +16,30 @@ gridPosToRealPos i j =
                 0
               )
             + (Config.padding / 2)
-    , y = toFloat <| j * (Config.brickHeight + Config.padding) + Config.padding // 2
+    , y = (toFloat <| j * (Config.brickHeight + Config.padding)) + Config.padding / 2
     }
+
+
+realPosToGridPos : Point -> ( Int, Int )
+realPosToGridPos point =
+    let
+        j =
+            floor <| (point.y - (Config.padding / 2)) / (Config.brickHeight + Config.padding)
+
+        i =
+            floor <|
+                (point.x
+                    - (Config.padding / 2)
+                    + (if modBy 2 j == 0 then
+                        Config.brickWidth
+
+                       else
+                        0
+                      )
+                )
+                    / (Config.brickWidth + Config.padding)
+    in
+    ( i, j )
 
 
 seedSeedGenerator : Random.Generator Int

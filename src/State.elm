@@ -20,7 +20,7 @@ init _ =
         }
     , Cmd.batch
         [ Time.now |> Task.perform UpdateNow
-        , Browser.Dom.getViewport |> Task.perform GotViewport
+        , getViewportCmd
         ]
     )
 
@@ -32,9 +32,9 @@ initLoadedModel viewport now =
         , time_bySecond = now
         , animateTime = now
         , tabState = OnTab CurrentWork
-        , brickWall = BrickWall.init now 1
+        , brickWall = BrickWall.init now viewport.scene.height
         }
-    , Browser.Dom.getViewport |> Task.perform GotViewport
+    , getViewportCmd
     )
 
 
@@ -82,14 +82,21 @@ updateLoadedModel msg model =
         GotViewport viewport ->
             ( { model
                 | viewport = viewport
+                , brickWall =
+                    let
+                        oldBW =
+                            model.brickWall
+                    in
+                    { oldBW
+                        | targetY = viewport.viewport.y + viewport.viewport.height
+                    }
               }
             , Browser.Dom.getElement "name-element" |> Task.attempt NameElementSizingInfoGot
             )
 
         TriggerGetViewport ->
             ( model
-            , Browser.Dom.getViewport
-                |> Task.perform GotViewport
+            , getViewportCmd
             )
 
         UpdateNow newNow ->
@@ -148,11 +155,9 @@ updateLoadedModel msg model =
         AddBrick now ->
             ( { model
                 | brickWall =
-                    model.brickWall
-                        |> BrickWall.updateBrickStates now
-                        |> BrickWall.spawnNewBrick now
+                    model.brickWall |> BrickWall.addBrickIfTargetYNotMet now
               }
-            , Cmd.none
+            , getViewportCmd
             )
 
         NameElementSizingInfoGot result ->
@@ -173,6 +178,13 @@ updateLoadedModel msg model =
                       }
                     , Cmd.none
                     )
+
+        Test ->
+            let
+                _ =
+                    Debug.log "hi " "hi"
+            in
+            ( model, Cmd.none )
 
 
 endAnimationIfNecessary : LoadedModel -> LoadedModel
@@ -219,3 +231,8 @@ subscriptions _ =
         , Browser.Events.onResize (\_ _ -> TriggerGetViewport)
         , Time.every 15 AddBrick
         ]
+
+
+getViewportCmd : Cmd Msg
+getViewportCmd =
+    Browser.Dom.getViewport |> Task.perform GotViewport

@@ -4,6 +4,8 @@ import Element exposing (Attribute, Element)
 import Element.Font as Font
 import Html exposing (Html)
 import Html.Attributes
+import Html.Events
+import Json.Decode
 import List.Extra as List
 
 

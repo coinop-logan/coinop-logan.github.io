@@ -106,14 +106,28 @@ getLastRowWithJust : List (Maybe Brick) -> Int
 getLastRowWithJust bricks =
     bricks
         -- traverse list in reverse order and find first Just
-        |> List.reverse
-        |> List.findIndex Maybe.isJust
-        -- turn "reverse index" into index
-        |> Maybe.map (\rh -> List.length bricks - rh)
+        |> findLastBrickIndex
         -- turn list index into grid pos, take only row, and default to 0
         |> Maybe.map listPosToGridPos
         |> Maybe.map Tuple.second
         |> Maybe.withDefault 0
+
+
+getLastBrickGridPos : BricksContainer -> Maybe ( Int, Int )
+getLastBrickGridPos (Bricks bricks) =
+    bricks
+        |> findLastBrickIndex
+        |> Maybe.map listPosToGridPos
+
+
+findLastBrickIndex : List (Maybe Brick) -> Maybe Int
+findLastBrickIndex bricks =
+    bricks
+        -- traverse list in reverse order and find first Just
+        |> List.reverse
+        |> List.findIndex Maybe.isJust
+        -- turn "reverse index" into index
+        |> Maybe.map (\rh -> List.length bricks - rh)
 
 
 parentsExist : List (Maybe Brick) -> ( Int, Int ) -> Bool
