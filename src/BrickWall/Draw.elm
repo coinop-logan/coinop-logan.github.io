@@ -34,32 +34,49 @@ draw now brickWall =
         drawnBricks =
             brickWall.bricks
                 |> BricksContainer.toList
-                |> List.map (Maybe.map (drawBrick now))
+                |> List.map (Maybe.andThen (maybeDrawBrick now))
                 |> Maybe.values
     in
     Svg.g [] drawnBricks
 
 
-drawBrick : Time.Posix -> Brick -> Svg msg
-drawBrick now brick =
-    let
-        ( position, rotation ) =
-            Brick.getBrickPosAndRot now brick
+maybeDrawBrick : Time.Posix -> Brick -> Maybe (Svg msg)
+maybeDrawBrick now brick =
+    if pointIsInInvisibleZone brick.homePoint then
+        Nothing
 
-        transformString =
-            String.join " "
-                [ SvgHelpers.rotateString rotation
+    else
+        Just <|
+            let
+                ( position, rotation ) =
+                    Brick.getBrickPosAndRot now brick
+
+                transformString =
+                    String.join " "
+                        [ SvgHelpers.rotateString rotation
+                        ]
+            in
+            Svg.rect
+                [ Svg.Attributes.x <| String.fromFloat position.x
+                , Svg.Attributes.y <| String.fromFloat position.y
+                , Svg.Attributes.class "brickrect"
+                , Svg.Attributes.width <| String.fromInt Config.brickWidth
+                , Svg.Attributes.height <| String.fromInt Config.brickHeight
+                , Svg.Attributes.transform transformString
+                , Svg.Attributes.fill <| colorToSvgString brick.fillColor
+                , Svg.Attributes.stroke <| colorToSvgString Config.brickStrokeColor
+                , Svg.Attributes.strokeWidth "1"
                 ]
-    in
-    Svg.rect
-        [ Svg.Attributes.x <| String.fromFloat position.x
-        , Svg.Attributes.y <| String.fromFloat position.y
-        , Svg.Attributes.class "brickrect"
-        , Svg.Attributes.width <| String.fromInt Config.brickWidth
-        , Svg.Attributes.height <| String.fromInt Config.brickHeight
-        , Svg.Attributes.transform transformString
-        , Svg.Attributes.fill <| colorToSvgString brick.fillColor
-        , Svg.Attributes.stroke <| colorToSvgString Config.brickStrokeColor
-        , Svg.Attributes.strokeWidth "1"
-        ]
-        []
+                []
+
+
+pointIsInInvisibleZone : Point -> Bool
+pointIsInInvisibleZone point =
+    point.x
+        > Config.invisibleZone.left
+        && point.x
+        < Config.invisibleZone.right
+        && point.y
+        > Config.invisibleZone.top
+        && point.y
+        < Config.invisibleZone.bottom

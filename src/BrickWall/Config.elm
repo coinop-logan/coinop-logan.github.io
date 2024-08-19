@@ -3,6 +3,14 @@ module BrickWall.Config exposing (..)
 import Element exposing (Color, Element)
 
 
+invisibleZone =
+    { left = 500
+    , right = 1300
+    , top = 0
+    , bottom = 110
+    }
+
+
 brickWidth =
     100
 
