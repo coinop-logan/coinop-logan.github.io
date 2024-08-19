@@ -15,7 +15,7 @@ viewportToDisplayProfile =
 
 screenWidthToDisplayProfile : number -> DisplayProfile
 screenWidthToDisplayProfile width =
-    if width >= 1150 then
+    if width >= 1100 then
         Desktop
 
     else

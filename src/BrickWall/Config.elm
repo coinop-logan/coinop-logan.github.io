@@ -20,7 +20,7 @@ brickDefaultStrokeColor =
 
 
 brickBehindNameStrokeColor =
-    Element.rgb 0.2 0.2 0.2
+    Element.rgb 0.15 0.15 0.15
 
 
 wallWidth : Int

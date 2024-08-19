@@ -2,6 +2,7 @@ module View exposing (..)
 
 import BrickWall.Draw
 import Browser
+import Browser.Dom exposing (Viewport)
 import CommonView exposing (..)
 import Convert exposing (..)
 import Element exposing (Attribute, Element)
@@ -11,7 +12,7 @@ import Element.Font as Font
 import Element.Input as Input
 import Embed.Youtube
 import Embed.Youtube.Attributes
-import Responsive exposing (DisplayProfile)
+import Responsive exposing (..)
 import TabGraphics
 import Theme
 import Time
@@ -79,7 +80,7 @@ view model =
                 BrickWall.Draw.view model.animateTime model.viewport.scene.width model.viewport.scene.height model.brickWall
             ]
             [ headerElement dProfile
-            , bodyElement dProfile model.tabState model.animateTime
+            , bodyElement model.viewport model.tabState model.animateTime
             ]
 
 
@@ -91,26 +92,22 @@ headerElement dProfile =
         ]
         [ Element.el
             [ Element.centerX
-            , Font.size 80
+            , Font.size <| responsiveVal dProfile 40 80
             , Font.semiBold
             , fontMontserrat
             , addId "name-element"
             ]
           <|
             Element.text "Logan Brutsche"
-
-        -- , Element.el
-        --     [ Element.centerX
-        --     , Font.size 36
-        --     ]
-        --   <|
-        --     Element.text "Current Work and Some Past Projects"
         ]
 
 
-bodyElement : DisplayProfile -> TabState -> Time.Posix -> Element Msg
-bodyElement dProfile tabState animateTime =
+bodyElement : Viewport -> TabState -> Time.Posix -> Element Msg
+bodyElement viewport tabState animateTime =
     let
+        dProfile =
+            Responsive.viewportToDisplayProfile viewport
+
         tabOnTop =
             case tabState of
                 OnTab tab ->
@@ -128,13 +125,13 @@ bodyElement dProfile tabState animateTime =
                         targetTab
 
         canvasWidth =
-            1600
+            viewport.scene.width
 
         tabBodyWidth =
-            canvasWidth / 2
+            responsiveVal dProfile 300.0 800.0
 
         tabSeparation =
-            10
+            responsiveVal dProfile 7 10
 
         xOffsetAbs =
             case tabState of
@@ -166,21 +163,21 @@ bodyElement dProfile tabState animateTime =
         portfolioTabEls =
             let
                 tabTopWidth =
-                    240
+                    responsiveVal dProfile 140 240
             in
             TabGraphics.createTabElementComponentsToStack
                 { shapeBottomY = 2600
-                , bodyTopY = 100
+                , bodyTopY = responsiveVal dProfile 70 100
                 , tabTopY = 10
                 , fillColor = Theme.portfolioTabBackgroundColor
                 , strokeColor = Theme.tabBorderColor
                 , pathThickness = 6
-                , cornerRadius = 40
+                , cornerRadius = responsiveVal dProfile 20 40
                 , tabTopStartX = (canvasWidth / 2) - tabTopWidth - (tabSeparation / 2)
                 , tabTopEndX = canvasWidth / 2 - (tabSeparation / 2)
                 , bodyExtendsLeft = ((tabBodyWidth / 2) - tabTopWidth) + xOffsetAbs
                 , bodyExtendsRight = tabBodyWidth / 2 - xOffsetAbs
-                , canvasWidth = Element.px <| canvasWidth
+                , canvasWidth = Element.px <| floor <| canvasWidth
                 }
                 (Element.el
                     [ Element.centerX
@@ -194,21 +191,21 @@ bodyElement dProfile tabState animateTime =
         currentWorkTabEls =
             let
                 tabTopWidth =
-                    240
+                    responsiveVal dProfile 140 240
             in
             TabGraphics.createTabElementComponentsToStack
                 { shapeBottomY = 2600
-                , bodyTopY = 100
+                , bodyTopY = responsiveVal dProfile 70 100
                 , tabTopY = 10
                 , fillColor = Theme.currentWorkTabBackgroundColor
                 , strokeColor = Theme.tabBorderColor
                 , pathThickness = 6
-                , cornerRadius = 40
+                , cornerRadius = responsiveVal dProfile 20 40
                 , tabTopStartX = canvasWidth / 2 + (tabSeparation / 2)
                 , tabTopEndX = (canvasWidth / 2) + tabTopWidth + (tabSeparation / 2)
                 , bodyExtendsLeft = tabBodyWidth / 2 - xOffsetAbs
                 , bodyExtendsRight = ((tabBodyWidth / 2) - tabTopWidth) + xOffsetAbs
-                , canvasWidth = Element.px <| canvasWidth
+                , canvasWidth = Element.px <| floor <| canvasWidth
                 }
                 (Element.el
                     [ Element.centerX
@@ -247,7 +244,7 @@ pastWorkEl dProfile =
     Element.column
         [ Element.width Element.fill
         , Element.spacing 35
-        , Element.padding 45
+        , Element.padding <| responsiveVal dProfile 15 45
         ]
         [ portfolioEntryEl dProfile
             (Just "eestisse-bg.png")
@@ -337,7 +334,7 @@ aboutMeEl dProfile =
     Element.column
         [ Element.width Element.fill
         , Element.spacing 35
-        , Element.padding 45
+        , Element.padding <| responsiveVal dProfile 15 45
         ]
         [ ytVidEl dProfile
 
@@ -371,16 +368,19 @@ ytVidEl dProfile =
         [ Element.width Element.fill
         , Element.spacing 15
         ]
-        [ Element.paragraph [ Font.size 18 ]
-            [ Element.text "For vibe-checking purposes, here's a recording of a workshop I ran on crypto in 2021." ]
+        [ Element.paragraph
+            [ Font.size 18
+            , Font.center
+            ]
+            [ Element.text "A recording of a workshop I ran on crypto in 2021." ]
         , Element.el
             [ Element.centerX ]
           <|
             Element.html <|
                 Embed.Youtube.toHtml <|
                     Embed.Youtube.attributes
-                        [ Embed.Youtube.Attributes.width 600
-                        , Embed.Youtube.Attributes.height 335
+                        [ Embed.Youtube.Attributes.width <| responsiveVal dProfile 270 600
+                        , Embed.Youtube.Attributes.height <| responsiveVal dProfile 170 335
 
                         -- , Embed.Youtube.Attributes.start
                         ]
@@ -391,7 +391,7 @@ ytVidEl dProfile =
 currentWorkTitleEl : DisplayProfile -> Element Msg
 currentWorkTitleEl dProfile =
     Element.el
-        [ Font.size 44
+        [ Font.size <| responsiveVal dProfile 38 44
         ]
         (Element.text "Current Work")
 
@@ -412,7 +412,7 @@ portfolioEntryEl dProfile maybeBGImgSrc titleEl dateString roleString bodyString
     Element.column
         [ Element.width Element.fill
         , Element.spacing 20
-        , Element.padding 20
+        , Element.padding <| responsiveVal dProfile 10 20
         , Border.width 1
         , Border.rounded 8
         , Border.color Theme.portfolioEntryBorderColor
@@ -423,17 +423,32 @@ portfolioEntryEl dProfile maybeBGImgSrc titleEl dateString roleString bodyString
             Nothing ->
                 Background.color Theme.portfolioEntryBackgroundColor
         ]
-        [ Element.row
-            [ Element.width Element.fill ]
-            [ titleEl
-            , Element.column
-                [ Element.alignRight
-                , Element.centerY
-                ]
-                [ Element.el [ Font.size 28, Element.alignRight ] <| Element.text dateString
-                , Element.el [ Font.size 18, Element.alignRight ] <| Element.text roleString
-                ]
-            ]
+        [ case dProfile of
+            Desktop ->
+                Element.row
+                    [ Element.width Element.fill ]
+                    [ titleEl
+                    , Element.column
+                        [ Element.alignRight
+                        , Element.centerY
+                        ]
+                        [ Element.el [ Font.size 28, Element.alignRight ] <| Element.text dateString
+                        , Element.el [ Font.size 18, Element.alignRight ] <| Element.text roleString
+                        ]
+                    ]
+
+            Mobile ->
+                Element.column
+                    [ Element.width Element.fill
+                    , Element.spacing 5
+                    ]
+                    [ titleEl
+                    , Element.row
+                        [ Element.width Element.fill ]
+                        [ Element.el [ Font.size 24 ] <| Element.text dateString
+                        , Element.el [ Font.size 16, Element.alignRight ] <| Element.text roleString
+                        ]
+                    ]
         , Element.column
             [ Element.width Element.fill
             , Element.spacing 15
@@ -443,22 +458,31 @@ portfolioEntryEl dProfile maybeBGImgSrc titleEl dateString roleString bodyString
                 |> List.map
                     (\bodyString ->
                         Element.paragraph
-                            [ Element.paddingXY 30 0 ]
+                            [ Element.paddingXY (responsiveVal dProfile 5 30) 0 ]
                             [ Element.text bodyString ]
                     )
             )
-        , Element.row
-            [ Element.spacing 30
-            , Font.size 16
-            ]
-            linkOutEls
+        , case dProfile of
+            Desktop ->
+                Element.row
+                    [ Element.spacing 30
+                    , Font.size 16
+                    ]
+                    linkOutEls
+
+            Mobile ->
+                Element.column
+                    [ Element.spacing 4
+                    , Font.size 16
+                    ]
+                    linkOutEls
         ]
 
 
 tabElement : DisplayProfile -> String -> Msg -> Element Msg
 tabElement dProfile label onPress =
     Input.button
-        [ Font.size 36 ]
+        [ Font.size <| responsiveVal dProfile 20 36 ]
         { onPress = Just onPress
         , label = Element.text label
         }
