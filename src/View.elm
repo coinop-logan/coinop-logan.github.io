@@ -257,8 +257,7 @@ pastWorkEl dProfile =
             "2024"
             "Solo Project"
             [ "An LLM-powered tool that explains the counter-intuitive Estonian grammar to English speakers (for example, why \"eestisse\" means \"into Estonia\"). The tool takes English or Estonian text, translates it, and explains word by word how the Estonian is constructed."
-            , "The central feature was almost shockingly easy to build, partially because LLMs tend to do well with language tasks."
-            , "Built with Lamdera, a fascinating and beautiful platform that extends the rock-solid type-safety of Elm into the backend. This made innovation very fast and pleasant, but made more traditional intevrations (i.e. Google Sign In, Stripe integration) harder than they'd have otherwise been."
+            , "The central feature was surprisingly easy to build, due to LLM's strength in language tasks."
             ]
             [ newTabLink [] "https://eestisse.ee" "eestisse.ee"
             , newTabLink [] "https://github.com/eestisse/eestisse" "github"
@@ -273,8 +272,8 @@ pastWorkEl dProfile =
             )
             "2022 / 2023"
             "Solo Project"
-            [ "An RTS game where users fight over crypto in-game. Players must invest real crypto into their armies, which if killed is dropped onto the battlefield for anyone else to pick up, capture, and withdraw. This is a zero-sum game where the goal is to get more out than you put in. \"Like Poker, but the chips shoot at each other!\""
-            , "The goal of Coinfight was to give players the tangible experience of fighting in a virtual match over real money in real time. This necessitated building a unique architecture among web3 games, where the blockchain was only used to clear deposits and withdrawals, and most money movement was tracked in the game server."
+            [ "An RTS game where users fight over crypto in-game. Players must invest real crypto into their units (i.e. $1.50 for a Fighter, $0.50 for a worker); if these units are killed, this investment is dropped onto the battlefield for anyone else to pick up, capture, and withdraw. This is a zero-sum game where the goal is to get more out than you put in. \"Like Poker, but the chips shoot at each other!\""
+            , "The goal of Coinfight was to give players the experience of fighting over real money in real time. To avoid the cumbersome limits of blockchain processing, Coinfight only used the blockchain to process deposits and withdrawals, a rewarding architectural approach that is nevertheless rare among web3 games."
             ]
             [ newTabLink [] "https://www.youtube.com/watch?v=7tw10KUO1_U" "demo video"
             , newTabLink [] "https://medium.com/p/472636deec57" "dev blog post"
@@ -291,9 +290,9 @@ pastWorkEl dProfile =
             )
             "2020 / 2021"
             "Tech Lead"
-            [ "SmokeSignal was an uncensorable, global chat forum that implemented Reddit-like functionality (nested comments in topical forums) fully on the Ethereum blockchain and accessed via an Elm/Javascript frontend, hosted on IPFS. Users were able to tip each other ETH for posts, as well as burn crypto for theirs or other posts as a sort of decentralized, unfakeable alternative to upvotes."
-            , "As with DAIHard, a major goal of SmokeSignal was to be both radically free and unkillable. In other words, it was to boldly challenge some constraints of traditional systems (in this case, rejecting the idea that moderation and censorship are unavoidable and necessary) while surviving any backlash this might create (lawsuits, nation-state attacks, etc)."
-            , "Thus, the main technical challenge was in making something suitably decentralized so as not to not be attackable, while still integrating with traditional frameworks and services for the purposes of marketing and usability. As an example, all conversational data was stored in Ethereum contract event logs, but a traditional HTTP server was used to serve SEO information for such posts."
+            [ "SmokeSignal was an uncensorable, global chat forum. It implemented Reddit-like functionality (nested comments in topical forums) and allowed users to tip each other for posts."
+            , "As with DAIHard, a major goal of SmokeSignal was to be both radically free (no censorship or moderation) and unkillable (no central organization or nation-state could stop it)."
+            , "Thus, the main technical challenge was in making something suitably decentralized so as not to not be attackable, while still integrating with traditional frameworks and services for the purposes of marketing and usability. For example, while all core functionality was implemented on the Ethereum blockchain and an interface hosted on IPFS, a traditional web server was used to serve SEO information for the otherwise decentralized content."
             ]
             [ newTabLink [] "https://medium.com/daihard-buidlers/introducing-smokesignal-da8f19bc27af" "intro post"
             , newTabLink [] "https://www.youtube.com/watch?v=pV70Q0wgnnU" "demo video"
@@ -304,9 +303,9 @@ pastWorkEl dProfile =
             daihardLogoEl
             "2019 / 2020"
             "Solo Developer"
-            [ "DAIHard was a crypto/fiat exchange built entirely with Ethereum smart contracts, so that there was no central server anyone could take down. The application was designed to continue to function even in adversarial jurisdictions. note this app uses no backend server at all, even for encrypted chat between users."
+            [ "DAIHard was a crypto/fiat exchange built entirely with Ethereum smart contracts, so that there was no central server anyone could take down. The application was designed to continue to function even in adversarial jurisdictions. Note that this app used no backend server at all, even for encrypted chat between users."
             , "As part of this project, I spent two months in Zimbabwe researching the viability of crypto adoption in the face of a hyperinflated currency. A summary of my findings can be found in the below-linked ZimDai paper \"ZimDai: Blueprint for an Economic Jailbreak\"."
-            , "Note that visual design for this project was contracted out."
+            , "(The visual design for this project was contracted out.)"
             ]
             [ newTabLink [] "https://www.youtube.com/watch?v=WR4WovM0qwg" "demo video"
             , newTabLink [] "https://medium.com/@coinop.logan/daihard-game-theory-21a456ef224e" "game theory writeup"
@@ -320,7 +319,6 @@ pastWorkEl dProfile =
             "Solo Project"
             [ "Toastycoin was an experimental dapp that used \"burnable payment\" contracts on the Ethereum blockchain to allow users to contract work from strangers on the Internet, without any previous trust or association. The burnable payment contracts used game theory to facilitate this: while loss of funds was not guaranteed, what was guaranteed was that scammers attempting to game the system would be punished and would not make a profit."
             , "See the \"game theory writeup\" link under the DAIHard project above, to read more about this game theory, as DAIHard was simply a narrowed use-case of the burnable payments developed for Toastycoin."
-            , "All work (burnable payment smart contract, Javascript webpage interface) done by me."
             ]
             [ newTabLink [] "https://medium.com/@coinop.logan/preventing-scammer-profit-with-burnable-payments-ad2e9b632ef2" "Burnable Payments proposal"
             , newTabLink [] "https://medium.com/@coinop.logan/toasted-money-part-2-b5dfd0b1e946" "experiment conclusion"
@@ -353,9 +351,9 @@ aboutMeEl dProfile =
                 (Element.el [ Font.size 38 ] <| Element.text "Zap Trails")
                 ""
                 "research / experimental"
-                [ "Recently I discovered the Nostr network, a decentralized social media platform. In practice it's something like Twitter or Medium, depending on the client you use, but without any centralized moderation or control. One of the features of this network is \"zapping\" users for content, which is to send a Lightning Bitcoin payment as a sort of financial upvote."
-                , "I'm interested in treating the record of such zaps as a directed graph of socially signaled value. I believe that a set of fairly simple and elegant algorithms is a silver bullet for content curation on Nostr, and further, that a community that primarily uses the zap network to curate content would begin to show some extremely positive and interesting dynamics: valuable content = viral content = profitable content (for the creator)."
-                , "My first goal is to demonstrate the basic utility of one of these algorithms, via a tool or visualizations; then I hope to get some traction from the Nostr community."
+                [ "I recently discovered the Nostr network, a decentralized social media platform. In practice it's something like Twitter or Medium, depending on the client you use, but without any centralized moderation or control. One of the features of this network is \"zapping\" users for content, which is to send a Lightning Bitcoin payment as a sort of financial upvote."
+                , "I see the the record of such zaps as quite a data goldmine - a directed graph of socially signaled value. I'm experimenting with a family of fairly simple and elegant algorithms for content curation on Nostr, and hope to prove that they not only solves data curation problems, but promote extremely exciting and interesting dynamics. I discuss this further in the writeup below."
+                , "My first goal is to demonstrate the basic utility of one of these algorithms, via a tool or visualizations; then I hope to get some traction from the Nostr community, and possible grant funding to pursue further application and research in this area."
                 ]
                 [ newTabLink [] "https://habla.news/a/naddr1qvzqqqr4gupzqyhjp3nd83hxklumz9elp6gmth2zrhr804hrcrktpmplygwtw4jjqqxnzde38q6rwwph8qcrvdpjwz7qav" "writeup on Nostr" ]
             ]
