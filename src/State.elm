@@ -180,10 +180,10 @@ updateLoadedModel msg model =
                     )
 
         Test ->
-            let
-                _ =
-                    Debug.log "hi " "hi"
-            in
+            -- let
+            --     _ =
+            --         Debug.log "hi " "hi"
+            -- in
             ( model, Cmd.none )
 
 

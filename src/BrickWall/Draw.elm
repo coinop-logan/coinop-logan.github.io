@@ -72,8 +72,8 @@ drawBrick now brick =
                 ]
     in
     Svg.rect
-        [ Svg.Attributes.x <| String.fromFloat position.x
-        , Svg.Attributes.y <| String.fromFloat position.y
+        [ Svg.Attributes.x <| String.fromInt <| floor position.x
+        , Svg.Attributes.y <| String.fromInt <| floor position.y
         , Svg.Attributes.class "brickrect"
         , Svg.Attributes.width <| String.fromInt Config.brickWidth
         , Svg.Attributes.height <| String.fromInt Config.brickHeight
