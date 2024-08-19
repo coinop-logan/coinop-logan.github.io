@@ -97,9 +97,9 @@ brickFillColorGenerator : Random.Generator Element.Color
 brickFillColorGenerator =
     Random.map3
         Element.rgb
-        (Random.float 0.2 0.4)
+        (Random.float 0.1 0.2)
         (Random.float 0 0.1)
-        (Random.float 0 0.05)
+        (Random.float 0 0.08)
 
 
 
