@@ -64,3 +64,9 @@ newTabLink extraAttributes url labelText =
         { url = url
         , label = Element.text labelText
         }
+
+
+addId : String -> Attribute msg
+addId idStr =
+    Element.htmlAttribute <|
+        Html.Attributes.id idStr

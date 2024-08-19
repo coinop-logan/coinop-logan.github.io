@@ -94,6 +94,7 @@ headerElement dProfile =
             , Font.size 80
             , Font.semiBold
             , fontMontserrat
+            , addId "name-element"
             ]
           <|
             Element.text "Logan Brutsche"

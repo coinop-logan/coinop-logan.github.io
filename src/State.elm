@@ -83,7 +83,7 @@ updateLoadedModel msg model =
             ( { model
                 | viewport = viewport
               }
-            , Cmd.none
+            , Browser.Dom.getElement "name-element" |> Task.attempt NameElementSizingInfoGot
             )
 
         TriggerGetViewport ->
@@ -145,7 +145,7 @@ updateLoadedModel msg model =
                     , Cmd.none
                     )
 
-        TestBrickShit now ->
+        AddBrick now ->
             ( { model
                 | brickWall =
                     model.brickWall
@@ -154,6 +154,25 @@ updateLoadedModel msg model =
               }
             , Cmd.none
             )
+
+        NameElementSizingInfoGot result ->
+            case result of
+                Err _ ->
+                    ( model, Cmd.none )
+
+                Ok nameElementSizingInfo ->
+                    ( { model
+                        | brickWall =
+                            let
+                                oldBW =
+                                    model.brickWall
+                            in
+                            { oldBW
+                                | nameArea = Just nameElementSizingInfo.element
+                            }
+                      }
+                    , Cmd.none
+                    )
 
 
 endAnimationIfNecessary : LoadedModel -> LoadedModel
@@ -198,5 +217,5 @@ subscriptions _ =
         [ Time.every 1000 UpdateNow
         , Browser.Events.onAnimationFrame Animate
         , Browser.Events.onResize (\_ _ -> TriggerGetViewport)
-        , Time.every 15 TestBrickShit
+        , Time.every 15 AddBrick
         ]

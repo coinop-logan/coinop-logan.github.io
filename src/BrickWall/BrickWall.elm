@@ -10,8 +10,9 @@ import Time
 
 
 type alias BrickWall =
-    { bricks : BricksContainer
-    , masterSeed : Random.Seed
+    { masterSeed : Random.Seed
+    , bricks : BricksContainer
+    , nameArea : Maybe AreaDef
     }
 
 
@@ -37,8 +38,9 @@ init now numRows =
                 |> List.map BricksContainer.listPosToGridPos
                 |> List.mapAccuml (initBrick now) masterSeed0
     in
-    { bricks = BricksContainer.fromList bricksList
-    , masterSeed = masterSeed1
+    { masterSeed = masterSeed1
+    , bricks = BricksContainer.fromList bricksList
+    , nameArea = Nothing
     }
 
 
@@ -61,10 +63,11 @@ spawnNewBrick now brickWall =
         ( seed2, brick ) =
             initBrick now seed1 chosenPos
     in
-    { bricks =
-        brickWall.bricks
-            |> BricksContainer.addNewBrickIfNotExists chosenPos brick
-    , masterSeed = seed2
+    { brickWall
+        | bricks =
+            brickWall.bricks
+                |> BricksContainer.addNewBrickIfNotExists chosenPos brick
+        , masterSeed = seed2
     }
 
 

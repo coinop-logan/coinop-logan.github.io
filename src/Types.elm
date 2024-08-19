@@ -39,7 +39,8 @@ type Msg
     | Animate Time.Posix
     | CurrentWorkClicked
     | PortfolioClicked
-    | TestBrickShit Time.Posix
+    | AddBrick Time.Posix
+    | NameElementSizingInfoGot (Result Browser.Dom.Error Browser.Dom.Element)
 
 
 type Tab

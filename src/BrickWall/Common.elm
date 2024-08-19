@@ -23,3 +23,29 @@ gridPosToRealPos i j =
 seedSeedGenerator : Random.Generator Int
 seedSeedGenerator =
     Random.int 0 Random.maxInt
+
+
+type alias AreaDef =
+    { x : Float
+    , y : Float
+    , width : Float
+    , height : Float
+    }
+
+
+pointToCenterPoint : Point -> Point
+pointToCenterPoint p =
+    Point.add
+        p
+        { x = Config.brickWidth / 2
+        , y = Config.brickHeight / 2
+        }
+
+
+padArea : Float -> Float -> AreaDef -> AreaDef
+padArea x y a =
+    { x = a.x - x
+    , y = a.y - y
+    , width = a.width + (x * 2)
+    , height = a.height + (y * 2)
+    }

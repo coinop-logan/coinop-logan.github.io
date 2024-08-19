@@ -3,6 +3,7 @@ module BrickWall.Draw exposing (..)
 import BrickWall.Brick as Brick exposing (Brick)
 import BrickWall.BrickWall as BrickWall exposing (BrickWall)
 import BrickWall.BricksContainer as BricksContainer
+import BrickWall.Common exposing (..)
 import BrickWall.Config as Config
 import Element exposing (Element)
 import Maybe.Extra as Maybe
@@ -34,49 +35,60 @@ draw now brickWall =
         drawnBricks =
             brickWall.bricks
                 |> BricksContainer.toList
-                |> List.map (Maybe.andThen (maybeDrawBrick now))
+                |> List.map (Maybe.andThen (maybeDrawBrick now brickWall.nameArea))
                 |> Maybe.values
     in
     Svg.g [] drawnBricks
 
 
-maybeDrawBrick : Time.Posix -> Brick -> Maybe (Svg msg)
-maybeDrawBrick now brick =
-    if pointIsInInvisibleZone brick.homePoint then
-        Nothing
+maybeDrawBrick : Time.Posix -> Maybe AreaDef -> Brick -> Maybe (Svg msg)
+maybeDrawBrick now maybeNameArea brick =
+    case maybeNameArea of
+        Nothing ->
+            Just <| drawBrick now brick
 
-    else
-        Just <|
-            let
-                ( position, rotation ) =
-                    Brick.getBrickPosAndRot now brick
+        Just nameArea ->
+            if pointIsInArea (pointToCenterPoint brick.homePoint) (padArea 60 40 nameArea) then
+                Nothing
 
-                transformString =
-                    String.join " "
-                        [ SvgHelpers.rotateString rotation
-                        ]
-            in
-            Svg.rect
-                [ Svg.Attributes.x <| String.fromFloat position.x
-                , Svg.Attributes.y <| String.fromFloat position.y
-                , Svg.Attributes.class "brickrect"
-                , Svg.Attributes.width <| String.fromInt Config.brickWidth
-                , Svg.Attributes.height <| String.fromInt Config.brickHeight
-                , Svg.Attributes.transform transformString
-                , Svg.Attributes.fill <| colorToSvgString brick.fillColor
-                , Svg.Attributes.stroke <| colorToSvgString Config.brickStrokeColor
-                , Svg.Attributes.strokeWidth "1"
+            else
+                Just <| drawBrick now brick
+
+
+drawBrick : Time.Posix -> Brick -> Svg msg
+drawBrick now brick =
+    let
+        ( position, rotation ) =
+            Brick.getBrickPosAndRot now brick
+
+        transformString =
+            String.join " "
+                [ SvgHelpers.rotateString rotation
                 ]
-                []
+    in
+    Svg.rect
+        [ Svg.Attributes.x <| String.fromFloat position.x
+        , Svg.Attributes.y <| String.fromFloat position.y
+        , Svg.Attributes.class "brickrect"
+        , Svg.Attributes.width <| String.fromInt Config.brickWidth
+        , Svg.Attributes.height <| String.fromInt Config.brickHeight
+        , Svg.Attributes.transform transformString
+        , Svg.Attributes.fill <| colorToSvgString brick.fillColor
+        , Svg.Attributes.stroke <| colorToSvgString Config.brickStrokeColor
+        , Svg.Attributes.strokeWidth "1"
+        ]
+        []
 
 
-pointIsInInvisibleZone : Point -> Bool
-pointIsInInvisibleZone point =
+pointIsInArea : Point -> AreaDef -> Bool
+pointIsInArea point area =
     point.x
-        > Config.invisibleZone.left
+        > area.x
         && point.x
-        < Config.invisibleZone.right
+        < area.x
+        + area.width
         && point.y
-        > Config.invisibleZone.top
+        > area.y
         && point.y
-        < Config.invisibleZone.bottom
+        < area.y
+        + area.height
