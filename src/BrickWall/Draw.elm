@@ -53,7 +53,7 @@ maybeDrawBrick now maybeNameArea brick =
                     drawBrick now
                         { brick
                             | fillColor = Element.rgb 0.1 0 0
-                            , strokeColor = Element.rgb 0.3 0.3 0.3
+                            , strokeColor = Config.brickBehindNameStrokeColor
                         }
 
             else

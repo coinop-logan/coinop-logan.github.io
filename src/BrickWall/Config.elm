@@ -19,6 +19,10 @@ brickDefaultStrokeColor =
     Element.rgb 0.6 0.6 0.6
 
 
+brickBehindNameStrokeColor =
+    Element.rgb 0.2 0.2 0.2
+
+
 wallWidth : Int
 wallWidth =
     20
