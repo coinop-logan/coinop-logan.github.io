@@ -3,7 +3,6 @@ module View exposing (..)
 import BrickWall.Draw
 import Browser
 import CommonView exposing (..)
-import Config
 import Convert exposing (..)
 import Element exposing (Attribute, Element)
 import Element.Background as Background

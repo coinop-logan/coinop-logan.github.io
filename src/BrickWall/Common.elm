@@ -16,7 +16,7 @@ gridPosToRealPos i j =
                 0
               )
             + (Config.padding / 2)
-    , y = toFloat <| j * (Config.brickHeight + Config.padding)
+    , y = toFloat <| j * (Config.brickHeight + Config.padding) + Config.padding // 2
     }
 
 
