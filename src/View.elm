@@ -80,8 +80,21 @@ view model =
                 BrickWall.Draw.view model.animateTime model.viewport.scene.width model.viewport.scene.height model.brickWall
             ]
             [ headerElement dProfile
+            , workInProgressDisclaimerEl
             , bodyElement dProfile model.tabState model.animateTime
             ]
+
+
+workInProgressDisclaimerEl : Element Msg
+workInProgressDisclaimerEl =
+    Element.el
+        [ Font.size 50
+        , Font.color <| Element.rgb 1 0 0
+        , Font.bold
+        , Element.centerX
+        ]
+    <|
+        Element.text "Under construction!!"
 
 
 headerElement : DisplayProfile -> Element Msg
