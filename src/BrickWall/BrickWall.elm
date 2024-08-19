@@ -52,11 +52,11 @@ init now targetYPrefill =
     }
 
 
-spawnNewBrick : Time.Posix -> BrickWall -> BrickWall
-spawnNewBrick now brickWall =
+maybeSpawnNewBrickUnderTargetY : Time.Posix -> BrickWall -> BrickWall
+maybeSpawnNewBrickUnderTargetY now brickWall =
     let
         candidatePositions =
-            BricksContainer.getNewBrickCandidatePositions brickWall.bricks
+            BricksContainer.getNewBrickCandidatePositions brickWall.targetY brickWall.bricks
 
         ( chosenPos, seed1 ) =
             case candidatePositions of
@@ -86,21 +86,3 @@ updateBrickStates now brickWall =
             brickWall.bricks
                 |> BricksContainer.updateBricks (updateBrickState now)
     }
-
-
-addBrickIfTargetYNotMet : Time.Posix -> BrickWall -> BrickWall
-addBrickIfTargetYNotMet now brickWall =
-    let
-        lastPlacedY =
-            BricksContainer.getLastBrickGridPos brickWall.bricks
-                |> Maybe.map gridPosToRealPos
-                |> Maybe.map .y
-                |> Maybe.withDefault 0
-    in
-    if lastPlacedY < brickWall.targetY then
-        brickWall
-            |> updateBrickStates now
-            |> spawnNewBrick now
-
-    else
-        brickWall

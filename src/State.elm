@@ -155,7 +155,7 @@ updateLoadedModel msg model =
         AddBrick now ->
             ( { model
                 | brickWall =
-                    model.brickWall |> BrickWall.addBrickIfTargetYNotMet now
+                    model.brickWall |> BrickWall.maybeSpawnNewBrickUnderTargetY now
               }
             , getViewportCmd
             )

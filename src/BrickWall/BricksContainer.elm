@@ -1,6 +1,7 @@
 module BrickWall.BricksContainer exposing (..)
 
 import BrickWall.Brick as Brick exposing (Brick)
+import BrickWall.Common exposing (..)
 import BrickWall.Config as Config
 import List.Extra as List
 import Maybe.Extra as Maybe
@@ -72,13 +73,19 @@ getNextGridPos (Bricks bricks) =
         |> listPosToGridPos
 
 
-getNewBrickCandidatePositions : BricksContainer -> List ( Int, Int )
-getNewBrickCandidatePositions (Bricks bricks) =
+getNewBrickCandidatePositions : Float -> BricksContainer -> List ( Int, Int )
+getNewBrickCandidatePositions maxY (Bricks bricks) =
     bricks
         |> addEmptyRowIfNeeded
         |> List.findIndices Maybe.isNothing
         |> List.map listPosToGridPos
+        |> List.filter (gridPosRealPosIsUnderY maxY)
         |> List.filter (parentsExist bricks)
+
+
+gridPosRealPosIsUnderY : Float -> ( Int, Int ) -> Bool
+gridPosRealPosIsUnderY y gridPos =
+    (gridPos |> gridPosToRealPos).y < y
 
 
 addEmptyRowIfNeeded : List (Maybe Brick) -> List (Maybe Brick)
