@@ -31,7 +31,7 @@ brickAnimationIntervalMillis =
 
 brickTravelAngleAbsMax : Float
 brickTravelAngleAbsMax =
-    20
+    10
 
 
 brickTravelXAbsMax : Float
