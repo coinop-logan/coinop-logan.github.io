@@ -15,8 +15,8 @@ padding =
     5
 
 
-brickStrokeColor =
-    Element.rgb 0.8 0.8 0.8
+brickDefaultStrokeColor =
+    Element.rgb 0.6 0.6 0.6
 
 
 wallWidth : Int

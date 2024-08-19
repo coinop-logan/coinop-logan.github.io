@@ -49,7 +49,12 @@ maybeDrawBrick now maybeNameArea brick =
 
         Just nameArea ->
             if pointIsInArea (pointToCenterPoint brick.homePoint) (padArea 60 40 nameArea) then
-                Nothing
+                Just <|
+                    drawBrick now
+                        { brick
+                            | fillColor = Element.rgb 0.1 0 0
+                            , strokeColor = Element.rgb 0.3 0.3 0.3
+                        }
 
             else
                 Just <| drawBrick now brick
@@ -74,7 +79,7 @@ drawBrick now brick =
         , Svg.Attributes.height <| String.fromInt Config.brickHeight
         , Svg.Attributes.transform transformString
         , Svg.Attributes.fill <| colorToSvgString brick.fillColor
-        , Svg.Attributes.stroke <| colorToSvgString Config.brickStrokeColor
+        , Svg.Attributes.stroke <| colorToSvgString brick.strokeColor
         , Svg.Attributes.strokeWidth "1"
         ]
         []

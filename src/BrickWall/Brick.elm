@@ -13,8 +13,7 @@ type alias Brick =
     { homePoint : Point
     , state : BrickState
     , fillColor : Element.Color
-
-    -- , strokeColor : Element.Color
+    , strokeColor : Element.Color
     }
 
 
@@ -44,7 +43,7 @@ brickGenerator ( i, j ) now =
             gridPosToRealPos i j
     in
     Random.map2
-        (Brick homePoint)
+        (\originInfo fillColor -> Brick homePoint originInfo fillColor Config.brickDefaultStrokeColor)
         (brickOriginGenerator homePoint |> Random.map (\originInfo -> Moving originInfo now))
         brickFillColorGenerator
 
