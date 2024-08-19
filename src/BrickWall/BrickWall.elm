@@ -1,9 +1,10 @@
 module BrickWall.BrickWall exposing (..)
 
-import BrickWall.Brick exposing (..)
+import BrickWall.Brick as Brick exposing (..)
 import BrickWall.BricksContainer as BricksContainer exposing (BricksContainer)
 import BrickWall.Common exposing (..)
 import BrickWall.Config as Config
+import List.Extra as List
 import Random
 import Time
 
@@ -14,16 +15,29 @@ type alias BrickWall =
     }
 
 
+initBrick : Time.Posix -> (Random.Seed -> ( Int, Int ) -> ( Random.Seed, Brick ))
+initBrick now seed gridPos =
+    let
+        ( brick, newSeed ) =
+            Random.step
+                (Brick.brickGenerator gridPos now)
+                seed
+    in
+    ( newSeed, brick )
+
+
 init : Time.Posix -> Int -> BrickWall
 init now numRows =
     let
         masterSeed0 =
             Random.initialSeed (Time.posixToMillis now)
 
-        ( seedSeed, masterSeed1 ) =
-            Random.step seedSeedGenerator masterSeed0
+        ( masterSeed1, bricksList ) =
+            List.range 0 ((Config.wallWidth * numRows) - 1)
+                |> List.map BricksContainer.listPosToGridPos
+                |> List.mapAccuml (initBrick now) masterSeed0
     in
-    { bricks = BricksContainer.initialize Config.wallWidth numRows (initBrick seedSeed Placed)
+    { bricks = BricksContainer.fromList bricksList
     , masterSeed = masterSeed1
     }
 
@@ -44,13 +58,8 @@ spawnNewBrick now brickWall =
                         (Random.uniform x xs)
                         brickWall.masterSeed
 
-        ( seedSeed, seed2 ) =
-            Random.step
-                seedSeedGenerator
-                seed1
-
-        brick =
-            initBrick seedSeed (Moving now) chosenPos
+        ( seed2, brick ) =
+            initBrick now seed1 chosenPos
     in
     { bricks =
         brickWall.bricks

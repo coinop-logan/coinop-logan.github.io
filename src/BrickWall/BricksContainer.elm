@@ -11,11 +11,19 @@ type BricksContainer
     = Bricks (List (Maybe Brick))
 
 
-initialize : Int -> Int -> (( Int, Int ) -> Brick) -> BricksContainer
-initialize i j initFunc =
-    Bricks <|
-        List.initialize (i * j)
-            (listPosToGridPos >> initFunc >> Just)
+
+-- initialize : Int -> Int -> (( Int, Int ) -> Brick) -> BricksContainer
+-- initialize i j initFunc =
+--     Bricks <|
+--         List.initialize (i * j)
+--             (listPosToGridPos >> initFunc >> Just)
+
+
+fromList : List Brick -> BricksContainer
+fromList bricksList =
+    bricksList
+        |> List.map Just
+        |> Bricks
 
 
 addNewBrickIfNotExists : ( Int, Int ) -> Brick -> BricksContainer -> BricksContainer

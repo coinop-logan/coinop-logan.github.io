@@ -2,6 +2,7 @@ module BrickWall.Brick exposing (..)
 
 import BrickWall.Common exposing (..)
 import BrickWall.Config as Config
+import Element
 import Point exposing (Point)
 import Random
 import Time
@@ -11,24 +12,15 @@ import Utils
 type alias Brick =
     { homePoint : Point
     , state : BrickState
-    , seed : Random.Seed
+    , fillColor : Element.Color
+
+    -- , strokeColor : Element.Color
     }
 
 
 type BrickState
     = Placed
-    | Moving Time.Posix
-
-
-initBrick : Int -> BrickState -> ( Int, Int ) -> Brick
-initBrick seedSeed brickState ( i, j ) =
-    { homePoint = gridPosToRealPos i j
-    , state = brickState
-    , seed =
-        (seedSeed + i + (j * Config.wallWidth))
-            -- unique input to each brick based on its grid position, which is immutable and unique
-            |> Random.initialSeed
-    }
+    | Moving ( Point, Float ) Time.Posix
 
 
 updateBrickState : Time.Posix -> Brick -> Brick
@@ -37,7 +29,7 @@ updateBrickState now brick =
         Placed ->
             brick
 
-        Moving spawnTime ->
+        Moving _ spawnTime ->
             if Time.posixToMillis now - Time.posixToMillis spawnTime >= floor Config.brickAnimationIntervalMillis then
                 { brick | state = Placed }
 
@@ -45,11 +37,16 @@ updateBrickState now brick =
                 brick
 
 
-deriveBrickOrigin : Point -> Random.Seed -> ( Point, Float )
-deriveBrickOrigin homePoint seed =
-    Random.step (brickOriginGenerator homePoint) seed
-        -- throw away the stepped seed, we don't need it
-        |> Tuple.first
+brickGenerator : ( Int, Int ) -> Time.Posix -> Random.Generator Brick
+brickGenerator ( i, j ) now =
+    let
+        homePoint =
+            gridPosToRealPos i j
+    in
+    Random.map2
+        (Brick homePoint)
+        (brickOriginGenerator homePoint |> Random.map (\originInfo -> Moving originInfo now))
+        brickFillColorGenerator
 
 
 brickOriginGenerator : Point -> Random.Generator ( Point, Float )
@@ -77,7 +74,7 @@ getBrickPosAndRot now brick =
         Placed ->
             ( brick.homePoint, 0 )
 
-        Moving spawnTime ->
+        Moving ( originPoint, originAngle ) spawnTime ->
             let
                 millisPassedSinceStart =
                     Time.posixToMillis now - Time.posixToMillis spawnTime
@@ -90,12 +87,22 @@ getBrickPosAndRot now brick =
                 ( brick.homePoint, 0 )
 
             else
-                let
-                    -- derive origin point and angle from seed
-                    ( originPoint, originAngle ) =
-                        deriveBrickOrigin brick.homePoint brick.seed
-                in
                 -- interpolate both linearly based on progressFloat
                 ( Point.interpolate progressFloat originPoint brick.homePoint
                 , Utils.interpolateFloat progressFloat originAngle 0
                 )
+
+
+brickFillColorGenerator : Random.Generator Element.Color
+brickFillColorGenerator =
+    Random.map3
+        Element.rgb
+        (Random.float 0.2 0.4)
+        (Random.float 0 0.1)
+        (Random.float 0 0.05)
+
+
+
+-- brickStrokeColorGenerator : Random.Generator Element.Color
+-- brickStrokeColorGenerator =
+--     Debug.todo ""

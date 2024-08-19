@@ -80,7 +80,8 @@ view model =
                 BrickWall.Draw.view model.animateTime model.viewport.scene.width model.viewport.scene.height model.brickWall
             ]
             [ headerElement dProfile
-            , workInProgressDisclaimerEl
+
+            -- , workInProgressDisclaimerEl
             , bodyElement dProfile model.tabState model.animateTime
             ]
 

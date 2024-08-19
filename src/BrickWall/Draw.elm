@@ -58,7 +58,7 @@ drawBrick now brick =
         , Svg.Attributes.width <| String.fromInt Config.brickWidth
         , Svg.Attributes.height <| String.fromInt Config.brickHeight
         , Svg.Attributes.transform transformString
-        , Svg.Attributes.fill <| colorToSvgString Config.brickFillColor
+        , Svg.Attributes.fill <| colorToSvgString brick.fillColor
         , Svg.Attributes.stroke <| colorToSvgString Config.brickStrokeColor
         , Svg.Attributes.strokeWidth "1"
         ]
