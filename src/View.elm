@@ -4,6 +4,7 @@ import BrickWall.Draw
 import Browser
 import Browser.Dom exposing (Viewport)
 import CommonView exposing (..)
+import Config
 import Convert exposing (..)
 import Element exposing (Attribute, Element)
 import Element.Background as Background
@@ -147,16 +148,19 @@ bodyElement viewport tabState animateTime =
                             else
                                 1 - (2 ^ (-20 * x))
 
+                        truncatedEasingFunction x =
+                            easingFunction (x * Config.easingFunctionTruncateMultiplier)
+
                         offsetMultiplier =
                             let
                                 progressFloat =
                                     animationProgressFloat animateStartTime animateTime
                             in
                             if progressFloat < 0.5 then
-                                easingFunction (progressFloat * 2)
+                                truncatedEasingFunction (progressFloat * 2)
 
                             else
-                                1 - easingFunction ((progressFloat - 0.5) * 2)
+                                1 - truncatedEasingFunction ((progressFloat - 0.5) * 2)
                     in
                     offsetMultiplier * (tabBodyWidth / 2)
 

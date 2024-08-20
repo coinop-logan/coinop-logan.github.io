@@ -111,46 +111,58 @@ updateLoadedModel msg model =
             )
 
         CurrentWorkClicked ->
-            case model.tabState of
-                OnTab Portfolio ->
-                    ( { model
-                        | tabState =
-                            SwitchingTo CurrentWork model.animateTime
-                      }
-                    , Cmd.none
-                    )
+            if Config.animateTabs then
+                case model.tabState of
+                    OnTab Portfolio ->
+                        ( { model
+                            | tabState =
+                                SwitchingTo CurrentWork model.animateTime
+                          }
+                        , Cmd.none
+                        )
 
-                SwitchingTo CurrentWork _ ->
-                    ( model, Cmd.none )
+                    SwitchingTo CurrentWork _ ->
+                        ( model, Cmd.none )
 
-                OnTab CurrentWork ->
-                    ( model, Cmd.none )
+                    OnTab CurrentWork ->
+                        ( model, Cmd.none )
 
-                SwitchingTo Portfolio startTime ->
-                    ( model |> reverseAnimation
-                    , Cmd.none
-                    )
+                    SwitchingTo Portfolio startTime ->
+                        ( model |> reverseAnimation
+                        , Cmd.none
+                        )
+
+            else
+                ( { model | tabState = OnTab CurrentWork }
+                , Cmd.none
+                )
 
         PortfolioClicked ->
-            case model.tabState of
-                OnTab CurrentWork ->
-                    ( { model
-                        | tabState =
-                            SwitchingTo Portfolio model.animateTime
-                      }
-                    , Cmd.none
-                    )
+            if Config.animateTabs then
+                case model.tabState of
+                    OnTab CurrentWork ->
+                        ( { model
+                            | tabState =
+                                SwitchingTo Portfolio model.animateTime
+                          }
+                        , Cmd.none
+                        )
 
-                SwitchingTo Portfolio _ ->
-                    ( model, Cmd.none )
+                    SwitchingTo Portfolio _ ->
+                        ( model, Cmd.none )
 
-                OnTab Portfolio ->
-                    ( model, Cmd.none )
+                    OnTab Portfolio ->
+                        ( model, Cmd.none )
 
-                SwitchingTo CurrentWork startTime ->
-                    ( model |> reverseAnimation
-                    , Cmd.none
-                    )
+                    SwitchingTo CurrentWork startTime ->
+                        ( model |> reverseAnimation
+                        , Cmd.none
+                        )
+
+            else
+                ( { model | tabState = OnTab Portfolio }
+                , Cmd.none
+                )
 
         AddBricks now ->
             ( { model
