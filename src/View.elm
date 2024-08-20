@@ -94,8 +94,10 @@ headerElement dProfile =
         [ Element.el
             [ Element.centerX
             , Font.size <| responsiveVal dProfile 40 80
-            , Font.semiBold
-            , fontMontserrat
+
+            -- , Font.semiBold
+            , Font.family [ Font.typeface "roboto" ]
+            , Font.color <| Element.rgb 0.5 0.7 1
             , addId "name-element"
             ]
           <|
