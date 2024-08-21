@@ -1,5 +1,6 @@
 module Config exposing (..)
 
+import Responsive exposing (DisplayProfile(..))
 import Time
 
 
@@ -16,3 +17,23 @@ animateTabs =
 easingFunctionTruncateMultiplier : Float
 easingFunctionTruncateMultiplier =
     0.8
+
+
+pastWorkTabBottmY : DisplayProfile -> Float
+pastWorkTabBottmY dProfile =
+    case dProfile of
+        Desktop ->
+            2300
+
+        Mobile ->
+            4080
+
+
+currentWorkTabBottomY : DisplayProfile -> Float
+currentWorkTabBottomY dProfile =
+    case dProfile of
+        Desktop ->
+            1250
+
+        Mobile ->
+            1750

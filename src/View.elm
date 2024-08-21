@@ -34,7 +34,8 @@ root model =
                 ]
             }
             [ Element.width Element.fill
-            , Element.height Element.fill
+            , Element.height <| calcNeededBodyHeight model
+            , Element.clipY
 
             -- , robotoFont
             ]
@@ -47,6 +48,31 @@ root model =
                     view loadedModel
         ]
     }
+
+
+calcNeededBodyHeight : Model -> Element.Length
+calcNeededBodyHeight model =
+    case model of
+        Loading _ ->
+            Element.fill
+
+        Loaded loadedModel ->
+            let
+                dProfile =
+                    viewportToDisplayProfile loadedModel.viewport
+
+                tabHeight =
+                    case loadedModel.tabState of
+                        OnTab PastWork ->
+                            Config.pastWorkTabBottmY dProfile
+
+                        OnTab CurrentWork ->
+                            Config.currentWorkTabBottomY dProfile
+
+                        _ ->
+                            200
+            in
+            Element.px <| floor <| tabHeight + responsiveVal dProfile 220 250
 
 
 viewLoadingMessage : Element Msg
@@ -166,18 +192,25 @@ bodyElement viewport tabState animateTime =
                     in
                     offsetMultiplier * (tabBodyWidth / 2)
 
-        portfolioTabEls =
+        pastWorkTabEls =
             let
                 tabTopWidth =
-                    responsiveVal dProfile 140 240
+                    responsiveVal dProfile 120 240
+
+                tabVerticalAdjustment =
+                    if tabOnTop /= PastWork then
+                        10
+
+                    else
+                        0
             in
             TabGraphics.createTabElementComponentsToStack
-                { shapeBottomY = 2600
-                , bodyTopY = responsiveVal dProfile 70 100
-                , tabTopY = 10
+                { shapeBottomY = Config.pastWorkTabBottmY dProfile
+                , bodyTopY = responsiveVal dProfile 70 100 + tabVerticalAdjustment
+                , tabTopY = 10 + tabVerticalAdjustment
                 , fillColor = Theme.portfolioTabBackgroundColor
                 , strokeColor = Theme.tabBorderColor
-                , pathThickness = 6
+                , pathThickness = responsiveVal dProfile 4 6
                 , cornerRadius = responsiveVal dProfile 20 40
                 , tabTopStartX = (canvasWidth / 2) - tabTopWidth - (tabSeparation / 2)
                 , tabTopEndX = canvasWidth / 2 - (tabSeparation / 2)
@@ -202,15 +235,22 @@ bodyElement viewport tabState animateTime =
         currentWorkTabEls =
             let
                 tabTopWidth =
-                    responsiveVal dProfile 140 240
+                    responsiveVal dProfile 120 240
+
+                tabVerticalAdjustment =
+                    if tabOnTop /= CurrentWork then
+                        10
+
+                    else
+                        0
             in
             TabGraphics.createTabElementComponentsToStack
-                { shapeBottomY = 2600
-                , bodyTopY = responsiveVal dProfile 70 100
-                , tabTopY = 10
+                { shapeBottomY = Config.currentWorkTabBottomY dProfile
+                , bodyTopY = responsiveVal dProfile 70 100 + tabVerticalAdjustment
+                , tabTopY = 10 + tabVerticalAdjustment
                 , fillColor = Theme.currentWorkTabBackgroundColor
                 , strokeColor = Theme.tabBorderColor
-                , pathThickness = 6
+                , pathThickness = responsiveVal dProfile 4 6
                 , cornerRadius = responsiveVal dProfile 20 40
                 , tabTopStartX = canvasWidth / 2 + (tabSeparation / 2)
                 , tabTopEndX = (canvasWidth / 2) + tabTopWidth + (tabSeparation / 2)
@@ -235,12 +275,12 @@ bodyElement viewport tabState animateTime =
         elsToStack =
             case tabOnTop of
                 CurrentWork ->
-                    [ portfolioTabEls.tabShape
+                    [ pastWorkTabEls.tabShape
 
                     -- , portfolioTabEls.bodyEl
                     , currentWorkTabEls.tabShape
                     , currentWorkTabEls.bodyEl
-                    , portfolioTabEls.tabEl
+                    , pastWorkTabEls.tabEl
                     , currentWorkTabEls.tabEl
                     ]
 
@@ -248,10 +288,10 @@ bodyElement viewport tabState animateTime =
                     [ currentWorkTabEls.tabShape
 
                     -- , currentWorkTabEls.bodyEl
-                    , portfolioTabEls.tabShape
-                    , portfolioTabEls.bodyEl
+                    , pastWorkTabEls.tabShape
+                    , pastWorkTabEls.bodyEl
                     , currentWorkTabEls.tabEl
-                    , portfolioTabEls.tabEl
+                    , pastWorkTabEls.tabEl
                     ]
     in
     stackElementsInZ [ Element.centerX, Element.height Element.fill ] <| elsToStack
@@ -291,7 +331,7 @@ pastWorkEl dProfile =
             "2022 / 2023"
             "Solo Project"
             [ "An RTS game where users fight over crypto in-game. Players must invest real crypto into their units (i.e. $1.50 for a Fighter, $0.50 for a worker); if these units are killed, this investment is dropped onto the battlefield for anyone else to pick up, capture, and withdraw. This is a zero-sum game where the goal is to get more out than you put in. \"Like Poker, but the chips shoot at each other!\""
-            , "The goal of Coinfight was to give players the experience of fighting over real money in real time. To avoid the cumbersome limits of blockchain processing, Coinfight only used the blockchain to process deposits and withdrawals, a rewarding architectural approach that is nevertheless rare among web3 games."
+            , "The goal of Coinfight was to give players the experience of fighting over real money in real time. To avoid the cumbersome limits of blockchain processing, Coinfight only used the blockchain to process deposits and withdrawals, a rare but rewarding architectural approach among web3 games."
             ]
             [ newTabLink [] "https://www.youtube.com/watch?v=7tw10KUO1_U" "demo video"
             , newTabLink [] "https://medium.com/p/472636deec57" "dev blog post"
@@ -385,12 +425,7 @@ ytVidEl dProfile =
         [ Element.width Element.fill
         , Element.spacing 15
         ]
-        [ Element.paragraph
-            [ Font.size 18
-            , Font.center
-            ]
-            [ Element.text "A recording of a workshop I ran on crypto in 2021." ]
-        , Element.el
+        [ Element.el
             [ Element.centerX ]
           <|
             Element.html <|
@@ -401,7 +436,7 @@ ytVidEl dProfile =
 
                         -- , Embed.Youtube.Attributes.start
                         ]
-                        (Embed.Youtube.fromString "rH7mjNDD448")
+                        (Embed.Youtube.fromString "nS8HTce95NY")
         ]
 
 
