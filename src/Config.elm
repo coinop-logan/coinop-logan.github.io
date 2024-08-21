@@ -33,7 +33,7 @@ currentWorkTabBottomY : DisplayProfile -> Float
 currentWorkTabBottomY dProfile =
     case dProfile of
         Desktop ->
-            1250
+            2050
 
         Mobile ->
             1750

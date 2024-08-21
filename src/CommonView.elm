@@ -45,17 +45,6 @@ stackElementsInZ attributes elements =
         |> Maybe.withDefault Element.none
 
 
-fontMontserrat : Attribute msg
-fontMontserrat =
-    Font.family
-        [ Font.typeface "montserrat"
-        ]
-
-
-testFont =
-    Font.family [ Font.typeface "new amsterdam" ]
-
-
 linkAttributes : List (Attribute msg)
 linkAttributes =
     [ Font.color <| Element.rgb 0.8 0.8 1

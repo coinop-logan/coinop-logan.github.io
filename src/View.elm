@@ -13,6 +13,7 @@ import Element.Font as Font
 import Element.Input as Input
 import Embed.Youtube
 import Embed.Youtube.Attributes
+import Fonts
 import Responsive exposing (..)
 import TabGraphics
 import Theme
@@ -125,7 +126,7 @@ headerElement dProfile =
             [ Element.el
                 [ Element.centerX
                 , Font.size <| responsiveVal dProfile 40 80
-                , Font.family [ Font.typeface "roboto" ]
+                , Fonts.roboto
                 , Font.color <| Element.rgb 0.5 0.7 1
                 ]
               <|
@@ -133,7 +134,7 @@ headerElement dProfile =
             , Element.el
                 [ Element.centerX
                 , Font.size <| responsiveVal dProfile 23 40
-                , Font.family [ Font.typeface "inconsolata" ]
+                , Fonts.inconsolata
                 , Font.color <| Element.rgb 1 1 1
                 ]
               <|
@@ -400,34 +401,113 @@ aboutMeEl : DisplayProfile -> Element Msg
 aboutMeEl dProfile =
     Element.column
         [ Element.width Element.fill
-        , Element.spacing 35
+        , Element.spacing <| responsiveVal dProfile 35 55
         , Element.padding <| responsiveVal dProfile 15 45
         ]
         [ ytVidEl dProfile
-
-        -- , Element.paragraph [ Font.center ]
-        --     [ Element.text "You might also be interested "
-        --     , newTabLink [] "https://www.youtube.com/watch?v=rH7mjNDD448" "the recording of a workshop"
-        --     , Element.text " I ran in 2021 on Bitcoin and crypto."
-        --     ]
         , Element.column
-            [ Element.spacing 15
-            , Element.width Element.fill
-            ]
-            [ currentWorkTitleEl dProfile
+            [ Element.spacing 10 ]
+            [ Element.el
+                [ Element.paddingEach
+                    { top = 15
+                    , bottom = 0
+                    , right = 0
+                    , left = 0
+                    }
+                , Font.size <| responsiveVal dProfile 32 42
+                ]
+              <|
+                Element.text "Current Project"
             , portfolioEntryEl dProfile
                 (Just "zaptrails-bg.png")
-                (Element.el [ Font.size 38 ] <| Element.text "Zap Trails")
+                (Element.el [ Font.size <| responsiveVal dProfile 30 38 ] <| Element.text "Zap Trails")
                 ""
                 "research / experimental"
-                [ "I recently discovered the Nostr network, a decentralized social media platform. In practice it's something like Twitter or Medium, depending on the client you use, but without any centralized moderation or control. One of the features of this network is \"zapping\" users for content, which is to send a Lightning Bitcoin payment as a financial upvote."
-                , "I see the the record of such zaps as quite a data goldmine - a directed graph of socially signaled value. I'm experimenting with a family of fairly simple algorithms for content curation on Nostr, and hope to prove that they elegantly solve data curation problems, finding valuable new content and routing around spam - an otherwise tricky problem in a sea of unmoderated content and pseudonymous accounts."
-                , "In addition, I believe that a community primarily using such a technique to construct feeds would begin to behave like something of a neural net, with users as neurons and zaps as synapse firings, forming connections and propagating content further through the network. I discuss this further in the article linked below."
-                , "My first goal is to demonstrate the basic utility of one of these algorithms, via a tool or visualizations; then I hope to get some traction from the Nostr community, and possible grant funding to pursue further application and research in this area."
-                ]
+                (responsiveVal dProfile
+                    [ "The Nostr network allows users to send \"zaps\" (Lightning Bitcoin) to one another; I see the record of such zaps as quite a data goldmine - a directed graph of socially signaled value. I'm experimenting using this to curate content and route around spam with a family of simple algorithms that I expect to yield extremely impressive results."
+                    , "My first goal is to demonstrate the basic utility of one of these algorithms, via a tool or visualizations; then I hope to get some traction from the Nostr community, and seek grant funding to pursue further application and research in this area."
+                    ]
+                    [ "I recently discovered the Nostr network, a decentralized social media platform. In practice it's something like Twitter or Medium, depending on the client you use, but without any centralized moderation or control. One of the features of this network is \"zapping\" users for content, which is to send a Lightning Bitcoin payment as a financial upvote."
+                    , "I see the the record of such zaps as quite a data goldmine - a directed graph of socially signaled value. I'm experimenting with a family of fairly simple algorithms for content curation on Nostr, and hope to prove that they elegantly solve data curation problems, finding valuable new content and routing around spam - an otherwise tricky problem in a sea of unmoderated content and pseudonymous accounts."
+                    , "In addition, I believe that a community primarily using such a technique to construct feeds would begin to behave like something of a neural net, with users as neurons and zaps as synapse firings, forming connections and propagating content further through the network. I discuss this further in the article linked below."
+                    , "My first goal is to demonstrate the basic utility of one of these algorithms, via a tool or visualizations; then I hope to get some traction from the Nostr community, and seek grant funding to pursue further application and research in this area."
+                    ]
+                )
                 [ newTabLink [] "https://habla.news/a/naddr1qvzqqqr4gupzqyhjp3nd83hxklumz9elp6gmth2zrhr804hrcrktpmplygwtw4jjqqxnzde38q6rwwph8qcrvdpjwz7qav" "writeup on Nostr" ]
             ]
+        , Element.paragraph
+            []
+            [ Element.text "For vibe-checking purposes, you may be interested in a recording of a "
+            , newTabLink [] "https://www.youtube.com/watch?v=rH7mjNDD448" "crypto workshop I ran"
+            , Element.text " in South Africa in 2021."
+            ]
+        , rockstarDevSchtick dProfile
         ]
+
+
+rockstarDevSchtick : DisplayProfile -> Element Msg
+rockstarDevSchtick dProfile =
+    Element.column
+        [ Element.centerX
+        , Element.padding 10
+        , Background.color <| Element.rgba 1 1 0 0.2
+        , Border.width 1
+        , Border.color <| Element.rgb 0.4 0.4 0.1
+        , Border.rounded 5
+        , Background.image "/rockstar2.jpg"
+        , Element.width <| Element.px <| responsiveVal dProfile 270 600
+        , Element.height <| Element.px <| responsiveVal dProfile 170 300
+        , Element.spaceEvenly
+        ]
+        [ Element.el
+            [ Fonts.roboto
+            , Font.bold
+            , Font.size <| responsiveVal dProfile 24 36
+            , Font.color <| Element.rgb 0.5 0.6 0.8
+            ]
+          <|
+            Element.text "Logan Brutsche"
+        , Element.column
+            [ Font.size <| responsiveVal dProfile 16 30
+            , Font.color <| Element.rgb 0.8 0.8 0.8
+            , Font.italic
+            , Fonts.montserrat
+            , Element.spacing <| responsiveVal dProfile 5 8
+            ]
+            [ Element.text "Rockstar architect"
+            , Element.text "looking for challenging work"
+            , Element.text "with a rockstar team"
+            ]
+        , contactLinksRow dProfile
+        ]
+
+
+contactLinksRow : DisplayProfile -> Element Msg
+contactLinksRow dProfile =
+    Element.row
+        [ Element.spacing <| responsiveVal dProfile 30 50
+        , Element.centerX
+        ]
+        (List.map (viewContactLink dProfile)
+            [ ( "github.png", "https://github.com/coinop-logan/" )
+            , ( "telegram.png", "https://t.me/coinoplogan" )
+            , ( "medium.png", "https://medium.com/@coinop.logan" )
+            , ( "email.png", "mailto:coinop.logan@gmail.com" )
+            ]
+        )
+
+
+viewContactLink : DisplayProfile -> ( String, String ) -> Element Msg
+viewContactLink dProfile ( imgFName, url ) =
+    Element.newTabLink
+        []
+        { url = url
+        , label =
+            Element.image [ Element.height <| Element.px <| responsiveVal dProfile 20 30 ]
+                { src = "/sm-icons/" ++ imgFName
+                , description = imgFName
+                }
+        }
 
 
 ytVidEl : DisplayProfile -> Element Msg
