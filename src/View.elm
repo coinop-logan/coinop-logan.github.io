@@ -35,10 +35,8 @@ root model =
                 ]
             }
             [ Element.width Element.fill
-            , Element.height <| calcNeededBodyHeight model
+            , Element.height Element.shrink
             , Element.clipY
-
-            -- , robotoFont
             ]
           <|
             case model of
@@ -169,7 +167,7 @@ bodyElement viewport tabState animateTime =
             viewport.scene.width
 
         tabBodyWidth =
-            responsiveVal dProfile 300.0 800.0
+            Config.bodyWidth dProfile
 
         tabSeparation =
             responsiveVal dProfile 7 10
@@ -306,7 +304,29 @@ bodyElement viewport tabState animateTime =
                     , pastWorkTabEls.tabEl
                     ]
     in
-    stackElementsInZ [ Element.centerX, Element.height Element.fill ] <| elsToStack
+    Element.column
+        [ Element.centerX
+        , Element.height Element.fill
+        , Element.spacing <| responsiveVal dProfile 15 50
+        ]
+        [ stackElementsInZ
+            [ Element.centerX
+            , Element.height <| Element.px <| floor <| getTabHeight dProfile tabOnTop
+            ]
+          <|
+            elsToStack
+        , rockstarDevSchtick dProfile
+        ]
+
+
+getTabHeight : DisplayProfile -> Tab -> Float
+getTabHeight dProfile tabOnTop =
+    case tabOnTop of
+        CurrentWork ->
+            Config.currentWorkTabBottomY dProfile
+
+        PastWork ->
+            Config.pastWorkTabBottmY dProfile
 
 
 pastWorkEl : DisplayProfile -> Element Msg
@@ -441,7 +461,6 @@ aboutMeEl dProfile =
             , newTabLink [] "https://www.youtube.com/watch?v=rH7mjNDD448" "crypto workshop I ran"
             , Element.text " in South Africa in 2021."
             ]
-        , rockstarDevSchtick dProfile
         ]
 
 
@@ -455,14 +474,14 @@ rockstarDevSchtick dProfile =
         , Border.color <| Element.rgb 0.4 0.4 0.1
         , Border.rounded 5
         , Background.image "/rockstar2.jpg"
-        , Element.width <| Element.px <| responsiveVal dProfile 270 600
+        , Element.width <| Element.px <| floor <| Config.bodyWidth dProfile
         , Element.height <| Element.px <| responsiveVal dProfile 170 300
         , Element.spaceEvenly
         ]
         [ Element.el
             [ Fonts.roboto
             , Font.bold
-            , Font.size <| responsiveVal dProfile 24 36
+            , Font.size <| responsiveVal dProfile 28 48
             , Font.color <| Element.rgb 0.5 0.6 0.8
             ]
           <|

@@ -1,6 +1,6 @@
 module Config exposing (..)
 
-import Responsive exposing (DisplayProfile(..))
+import Responsive exposing (..)
 import Time
 
 
@@ -37,3 +37,8 @@ currentWorkTabBottomY dProfile =
 
         Mobile ->
             1750
+
+
+bodyWidth : DisplayProfile -> Float
+bodyWidth dProfile =
+    responsiveVal dProfile 300.0 800.0
