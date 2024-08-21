@@ -12,7 +12,7 @@ import Time
 type alias BrickWall =
     { masterSeed : Random.Seed
     , bricks : BricksContainer
-    , nameArea : Maybe AreaDef
+    , titleArea : Maybe AreaDef
     , targetY : Float
     }
 
@@ -47,7 +47,7 @@ init now targetYPrefill =
     in
     { masterSeed = masterSeed1
     , bricks = BricksContainer.fromList bricksList
-    , nameArea = Nothing
+    , titleArea = Nothing
     , targetY = targetYPrefill
     }
 

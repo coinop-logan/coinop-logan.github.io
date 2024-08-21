@@ -91,7 +91,7 @@ updateLoadedModel msg model =
                         | targetY = viewport.viewport.y + viewport.viewport.height
                     }
               }
-            , Browser.Dom.getElement "name-element" |> Task.attempt NameElementSizingInfoGot
+            , Browser.Dom.getElement "header-element" |> Task.attempt NameElementSizingInfoGot
             )
 
         TriggerGetViewport ->
@@ -185,7 +185,7 @@ updateLoadedModel msg model =
                                     model.brickWall
                             in
                             { oldBW
-                                | nameArea = Just nameElementSizingInfo.element
+                                | titleArea = Just nameElementSizingInfo.element
                             }
                       }
                     , Cmd.none

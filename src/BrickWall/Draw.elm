@@ -35,20 +35,20 @@ draw now brickWall =
         drawnBricks =
             brickWall.bricks
                 |> BricksContainer.toList
-                |> List.map (Maybe.andThen (maybeDrawBrick now brickWall.nameArea))
+                |> List.map (Maybe.andThen (maybeDrawBrick now brickWall.titleArea))
                 |> Maybe.values
     in
     Svg.g [] drawnBricks
 
 
 maybeDrawBrick : Time.Posix -> Maybe AreaDef -> Brick -> Maybe (Svg msg)
-maybeDrawBrick now maybeNameArea brick =
-    case maybeNameArea of
+maybeDrawBrick now maybeTitleArea brick =
+    case maybeTitleArea of
         Nothing ->
             Just <| drawBrick now brick
 
         Just nameArea ->
-            if pointIsInArea (pointToCenterPoint brick.homePoint) (padArea 60 40 nameArea) then
+            if pointIsInArea (pointToCenterPoint brick.homePoint) (padArea 60 30 nameArea) then
                 Just <|
                     drawBrick now
                         { brick

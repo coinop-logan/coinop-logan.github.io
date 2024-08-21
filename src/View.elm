@@ -101,7 +101,7 @@ view model =
             [ Element.width Element.fill
             , Background.color Theme.bgColor
             , Element.height Element.fill
-            , Element.spacing 60
+            , Element.spacing 40
             , Element.padding 30
             , Element.behindContent <|
                 BrickWall.Draw.view model.animateTime model.viewport.scene.width model.viewport.scene.height model.brickWall
@@ -117,17 +117,28 @@ headerElement dProfile =
         [ Element.centerX
         , Element.spacing 20
         ]
-        [ Element.el
+        [ Element.column
             [ Element.centerX
-            , Font.size <| responsiveVal dProfile 40 80
-
-            -- , Font.semiBold
-            , Font.family [ Font.typeface "roboto" ]
-            , Font.color <| Element.rgb 0.5 0.7 1
-            , addId "name-element"
+            , Element.spacing <| responsiveVal dProfile 15 20
+            , addId "header-element"
             ]
-          <|
-            Element.text "Logan Brutsche"
+            [ Element.el
+                [ Element.centerX
+                , Font.size <| responsiveVal dProfile 40 80
+                , Font.family [ Font.typeface "roboto" ]
+                , Font.color <| Element.rgb 0.5 0.7 1
+                ]
+              <|
+                Element.text "Logan Brutsche"
+            , Element.el
+                [ Element.centerX
+                , Font.size <| responsiveVal dProfile 23 40
+                , Font.family [ Font.typeface "inconsolata" ]
+                , Font.color <| Element.rgb 1 1 1
+                ]
+              <|
+                Element.text "Full-Stack Software Architect"
+            ]
         ]
 
 
