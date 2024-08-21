@@ -10,7 +10,7 @@ tabSwitchAnimationInterval =
 
 animateTabs : Bool
 animateTabs =
-    True
+    False
 
 
 easingFunctionTruncateMultiplier : Float

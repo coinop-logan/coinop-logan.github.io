@@ -181,8 +181,8 @@ bodyElement viewport tabState animateTime =
                 , cornerRadius = responsiveVal dProfile 20 40
                 , tabTopStartX = (canvasWidth / 2) - tabTopWidth - (tabSeparation / 2)
                 , tabTopEndX = canvasWidth / 2 - (tabSeparation / 2)
-                , bodyExtendsLeft = ((tabBodyWidth / 2) - tabTopWidth) + xOffsetAbs
-                , bodyExtendsRight = tabBodyWidth / 2 - xOffsetAbs
+                , bodyExtendsLeft = ((tabBodyWidth / 2) - tabTopWidth) + xOffsetAbs - (tabSeparation / 2)
+                , bodyExtendsRight = tabBodyWidth / 2 - xOffsetAbs + (tabSeparation / 2)
                 , canvasWidth = Element.px <| floor <| canvasWidth
                 }
                 (Element.el
@@ -192,7 +192,12 @@ bodyElement viewport tabState animateTime =
                  <|
                     tabElement dProfile "Past Work" PortfolioClicked
                 )
-                (pastWorkEl dProfile)
+                (if tabOnTop == PastWork then
+                    Just <| pastWorkEl dProfile
+
+                 else
+                    Nothing
+                )
 
         currentWorkTabEls =
             let
@@ -209,8 +214,8 @@ bodyElement viewport tabState animateTime =
                 , cornerRadius = responsiveVal dProfile 20 40
                 , tabTopStartX = canvasWidth / 2 + (tabSeparation / 2)
                 , tabTopEndX = (canvasWidth / 2) + tabTopWidth + (tabSeparation / 2)
-                , bodyExtendsLeft = tabBodyWidth / 2 - xOffsetAbs
-                , bodyExtendsRight = ((tabBodyWidth / 2) - tabTopWidth) + xOffsetAbs
+                , bodyExtendsLeft = tabBodyWidth / 2 - xOffsetAbs + (tabSeparation / 2)
+                , bodyExtendsRight = ((tabBodyWidth / 2) - tabTopWidth) + xOffsetAbs - (tabSeparation / 2)
                 , canvasWidth = Element.px <| floor <| canvasWidth
                 }
                 (Element.el
@@ -220,22 +225,29 @@ bodyElement viewport tabState animateTime =
                  <|
                     tabElement dProfile "About Me" CurrentWorkClicked
                 )
-                (aboutMeEl dProfile)
+                (if tabOnTop == CurrentWork then
+                    Just <| aboutMeEl dProfile
+
+                 else
+                    Nothing
+                )
 
         elsToStack =
             case tabOnTop of
                 CurrentWork ->
                     [ portfolioTabEls.tabShape
-                    , portfolioTabEls.bodyEl
+
+                    -- , portfolioTabEls.bodyEl
                     , currentWorkTabEls.tabShape
                     , currentWorkTabEls.bodyEl
                     , portfolioTabEls.tabEl
                     , currentWorkTabEls.tabEl
                     ]
 
-                Portfolio ->
+                PastWork ->
                     [ currentWorkTabEls.tabShape
-                    , currentWorkTabEls.bodyEl
+
+                    -- , currentWorkTabEls.bodyEl
                     , portfolioTabEls.tabShape
                     , portfolioTabEls.bodyEl
                     , currentWorkTabEls.tabEl

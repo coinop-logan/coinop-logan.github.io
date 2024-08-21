@@ -46,7 +46,7 @@ type Msg
 
 type Tab
     = CurrentWork
-    | Portfolio
+    | PastWork
 
 
 type TabState

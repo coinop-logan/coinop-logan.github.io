@@ -24,8 +24,8 @@ type alias TabSpec =
     }
 
 
-createTabElementComponentsToStack : TabSpec -> Element msg -> Element msg -> { tabShape : Element msg, tabEl : Element msg, bodyEl : Element msg }
-createTabElementComponentsToStack tabSpec tabEl innerEl =
+createTabElementComponentsToStack : TabSpec -> Element msg -> Maybe (Element msg) -> { tabShape : Element msg, tabEl : Element msg, bodyEl : Element msg }
+createTabElementComponentsToStack tabSpec tabEl maybeInnerEl =
     let
         tabWidth =
             floor <|
@@ -35,14 +35,16 @@ createTabElementComponentsToStack tabSpec tabEl innerEl =
         bodyWidth =
             tabWidth + (tabSpec.bodyExtendsLeft |> floor) + (tabSpec.bodyExtendsRight |> floor)
 
-        innerElContained =
-            Element.el
-                [ Element.moveRight <| tabSpec.tabTopStartX - tabSpec.bodyExtendsLeft
-                , Element.moveDown <| tabSpec.bodyTopY
-                , Element.width <| Element.px bodyWidth
-                , Element.height <| Element.px <| floor <| tabSpec.shapeBottomY - tabSpec.bodyTopY
-                ]
-                innerEl
+        maybeInnerElContained =
+            Maybe.map
+                (Element.el
+                    [ Element.moveRight <| tabSpec.tabTopStartX - tabSpec.bodyExtendsLeft
+                    , Element.moveDown <| tabSpec.bodyTopY
+                    , Element.width <| Element.px bodyWidth
+                    , Element.height <| Element.px <| floor <| tabSpec.shapeBottomY - tabSpec.bodyTopY
+                    ]
+                )
+                maybeInnerEl
 
         tabElContained =
             Element.el
@@ -57,20 +59,55 @@ createTabElementComponentsToStack tabSpec tabEl innerEl =
         Element.el [ Element.width tabSpec.canvasWidth, Element.height Element.fill ] <|
             Element.html <|
                 Svg.svg
-                    [ Svg.Attributes.height <| String.fromFloat <| tabSpec.shapeBottomY + (tabSpec.pathThickness / 2)
+                    [ Svg.Attributes.height <|
+                        case maybeInnerEl of
+                            Just _ ->
+                                String.fromFloat <| tabSpec.shapeBottomY + (tabSpec.pathThickness / 2)
+
+                            Nothing ->
+                                String.fromFloat <| tabSpec.bodyTopY + (tabSpec.pathThickness / 2)
                     ]
                     [ Svg.defs
                         []
                         []
-                    , drawTabShape tabSpec
+                    , if maybeInnerEl == Nothing then
+                        drawOnlyTabShape tabSpec
+
+                      else
+                        drawTabAndBodyShape tabSpec
                     ]
     , tabEl = tabElContained
-    , bodyEl = innerElContained
+    , bodyEl = maybeInnerElContained |> Maybe.withDefault Element.none
     }
 
 
-drawTabShape : TabSpec -> Svg msg
-drawTabShape tabSpec =
+drawOnlyTabShape : TabSpec -> Svg msg
+drawOnlyTabShape tabSpec =
+    let
+        dString =
+            String.join " "
+                [ moveToPointString { x = tabSpec.tabTopStartX - tabSpec.cornerRadius, y = tabSpec.bodyTopY }
+                , drawThroughElbowString False { x = tabSpec.tabTopStartX, y = tabSpec.bodyTopY - tabSpec.cornerRadius } tabSpec.cornerRadius
+                , drawToPointString { x = tabSpec.tabTopStartX, y = tabSpec.tabTopY + tabSpec.cornerRadius }
+                , drawThroughElbowString True { x = tabSpec.tabTopStartX + tabSpec.cornerRadius, y = tabSpec.tabTopY } tabSpec.cornerRadius
+                , drawToPointString { x = tabSpec.tabTopEndX - tabSpec.cornerRadius, y = tabSpec.tabTopY }
+                , drawThroughElbowString True { x = tabSpec.tabTopEndX, y = tabSpec.tabTopY + tabSpec.cornerRadius } tabSpec.cornerRadius
+                , drawToPointString { x = tabSpec.tabTopEndX, y = tabSpec.bodyTopY - tabSpec.cornerRadius }
+                , drawThroughElbowString False { x = tabSpec.tabTopEndX + tabSpec.cornerRadius, y = tabSpec.bodyTopY } tabSpec.cornerRadius
+                , "Z"
+                ]
+    in
+    Svg.path
+        [ Svg.Attributes.d dString
+        , Svg.Attributes.fill <| colorToSvgString tabSpec.fillColor
+        , Svg.Attributes.stroke <| colorToSvgString tabSpec.strokeColor
+        , Svg.Attributes.strokeWidth <| String.fromFloat tabSpec.pathThickness
+        ]
+        []
+
+
+drawTabAndBodyShape : TabSpec -> Svg msg
+drawTabAndBodyShape tabSpec =
     let
         shapeStartX =
             tabSpec.tabTopStartX - tabSpec.bodyExtendsLeft

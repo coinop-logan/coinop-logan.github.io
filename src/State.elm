@@ -113,7 +113,7 @@ updateLoadedModel msg model =
         CurrentWorkClicked ->
             if Config.animateTabs then
                 case model.tabState of
-                    OnTab Portfolio ->
+                    OnTab PastWork ->
                         ( { model
                             | tabState =
                                 SwitchingTo CurrentWork model.animateTime
@@ -127,7 +127,7 @@ updateLoadedModel msg model =
                     OnTab CurrentWork ->
                         ( model, Cmd.none )
 
-                    SwitchingTo Portfolio startTime ->
+                    SwitchingTo PastWork startTime ->
                         ( model |> reverseAnimation
                         , Cmd.none
                         )
@@ -143,15 +143,15 @@ updateLoadedModel msg model =
                     OnTab CurrentWork ->
                         ( { model
                             | tabState =
-                                SwitchingTo Portfolio model.animateTime
+                                SwitchingTo PastWork model.animateTime
                           }
                         , Cmd.none
                         )
 
-                    SwitchingTo Portfolio _ ->
+                    SwitchingTo PastWork _ ->
                         ( model, Cmd.none )
 
-                    OnTab Portfolio ->
+                    OnTab PastWork ->
                         ( model, Cmd.none )
 
                     SwitchingTo CurrentWork startTime ->
@@ -160,7 +160,7 @@ updateLoadedModel msg model =
                         )
 
             else
-                ( { model | tabState = OnTab Portfolio }
+                ( { model | tabState = OnTab PastWork }
                 , Cmd.none
                 )
 

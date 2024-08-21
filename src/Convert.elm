@@ -18,7 +18,7 @@ otherTab : Tab -> Tab
 otherTab tab =
     case tab of
         CurrentWork ->
-            Portfolio
+            PastWork
 
-        Portfolio ->
+        PastWork ->
             CurrentWork
