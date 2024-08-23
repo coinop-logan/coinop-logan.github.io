@@ -333,87 +333,134 @@ pastWorkEl : DisplayProfile -> Element Msg
 pastWorkEl dProfile =
     Element.column
         [ Element.width Element.fill
-        , Element.spacing 35
+        , Element.spacing 70
         , Element.padding <| responsiveVal dProfile 15 45
         ]
-        [ portfolioEntryEl dProfile
-            (Just "eestisse-bg.png")
-            (Element.image
-                [ Element.height <| Element.px 50 ]
-                { src = "eestisse-title.png"
-                , description = "eestisse"
-                }
-            )
-            "2024"
-            "Solo Project"
-            [ "An LLM-powered tool that explains the counter-intuitive Estonian grammar to English speakers (for example, why \"eestisse\" means \"into Estonia\"). The tool takes English or Estonian text, translates it, and explains word by word how the Estonian is constructed."
-            , "The central feature was surprisingly easy to build, due to LLM's strength in language tasks."
+        [ Element.column
+            [ Element.width Element.fill
+            , Element.spacing 35
             ]
-            [ newTabLink [] "https://eestisse.ee" "eestisse.ee"
-            , newTabLink [] "https://github.com/eestisse/eestisse" "github"
+            [ portfolioEntryEl dProfile
+                (Just "eestisse-bg.png")
+                (Element.image
+                    [ Element.height <| Element.px 50 ]
+                    { src = "eestisse-title.png"
+                    , description = "eestisse"
+                    }
+                )
+                "2024"
+                "Solo Project"
+                [ "An LLM-powered tool that explains the counter-intuitive Estonian grammar to English speakers (for example, why \"eestisse\" means \"into Estonia\"). The tool takes English or Estonian text, translates it, and explains word by word how the Estonian is constructed."
+                , "The central feature was surprisingly easy to build, due to LLM's strength in language tasks."
+                ]
+                [ newTabLink [] "https://eestisse.ee" "eestisse.ee"
+                , newTabLink [] "https://github.com/eestisse/eestisse" "github"
+                ]
+            , portfolioEntryEl dProfile
+                (Just "coinfight-bg.png")
+                (Element.image
+                    [ Element.height <| Element.px 50 ]
+                    { src = "coinfight-title.png"
+                    , description = "coinfight"
+                    }
+                )
+                "2022 / 2023"
+                "Solo Project"
+                [ "An RTS game where users fight over crypto in-game. Players must invest real crypto into their units (i.e. $1.50 for a Fighter, $0.50 for a worker); if these units are killed, this investment is dropped onto the battlefield for anyone else to pick up, capture, and withdraw. This is a zero-sum game where the goal is to get more out than you put in. \"Like Poker, but the chips shoot at each other!\""
+                , "The goal of Coinfight was to give players the experience of fighting over real money in real time. To avoid the cumbersome limits of blockchain processing, Coinfight only used the blockchain to process deposits and withdrawals, a rare but rewarding architectural approach among web3 games."
+                ]
+                [ newTabLink [] "https://www.youtube.com/watch?v=7tw10KUO1_U" "demo video"
+                , newTabLink [] "https://medium.com/p/472636deec57" "dev blog post"
+                , newTabLink [] "https://coinfight.io/" "coinfight.io"
+                , newTabLink [] "https://github.com/coinop-logan/coinfight" "github"
+                ]
+            , portfolioEntryEl dProfile
+                (Just "smokesignal-bg.png")
+                (Element.image
+                    [ Element.height <| Element.px 50 ]
+                    { src = "smokesignal-title.svg"
+                    , description = "smokesignal"
+                    }
+                )
+                "2020 / 2021"
+                "Tech Lead"
+                [ "SmokeSignal was an uncensorable, global chat forum. It implemented Reddit-like functionality (nested comments in topical forums) and allowed users to tip each other for posts."
+                , "As with DAIHard, below, a major goal of SmokeSignal was to be both radically free (no censorship or moderation) and unkillable (no central organization or nation-state could stop it)."
+                , "Thus, the main technical challenge was in making something suitably decentralized so as to not be attackable, while still integrating with traditional frameworks and services for the purposes of marketing and usability. For example, while all core functionality was implemented on the Ethereum blockchain and an interface hosted on IPFS, a traditional web server was used to serve SEO information for the otherwise decentralized content."
+                ]
+                [ newTabLink [] "https://medium.com/daihard-buidlers/introducing-smokesignal-da8f19bc27af" "intro post"
+                , newTabLink [] "https://www.youtube.com/watch?v=pV70Q0wgnnU" "demo video"
+                , newTabLink [] "https://github.com/team-toast/SmokeSignal" "github"
+                ]
+            , portfolioEntryEl dProfile
+                (Just "daihard-bg.png")
+                daihardLogoEl
+                "2019 / 2020"
+                "Solo Developer"
+                [ "DAIHard was a crypto/fiat exchange built entirely with Ethereum smart contracts, so that there was no central server anyone could take down. The application was designed to continue to function even in adversarial jurisdictions. Note that this app used no backend server at all, even for encrypted chat between users."
+                , "As part of this project, I spent two months in Zimbabwe researching the viability of crypto adoption in the face of a hyperinflated currency. A summary of my findings can be found in the below-linked ZimDai paper \"ZimDai: Blueprint for an Economic Jailbreak\"."
+                , "(The visual design for this project was contracted out.)"
+                ]
+                [ newTabLink [] "https://www.youtube.com/watch?v=WR4WovM0qwg" "demo video"
+                , newTabLink [] "https://medium.com/@coinop.logan/daihard-game-theory-21a456ef224e" "game theory writeup"
+                , newTabLink [] "https://github.com/team-toast/DAIHard" "github"
+                , newTabLink [] "https://github.com/coinop-logan/ZimDai/blob/master/whitepaper.pdf" "ZimDai paper"
+                ]
+            , portfolioEntryEl dProfile
+                (Just "toastycoin-bg.png")
+                (Element.el [ Font.size 38 ] <| Element.text "Toastycoin")
+                "2017"
+                "Solo Project"
+                [ "Toastycoin was an experimental dapp that used \"burnable payment\" contracts on the Ethereum blockchain to allow users to contract work from strangers on the Internet, without any previous trust or association. The burnable payment contracts used game theory to facilitate this: while loss of funds was not guaranteed, what was guaranteed was that scammers attempting to game the system would be punished and would not make a profit."
+                , "See the \"game theory writeup\" link under the DAIHard project above, to read more about this game theory, as DAIHard was simply a narrowed use-case of the burnable payments developed for Toastycoin."
+                ]
+                [ newTabLink [] "https://medium.com/@coinop.logan/preventing-scammer-profit-with-burnable-payments-ad2e9b632ef2" "Burnable Payments proposal"
+                , newTabLink [] "https://medium.com/@coinop.logan/toasted-money-part-2-b5dfd0b1e946" "experiment conclusion"
+                , newTabLink [] "https://github.com/coinop-logan/toastycoin" "github"
+                ]
             ]
-        , portfolioEntryEl dProfile
-            (Just "coinfight-bg.png")
-            (Element.image
-                [ Element.height <| Element.px 50 ]
-                { src = "coinfight-title.png"
-                , description = "coinfight"
-                }
-            )
-            "2022 / 2023"
-            "Solo Project"
-            [ "An RTS game where users fight over crypto in-game. Players must invest real crypto into their units (i.e. $1.50 for a Fighter, $0.50 for a worker); if these units are killed, this investment is dropped onto the battlefield for anyone else to pick up, capture, and withdraw. This is a zero-sum game where the goal is to get more out than you put in. \"Like Poker, but the chips shoot at each other!\""
-            , "The goal of Coinfight was to give players the experience of fighting over real money in real time. To avoid the cumbersome limits of blockchain processing, Coinfight only used the blockchain to process deposits and withdrawals, a rare but rewarding architectural approach among web3 games."
+
+        -- , Element.column
+        --     [ Element.width Element.fill
+        --     , Element.spacing 35
+        --     ]
+        --     [ Element.el
+        --         [ Font.size <| responsiveVal dProfile 24 36
+        --         ]
+        --       <|
+        --         Element.text "From past team members"
+        --     , proofAdEl dProfile
+        --         "Logan's the dopest bro I ever did know and I known a lotta dope bros man you shoulda seen the dopeness of those I worked with and Logan man he tops em all from the feels to the reals it's all there you better believe"
+        --         "Chase, CEO at Vaporware"
+        --     ]
+        ]
+
+
+proofAdEl : DisplayProfile -> String -> String -> Element Msg
+proofAdEl dProfile quote who =
+    Element.column
+        [ Element.width Element.fill
+        , Element.spacing <| responsiveVal dProfile 10 15
+        ]
+        [ Element.paragraph
+            [ Element.width Element.fill
+            , Font.size <| responsiveVal dProfile 18 24
+            , Border.width 1
+            , Border.color <| Element.rgb 0.3 0.3 0.3
+            , Element.padding <| responsiveVal dProfile 10 15
+            , Background.color <| Element.rgba 1 1 1 0.1
+            , Border.rounded 5
             ]
-            [ newTabLink [] "https://www.youtube.com/watch?v=7tw10KUO1_U" "demo video"
-            , newTabLink [] "https://medium.com/p/472636deec57" "dev blog post"
-            , newTabLink [] "https://coinfight.io/" "coinfight.io"
-            , newTabLink [] "https://github.com/coinop-logan/coinfight" "github"
+            [ Element.text quote ]
+        , Element.el
+            [ Element.alignRight
+            , Fonts.robotoCondensed
+            , Font.italic
             ]
-        , portfolioEntryEl dProfile
-            (Just "smokesignal-bg.png")
-            (Element.image
-                [ Element.height <| Element.px 50 ]
-                { src = "smokesignal-title.svg"
-                , description = "smokesignal"
-                }
-            )
-            "2020 / 2021"
-            "Tech Lead"
-            [ "SmokeSignal was an uncensorable, global chat forum. It implemented Reddit-like functionality (nested comments in topical forums) and allowed users to tip each other for posts."
-            , "As with DAIHard, below, a major goal of SmokeSignal was to be both radically free (no censorship or moderation) and unkillable (no central organization or nation-state could stop it)."
-            , "Thus, the main technical challenge was in making something suitably decentralized so as to not be attackable, while still integrating with traditional frameworks and services for the purposes of marketing and usability. For example, while all core functionality was implemented on the Ethereum blockchain and an interface hosted on IPFS, a traditional web server was used to serve SEO information for the otherwise decentralized content."
-            ]
-            [ newTabLink [] "https://medium.com/daihard-buidlers/introducing-smokesignal-da8f19bc27af" "intro post"
-            , newTabLink [] "https://www.youtube.com/watch?v=pV70Q0wgnnU" "demo video"
-            , newTabLink [] "https://github.com/team-toast/SmokeSignal" "github"
-            ]
-        , portfolioEntryEl dProfile
-            (Just "daihard-bg.png")
-            daihardLogoEl
-            "2019 / 2020"
-            "Solo Developer"
-            [ "DAIHard was a crypto/fiat exchange built entirely with Ethereum smart contracts, so that there was no central server anyone could take down. The application was designed to continue to function even in adversarial jurisdictions. Note that this app used no backend server at all, even for encrypted chat between users."
-            , "As part of this project, I spent two months in Zimbabwe researching the viability of crypto adoption in the face of a hyperinflated currency. A summary of my findings can be found in the below-linked ZimDai paper \"ZimDai: Blueprint for an Economic Jailbreak\"."
-            , "(The visual design for this project was contracted out.)"
-            ]
-            [ newTabLink [] "https://www.youtube.com/watch?v=WR4WovM0qwg" "demo video"
-            , newTabLink [] "https://medium.com/@coinop.logan/daihard-game-theory-21a456ef224e" "game theory writeup"
-            , newTabLink [] "https://github.com/team-toast/DAIHard" "github"
-            , newTabLink [] "https://github.com/coinop-logan/ZimDai/blob/master/whitepaper.pdf" "ZimDai paper"
-            ]
-        , portfolioEntryEl dProfile
-            (Just "toastycoin-bg.png")
-            (Element.el [ Font.size 38 ] <| Element.text "Toastycoin")
-            "2017"
-            "Solo Project"
-            [ "Toastycoin was an experimental dapp that used \"burnable payment\" contracts on the Ethereum blockchain to allow users to contract work from strangers on the Internet, without any previous trust or association. The burnable payment contracts used game theory to facilitate this: while loss of funds was not guaranteed, what was guaranteed was that scammers attempting to game the system would be punished and would not make a profit."
-            , "See the \"game theory writeup\" link under the DAIHard project above, to read more about this game theory, as DAIHard was simply a narrowed use-case of the burnable payments developed for Toastycoin."
-            ]
-            [ newTabLink [] "https://medium.com/@coinop.logan/preventing-scammer-profit-with-burnable-payments-ad2e9b632ef2" "Burnable Payments proposal"
-            , newTabLink [] "https://medium.com/@coinop.logan/toasted-money-part-2-b5dfd0b1e946" "experiment conclusion"
-            , newTabLink [] "https://github.com/coinop-logan/toastycoin" "github"
-            ]
+          <|
+            Element.text <|
+                "- "
+                    ++ who
         ]
 
 

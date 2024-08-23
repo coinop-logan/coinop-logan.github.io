@@ -23,7 +23,7 @@ pastWorkTabBottmY : DisplayProfile -> Float
 pastWorkTabBottmY dProfile =
     case dProfile of
         Desktop ->
-            2300
+            3300
 
         Mobile ->
             4080
