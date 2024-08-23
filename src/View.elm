@@ -419,16 +419,6 @@ pastWorkEl dProfile =
                 , newTabLink [] "https://github.com/coinop-logan/toastycoin" "github"
                 ]
             ]
-        , Element.column
-            [ Element.width Element.fill
-            , Element.spacing 35
-            ]
-            [ Element.el
-                [ Font.size <| responsiveVal dProfile 24 36
-                ]
-              <|
-                Element.text "From My Colleagues"
-            ]
         ]
 
 
@@ -543,22 +533,36 @@ aboutMeEl dProfile =
 proofAds : DisplayProfile -> Element Msg
 proofAds dProfile =
     Element.column
-        [ Element.spacing 10 ]
-        [ proofAdEl dProfile
-            "Logan is excellent at plotting out complex projects, then pushing forward in the execution with a consistent, healthy momentum. He keeps the whole scope of the project in mind, and can fill in any needed gaps in things like UX design and cloud infrastructure."
-            "placeholder.png"
-            "Schalk Dormehl"
-            "CEO at Whoknows"
-        , proofAdEl dProfile
-            "Logan is excellent at plotting out complex projects, then pushing forward in the execution with a consistent, healthy momentum. He keeps the whole scope of the project in mind, and can fill in any needed gaps in things like UX design and cloud infrastructure."
-            "placeholder.png"
-            "Schalk Dormehl"
-            "CEO at Whoknows"
-        , proofAdEl dProfile
-            "Logan is excellent at plotting out complex projects, then pushing forward in the execution with a consistent, healthy momentum. He keeps the whole scope of the project in mind, and can fill in any needed gaps in things like UX design and cloud infrastructure."
-            "placeholder.png"
-            "Schalk Dormehl"
-            "CEO at Whoknows"
+        [ Element.spacing 15
+        ]
+        [ Element.column
+            [ Element.width Element.fill
+            , Element.spacing 35
+            ]
+            [ Element.el
+                [ Font.size <| responsiveVal dProfile 24 36
+                ]
+              <|
+                Element.text "From My Colleagues"
+            ]
+        , Element.column
+            [ Element.spacing 10 ]
+            [ proofAdEl dProfile
+                "Logan is excellent at plotting out complex projects, then pushing forward in the execution with a consistent, healthy momentum. He keeps the whole scope of the project in mind, and can fill in any needed gaps in things like UX design and cloud infrastructure."
+                "placeholder.png"
+                "Schalk Dormehl"
+                "CEO at Whoknows"
+            , proofAdEl dProfile
+                "Logan is excellent at plotting out complex projects, then pushing forward in the execution with a consistent, healthy momentum. He keeps the whole scope of the project in mind, and can fill in any needed gaps in things like UX design and cloud infrastructure."
+                "placeholder.png"
+                "Schalk Dormehl"
+                "CEO at Whoknows"
+            , proofAdEl dProfile
+                "Logan is excellent at plotting out complex projects, then pushing forward in the execution with a consistent, healthy momentum. He keeps the whole scope of the project in mind, and can fill in any needed gaps in things like UX design and cloud infrastructure."
+                "placeholder.png"
+                "Schalk Dormehl"
+                "CEO at Whoknows"
+            ]
         ]
 
 
