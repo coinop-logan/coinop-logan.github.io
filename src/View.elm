@@ -429,10 +429,10 @@ pastWorkEl dProfile =
               <|
                 Element.text "From My Colleagues"
             , proofAdEl dProfile
-                "(placeholder content) Logan's the dopest bro I ever did know and I known a lotta dope bros man you shoulda seen the dopeness of those I worked with and Logan man he tops em all from the feels to the reals it's all there you better believe"
+                "Logan is excellent at plotting out complex projects, then pushing forward in the execution with a consistent, healthy momentum. He keeps the whole scope of the project in mind, and can fill in any needed gaps in things like UX design and cloud infrastructure."
                 "placeholder.png"
-                "Chase Van Etten"
-                "CEO at Vaporware"
+                "Schalk Dormehl"
+                "CEO at Whoknows"
             ]
         ]
 
