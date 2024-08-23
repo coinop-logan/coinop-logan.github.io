@@ -33,10 +33,10 @@ currentWorkTabBottomY : DisplayProfile -> Float
 currentWorkTabBottomY dProfile =
     case dProfile of
         Desktop ->
-            2050
+            2250
 
         Mobile ->
-            1750
+            2350
 
 
 bodyWidth : DisplayProfile -> Float

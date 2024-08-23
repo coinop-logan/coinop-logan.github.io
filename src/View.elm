@@ -428,18 +428,15 @@ pastWorkEl dProfile =
                 ]
               <|
                 Element.text "From My Colleagues"
-            , proofAdEl dProfile
-                "Logan is excellent at plotting out complex projects, then pushing forward in the execution with a consistent, healthy momentum. He keeps the whole scope of the project in mind, and can fill in any needed gaps in things like UX design and cloud infrastructure."
-                "placeholder.png"
-                "Schalk Dormehl"
-                "CEO at Whoknows"
             ]
         ]
 
 
 proofAdEl : DisplayProfile -> String -> String -> String -> String -> Element Msg
 proofAdEl dProfile quote imgSrc who context =
-    Element.row
+    responsiveVal dProfile
+        Element.column
+        Element.row
         [ Element.width Element.fill
         , Element.spacing <| responsiveVal dProfile 10 50
         , Border.width 1
@@ -448,8 +445,16 @@ proofAdEl dProfile quote imgSrc who context =
         , Background.color <| Element.rgba 1 1 1 0.1
         , Border.rounded 5
         ]
-        [ Element.column
-            [ Element.spacing 10 ]
+        [ responsiveVal dProfile
+            (Element.row
+                [ Element.spacing 10
+                , Element.centerX
+                ]
+            )
+            (Element.column
+                [ Element.spacing 10
+                ]
+            )
             [ Element.image
                 [ Element.height <| Element.px <| responsiveVal dProfile 100 150
                 ]
@@ -495,6 +500,13 @@ aboutMeEl dProfile =
         , Element.padding <| responsiveVal dProfile 15 45
         ]
         [ ytVidEl dProfile
+        , proofAds dProfile
+        , Element.paragraph
+            []
+            [ Element.text "For vibe-checking purposes, you may be interested in a recording of a "
+            , newTabLink [] "https://www.youtube.com/watch?v=rH7mjNDD448" "crypto workshop I ran"
+            , Element.text " in South Africa in 2021."
+            ]
         , Element.column
             [ Element.spacing 10 ]
             [ Element.el
@@ -525,12 +537,28 @@ aboutMeEl dProfile =
                 )
                 [ newTabLink [] "https://habla.news/a/naddr1qvzqqqr4gupzqyhjp3nd83hxklumz9elp6gmth2zrhr804hrcrktpmplygwtw4jjqqxnzde38q6rwwph8qcrvdpjwz7qav" "writeup on Nostr" ]
             ]
-        , Element.paragraph
-            []
-            [ Element.text "For vibe-checking purposes, you may be interested in a recording of a "
-            , newTabLink [] "https://www.youtube.com/watch?v=rH7mjNDD448" "crypto workshop I ran"
-            , Element.text " in South Africa in 2021."
-            ]
+        ]
+
+
+proofAds : DisplayProfile -> Element Msg
+proofAds dProfile =
+    Element.column
+        [ Element.spacing 10 ]
+        [ proofAdEl dProfile
+            "Logan is excellent at plotting out complex projects, then pushing forward in the execution with a consistent, healthy momentum. He keeps the whole scope of the project in mind, and can fill in any needed gaps in things like UX design and cloud infrastructure."
+            "placeholder.png"
+            "Schalk Dormehl"
+            "CEO at Whoknows"
+        , proofAdEl dProfile
+            "Logan is excellent at plotting out complex projects, then pushing forward in the execution with a consistent, healthy momentum. He keeps the whole scope of the project in mind, and can fill in any needed gaps in things like UX design and cloud infrastructure."
+            "placeholder.png"
+            "Schalk Dormehl"
+            "CEO at Whoknows"
+        , proofAdEl dProfile
+            "Logan is excellent at plotting out complex projects, then pushing forward in the execution with a consistent, healthy momentum. He keeps the whole scope of the project in mind, and can fill in any needed gaps in things like UX design and cloud infrastructure."
+            "placeholder.png"
+            "Schalk Dormehl"
+            "CEO at Whoknows"
         ]
 
 
