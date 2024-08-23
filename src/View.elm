@@ -419,48 +419,71 @@ pastWorkEl dProfile =
                 , newTabLink [] "https://github.com/coinop-logan/toastycoin" "github"
                 ]
             ]
-
-        -- , Element.column
-        --     [ Element.width Element.fill
-        --     , Element.spacing 35
-        --     ]
-        --     [ Element.el
-        --         [ Font.size <| responsiveVal dProfile 24 36
-        --         ]
-        --       <|
-        --         Element.text "From past team members"
-        --     , proofAdEl dProfile
-        --         "Logan's the dopest bro I ever did know and I known a lotta dope bros man you shoulda seen the dopeness of those I worked with and Logan man he tops em all from the feels to the reals it's all there you better believe"
-        --         "Chase, CEO at Vaporware"
-        --     ]
+        , Element.column
+            [ Element.width Element.fill
+            , Element.spacing 35
+            ]
+            [ Element.el
+                [ Font.size <| responsiveVal dProfile 24 36
+                ]
+              <|
+                Element.text "From My Colleagues"
+            , proofAdEl dProfile
+                "(placeholder content) Logan's the dopest bro I ever did know and I known a lotta dope bros man you shoulda seen the dopeness of those I worked with and Logan man he tops em all from the feels to the reals it's all there you better believe"
+                "placeholder.png"
+                "Chase Van Etten"
+                "CEO at Vaporware"
+            ]
         ]
 
 
-proofAdEl : DisplayProfile -> String -> String -> Element Msg
-proofAdEl dProfile quote who =
-    Element.column
+proofAdEl : DisplayProfile -> String -> String -> String -> String -> Element Msg
+proofAdEl dProfile quote imgSrc who context =
+    Element.row
         [ Element.width Element.fill
-        , Element.spacing <| responsiveVal dProfile 10 15
+        , Element.spacing <| responsiveVal dProfile 10 50
+        , Border.width 1
+        , Border.color <| Element.rgb 0.3 0.3 0.3
+        , Element.padding <| responsiveVal dProfile 10 15
+        , Background.color <| Element.rgba 1 1 1 0.1
+        , Border.rounded 5
         ]
-        [ Element.paragraph
+        [ Element.column
+            [ Element.spacing 10 ]
+            [ Element.image
+                [ Element.height <| Element.px <| responsiveVal dProfile 100 150
+                ]
+                { src = "endorsements/" ++ imgSrc
+                , description = who
+                }
+            , Element.column
+                [ Element.centerX, Element.spacing 5 ]
+                [ Element.el
+                    [ Fonts.robotoCondensed
+                    , Element.centerX
+                    , Font.bold
+                    , Font.size <| responsiveVal dProfile 16 20
+                    ]
+                  <|
+                    Element.text
+                        who
+                , Element.el
+                    [ Fonts.robotoCondensed
+                    , Element.centerX
+                    , Font.size <| responsiveVal dProfile 14 16
+                    ]
+                  <|
+                    Element.text
+                        context
+                ]
+            ]
+        , Element.paragraph
             [ Element.width Element.fill
             , Font.size <| responsiveVal dProfile 18 24
-            , Border.width 1
-            , Border.color <| Element.rgb 0.3 0.3 0.3
-            , Element.padding <| responsiveVal dProfile 10 15
-            , Background.color <| Element.rgba 1 1 1 0.1
-            , Border.rounded 5
+            , Font.italic
+            , Font.color <| Element.rgb 0.9 0.9 0.9
             ]
             [ Element.text quote ]
-        , Element.el
-            [ Element.alignRight
-            , Fonts.robotoCondensed
-            , Font.italic
-            ]
-          <|
-            Element.text <|
-                "- "
-                    ++ who
         ]
 
 
