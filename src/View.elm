@@ -614,6 +614,32 @@ contactLinksRow dProfile =
         )
 
 
+
+-- downloadResumeButton : DisplayProfile -> Element Msg
+-- downloadResumeButton dProfile =
+--     Element.newTabLink
+--         []
+--         { url = "/resume.pdf"
+--         , label =
+--             Element.row
+--                 [ Element.padding <| responsiveVal dProfile 10 15
+--                 , Element.spacing <| responsiveVal dProfile 5 10
+--                 , Border.color <| Element.rgb 1 1 1
+--                 , Border.rounded 5
+--                 , Background.color <| Element.rgba 0.5 0.5 1 0.7
+--                 , Border.width 1
+--                 , Font.color <| Element.rgb 0 0 0
+--                 , Font.size <| responsiveVal dProfile 20 24
+--                 ]
+--                 [ Element.text "CV"
+--                 , Element.image [ Element.height <| Element.px 20 ]
+--                     { src = "/download.png"
+--                     , description = "download"
+--                     }
+--                 ]
+--         }
+
+
 viewContactLink : DisplayProfile -> ( String, String ) -> Element Msg
 viewContactLink dProfile ( imgFName, url ) =
     Element.newTabLink
