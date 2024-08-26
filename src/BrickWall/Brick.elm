@@ -12,8 +12,7 @@ import Utils
 type alias Brick =
     { homePoint : Point
     , state : BrickState
-    , fillColor : Element.Color
-    , strokeColor : Element.Color
+    , gradientUrl : String
     }
 
 
@@ -43,15 +42,13 @@ brickGenerator gridPos alreadyPlaced now =
             gridPosToRealPos gridPos
     in
     if alreadyPlaced then
-        Random.map
-            (\fillColor -> Brick homePoint Placed fillColor Config.brickDefaultStrokeColor)
-            brickFillColorGenerator
+        Random.constant <|
+            Brick homePoint Placed (gradientIdStr gridPos)
 
     else
-        Random.map2
-            (\brickState fillColor -> Brick homePoint brickState fillColor Config.brickDefaultStrokeColor)
+        Random.map
+            (\brickState -> Brick homePoint brickState (gradientIdStr gridPos))
             (brickOriginGenerator homePoint |> Random.map (\originInfo -> Moving originInfo now))
-            brickFillColorGenerator
 
 
 brickOriginGenerator : Point -> Random.Generator ( Point, Float )
@@ -98,16 +95,14 @@ getBrickPosAndRot now brick =
                 )
 
 
-brickFillColorGenerator : Random.Generator Element.Color
-brickFillColorGenerator =
-    Random.map3
-        Element.rgb
-        (Random.float 0.1 0.2)
-        (Random.float 0 0.1)
-        (Random.float 0 0.08)
 
-
-
+-- brickFillColorGenerator : Random.Generator Element.Color
+-- brickFillColorGenerator =
+--     Random.map3
+--         Element.rgb
+--         (Random.float 0.1 0.2)
+--         (Random.float 0 0.1)
+--         (Random.float 0 0.08)
 -- brickStrokeColorGenerator : Random.Generator Element.Color
 -- brickStrokeColorGenerator =
 --     Debug.todo ""

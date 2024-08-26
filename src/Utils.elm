@@ -16,6 +16,11 @@ elementColorToRgb elColor =
         rgba.blue
 
 
+rgbToElementColor : RGB -> Element.Color
+rgbToElementColor rgb =
+    Element.rgb rgb.red rgb.blue rgb.green
+
+
 interpolateFloat : Float -> Float -> Float -> Float
 interpolateFloat f a b =
     (b - a) * f + a

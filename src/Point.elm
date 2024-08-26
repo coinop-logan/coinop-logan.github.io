@@ -14,6 +14,13 @@ add a b =
         (a.y + b.y)
 
 
+sub : Point -> Point -> Point
+sub a b =
+    Point
+        (a.x - b.x)
+        (a.y - b.y)
+
+
 getMidpoint : Point -> Point -> Point
 getMidpoint a b =
     { x = (a.x + b.x) / 2
@@ -38,3 +45,8 @@ interpolate f a b =
 interpolateFloat : Float -> Float -> Float -> Float
 interpolateFloat f a b =
     (b - a) * f + a
+
+
+manhattanDistance : Point -> Point -> Float
+manhattanDistance a b =
+    abs (a.x - b.x) + abs (a.y - b.y)

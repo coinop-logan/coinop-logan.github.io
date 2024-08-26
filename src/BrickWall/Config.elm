@@ -12,11 +12,11 @@ brickHeight =
 
 
 padding =
-    5
+    0
 
 
 brickDefaultStrokeColor =
-    Element.rgb 0.6 0.6 0.6
+    Element.rgba 1 1 1 0.2
 
 
 brickBehindNameStrokeColor =
@@ -51,3 +51,28 @@ brickTravelYMin =
 brickTravelYMax : Float
 brickTravelYMax =
     1200
+
+
+brickMainColor : Element.Color
+brickMainColor =
+    Element.rgb255 2 10 34
+
+
+brickGradientColor : Element.Color
+brickGradientColor =
+    Element.rgb255 46 81 102
+
+
+heightToFillWithCircleGradientPoints : Float
+heightToFillWithCircleGradientPoints =
+    5000
+
+
+vSpaceBetweenCircleGradientPoints : Float
+vSpaceBetweenCircleGradientPoints =
+    1000
+
+
+circleGradientRadius : Float
+circleGradientRadius =
+    700

@@ -71,3 +71,8 @@ padArea x y a =
     , width = a.width + (x * 2)
     , height = a.height + (y * 2)
     }
+
+
+gradientIdStr : ( Int, Int ) -> String
+gradientIdStr ( i, j ) =
+    "b" ++ String.fromInt i ++ ":" ++ String.fromInt j
