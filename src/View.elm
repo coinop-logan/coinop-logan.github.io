@@ -551,7 +551,7 @@ proofAds dProfile =
                 "Logan is excellent at plotting out complex projects, then pushing forward in the execution with a consistent, healthy momentum. He keeps the whole scope of the project in mind, and can fill in any needed gaps in things like UX design and cloud infrastructure."
                 "schalk.png"
                 "Schalk Dormehl"
-                "CEO at Whoknows"
+                "CTO at SwiftCom"
             , proofAdEl dProfile
                 "Logan is the rare engineer that is both competent with his tools and genuinely cares about business goals. He's an excellent partner throughout product development, challenges assumptions that would be easy to overlook, and is considerate of his teammates. Nihilism and pessimism are rampant in our industry, but Logan is the real deal—he knows technology is still the best tool for empowering individuals and takes that responsibility seriously."
                 "chase.png"
