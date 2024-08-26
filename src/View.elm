@@ -549,18 +549,18 @@ proofAds dProfile =
             [ Element.spacing 10 ]
             [ proofAdEl dProfile
                 "Logan is excellent at plotting out complex projects, then pushing forward in the execution with a consistent, healthy momentum. He keeps the whole scope of the project in mind, and can fill in any needed gaps in things like UX design and cloud infrastructure."
-                "placeholder.png"
+                "schalk.png"
                 "Schalk Dormehl"
                 "CEO at Whoknows"
             , proofAdEl dProfile
-                "Logan is excellent at plotting out complex projects, then pushing forward in the execution with a consistent, healthy momentum. He keeps the whole scope of the project in mind, and can fill in any needed gaps in things like UX design and cloud infrastructure."
-                "placeholder.png"
-                "Schalk Dormehl"
-                "CEO at Whoknows"
+                "Logan is the rare engineer that is both competent with his tools and genuinely cares about business goals. He's an excellent partner throughout product development, challenges assumptions that would be easy to overlook, and is considerate of his teammates. Nihilism and pessimism are rampant in our industry, but Logan is the real deal—he knows technology is still the best tool for empowering individuals and takes that responsibility seriously."
+                "chase.png"
+                "Chase Van Etten"
+                "CEO at OPFN"
             , proofAdEl dProfile
-                "Logan is excellent at plotting out complex projects, then pushing forward in the execution with a consistent, healthy momentum. He keeps the whole scope of the project in mind, and can fill in any needed gaps in things like UX design and cloud infrastructure."
-                "placeholder.png"
-                "Schalk Dormehl"
+                "[Chris quote]"
+                "chris.png"
+                "Chris Lemmer"
                 "CEO at Whoknows"
             ]
         ]
