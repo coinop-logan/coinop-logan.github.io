@@ -147,7 +147,7 @@ drawBrick now brick =
         , Svg.Attributes.transform transformString
         , Svg.Attributes.fill <| "url(#" ++ brick.gradientUrl ++ ")"
         , Svg.Attributes.stroke "white"
-        , Svg.Attributes.strokeOpacity "0.1"
+        , Svg.Attributes.strokeOpacity "0.05"
         , Svg.Attributes.strokeWidth "1"
         ]
         []
