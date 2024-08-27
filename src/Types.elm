@@ -24,6 +24,7 @@ type alias LoadingModel =
 
 type alias LoadedModel =
     { viewport : Viewport
+    , bodyViewport : Maybe Viewport
     , time_bySecond : Time.Posix
     , animateTime : Time.Posix
     , tabState : TabState
@@ -34,13 +35,14 @@ type alias LoadedModel =
 type Msg
     = NoOp
     | GotViewport Viewport
-    | TriggerGetViewport
+    | GotBodyViewport (Result Browser.Dom.Error Viewport)
+    | TriggerGetViewports
     | UpdateNow Time.Posix
     | Animate Time.Posix
     | CurrentWorkClicked
     | PortfolioClicked
     | AddBricks Time.Posix
-    | NameElementSizingInfoGot (Result Browser.Dom.Error Browser.Dom.Element)
+      -- | NameElementSizingInfoGot (Result Browser.Dom.Error Browser.Dom.Element)
     | Test
 
 

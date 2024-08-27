@@ -29,12 +29,16 @@ initLoadedModel : Viewport -> Time.Posix -> ( Model, Cmd Msg )
 initLoadedModel viewport now =
     ( Loaded
         { viewport = viewport
+        , bodyViewport = Nothing
         , time_bySecond = now
         , animateTime = now
         , tabState = OnTab CurrentWork
         , brickWall = BrickWall.init now viewport.scene.height
         }
-    , getViewportCmd
+    , Cmd.batch
+        [ getViewportCmd
+        , getBodyViewportCmd
+        ]
     )
 
 
@@ -82,21 +86,40 @@ updateLoadedModel msg model =
         GotViewport viewport ->
             ( { model
                 | viewport = viewport
-                , brickWall =
-                    let
-                        oldBW =
-                            model.brickWall
-                    in
-                    { oldBW
-                        | targetY = viewport.viewport.y + viewport.viewport.height
-                    }
               }
-            , Browser.Dom.getElement "header-element" |> Task.attempt NameElementSizingInfoGot
+            , Cmd.none
             )
 
-        TriggerGetViewport ->
+        GotBodyViewport result ->
+            case result of
+                Err domErr ->
+                    let
+                        _ =
+                            Debug.log "error getting body viewport" domErr
+                    in
+                    ( model, Cmd.none )
+
+                Ok viewport ->
+                    ( { model
+                        | bodyViewport = Just viewport
+                        , brickWall =
+                            let
+                                oldBW =
+                                    model.brickWall
+                            in
+                            { oldBW
+                                | targetY = viewport.viewport.y + viewport.viewport.height
+                            }
+                      }
+                    , Cmd.none
+                    )
+
+        TriggerGetViewports ->
             ( model
-            , getViewportCmd
+            , Cmd.batch
+                [ getViewportCmd
+                , getBodyViewportCmd
+                ]
             )
 
         UpdateNow newNow ->
@@ -169,28 +192,26 @@ updateLoadedModel msg model =
                 | brickWall =
                     model.brickWall |> BrickWall.maybeSpawnNewBricksUnderTargetY 3 now
               }
-            , getViewportCmd
+            , getBodyViewportCmd
             )
 
-        NameElementSizingInfoGot result ->
-            case result of
-                Err _ ->
-                    ( model, Cmd.none )
-
-                Ok nameElementSizingInfo ->
-                    ( { model
-                        | brickWall =
-                            let
-                                oldBW =
-                                    model.brickWall
-                            in
-                            { oldBW
-                                | titleArea = Just nameElementSizingInfo.element
-                            }
-                      }
-                    , Cmd.none
-                    )
-
+        -- NameElementSizingInfoGot result ->
+        --     case result of
+        --         Err _ ->
+        --             ( model, Cmd.none )
+        --         Ok nameElementSizingInfo ->
+        --             ( { model
+        --                 | brickWall =
+        --                     let
+        --                         oldBW =
+        --                             model.brickWall
+        --                     in
+        --                     { oldBW
+        --                         | titleArea = Just nameElementSizingInfo.element
+        --                     }
+        --               }
+        --             , Cmd.none
+        --             )
         Test ->
             -- let
             --     _ =
@@ -240,7 +261,7 @@ subscriptions _ =
     Sub.batch
         [ Time.every 1000 UpdateNow
         , Browser.Events.onAnimationFrame Animate
-        , Browser.Events.onResize (\_ _ -> TriggerGetViewport)
+        , Browser.Events.onResize (\_ _ -> TriggerGetViewports)
         , Time.every 15 AddBricks
         ]
 
@@ -248,3 +269,8 @@ subscriptions _ =
 getViewportCmd : Cmd Msg
 getViewportCmd =
     Browser.Dom.getViewport |> Task.perform GotViewport
+
+
+getBodyViewportCmd : Cmd Msg
+getBodyViewportCmd =
+    Browser.Dom.getViewportOf "body-element" |> Task.attempt GotBodyViewport
