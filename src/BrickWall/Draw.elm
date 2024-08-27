@@ -93,42 +93,31 @@ radialGradientDefs screenWidth =
 draw : Time.Posix -> BrickWall -> Svg msg
 draw now brickWall =
     let
+        fadedAreas =
+            -- case brickWall.titleArea of
+            --     Just area ->
+            --         [ padArea 55 30 area ]
+            --     Nothing ->
+            []
+
         drawnBricks =
             brickWall.bricks
                 |> BricksContainer.toList
-                |> List.map (Maybe.andThen (maybeDrawBrick now brickWall.titleArea))
+                |> List.map (Maybe.map (drawBrick now fadedAreas))
                 |> Maybe.values
     in
     Svg.g [] drawnBricks
 
 
-maybeDrawBrick : Time.Posix -> Maybe AreaDef -> Brick -> Maybe (Svg msg)
-maybeDrawBrick now maybeTitleArea brick =
-    case maybeTitleArea of
-        Nothing ->
-            Just <| drawBrick now brick
-
-        Just nameArea ->
-            if pointIsInArea (pointToCenterPoint brick.homePoint) (padArea 60 30 nameArea) then
-                Just <|
-                    drawBrick now brick
-                -- { brick
-                --     | fillColor = Element.rgb 0.1 0 0
-                --     , strokeColor = Config.brickBehindNameStrokeColor
-                -- }
-
-            else
-                Just <| drawBrick now brick
-
-
-drawBrick : Time.Posix -> Brick -> Svg msg
-drawBrick now brick =
+drawBrick : Time.Posix -> List AreaDef -> Brick -> Svg msg
+drawBrick now fadedAreas brick =
     let
-        testGradPointGlobal =
-            { x = 100, y = 500 }
-
-        gradPointLocal =
-            Point.sub testGradPointGlobal brick.homePoint
+        isFaded =
+            List.any
+                (\area ->
+                    pointIsInArea (pointToCenterPoint brick.homePoint) area
+                )
+                fadedAreas
 
         ( position, rotation ) =
             Brick.getBrickPosAndRot now brick
@@ -137,45 +126,32 @@ drawBrick now brick =
             String.join " "
                 [ SvgHelpers.rotateString rotation
                 ]
+
+        rectAttrs =
+            [ Svg.Attributes.x <| String.fromInt <| floor position.x
+            , Svg.Attributes.y <| String.fromInt <| floor position.y
+            , Svg.Attributes.class "brickrect"
+            , Svg.Attributes.width <| String.fromInt Config.brickWidth
+            , Svg.Attributes.height <| String.fromInt Config.brickHeight
+            , Svg.Attributes.transform transformString
+            , Svg.Attributes.strokeWidth "1"
+            ]
+                ++ (if isFaded then
+                        [ Svg.Attributes.fill <| "url(#" ++ brick.gradientUrl ++ ")"
+                        , Svg.Attributes.stroke "white"
+                        , Svg.Attributes.strokeOpacity <| String.fromFloat Config.fadedBrickStrokeOpacity
+                        , Svg.Attributes.fillOpacity <| String.fromFloat Config.fadedBrickFillOpacity
+                        ]
+
+                    else
+                        [ Svg.Attributes.fill <| "url(#" ++ brick.gradientUrl ++ ")"
+                        , Svg.Attributes.stroke "white"
+                        , Svg.Attributes.strokeOpacity <| String.fromFloat Config.brickStrokeOpacity
+                        ]
+                   )
     in
     Svg.rect
-        [ Svg.Attributes.x <| String.fromInt <| floor position.x
-        , Svg.Attributes.y <| String.fromInt <| floor position.y
-        , Svg.Attributes.class "brickrect"
-        , Svg.Attributes.width <| String.fromInt Config.brickWidth
-        , Svg.Attributes.height <| String.fromInt Config.brickHeight
-        , Svg.Attributes.transform transformString
-        , Svg.Attributes.fill <| "url(#" ++ brick.gradientUrl ++ ")"
-        , Svg.Attributes.stroke "white"
-        , Svg.Attributes.strokeOpacity "0.05"
-        , Svg.Attributes.strokeWidth "1"
-        ]
-        []
-
-
-odrawBrick : Time.Posix -> Brick -> Svg msg
-odrawBrick now brick =
-    let
-        ( position, rotation ) =
-            Brick.getBrickPosAndRot now brick
-
-        transformString =
-            String.join " "
-                [ SvgHelpers.rotateString rotation
-                ]
-    in
-    Svg.rect
-        [ Svg.Attributes.x <| String.fromInt <| floor position.x
-        , Svg.Attributes.y <| String.fromInt <| floor position.y
-        , Svg.Attributes.class "brickrect"
-        , Svg.Attributes.width <| String.fromInt Config.brickWidth
-        , Svg.Attributes.height <| String.fromInt Config.brickHeight
-        , Svg.Attributes.transform transformString
-
-        -- , Svg.Attributes.fill <| colorToSvgString brick.fillColor
-        -- , Svg.Attributes.stroke <| colorToSvgString brick.strokeColor
-        , Svg.Attributes.strokeWidth "1"
-        ]
+        rectAttrs
         []
 
 

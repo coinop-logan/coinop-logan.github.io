@@ -15,14 +15,6 @@ padding =
     0
 
 
-brickDefaultStrokeColor =
-    Element.rgba 1 1 1 0.2
-
-
-brickBehindNameStrokeColor =
-    Element.rgb 0.15 0.15 0.15
-
-
 wallWidth : Int
 wallWidth =
     20
@@ -76,3 +68,18 @@ vSpaceBetweenCircleGradientPoints =
 circleGradientRadius : Float
 circleGradientRadius =
     700
+
+
+fadedBrickStrokeOpacity : Float
+fadedBrickStrokeOpacity =
+    0
+
+
+brickStrokeOpacity : Float
+brickStrokeOpacity =
+    0.05
+
+
+fadedBrickFillOpacity : Float
+fadedBrickFillOpacity =
+    0.01
