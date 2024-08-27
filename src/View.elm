@@ -14,6 +14,8 @@ import Element.Input as Input
 import Embed.Youtube
 import Embed.Youtube.Attributes
 import Fonts
+import Html
+import Html.Attributes
 import Responsive exposing (..)
 import Route exposing (Route)
 import TabGraphics
@@ -147,7 +149,69 @@ bodyEl dProfile model =
 
 viewAboutPage : DisplayProfile -> Element Msg
 viewAboutPage dProfile =
-    Element.text "viewAboutPage"
+    Element.column
+        [ Element.width Element.fill
+        , Element.spacing 140
+        ]
+        [ nameAndTitleElement dProfile
+        , viewPortfolioElements dProfile
+        ]
+
+
+nameAndTitleElement : DisplayProfile -> Element Msg
+nameAndTitleElement dProfile =
+    Element.column
+        [ Element.centerX
+        , Element.spacing 44
+        , Fonts.poppins
+        , Element.paddingEach
+            { top = 135
+            , bottom = 0
+            , right = 0
+            , left = 0
+            }
+        ]
+        [ Element.el
+            [ Element.centerX
+            , Font.size 80
+            , Font.extraBold
+            ]
+          <|
+            nameElement
+        , Element.el
+            [ Element.centerX
+            , Font.size 40
+            ]
+          <|
+            Element.text "Full-Stack Software Architect"
+        ]
+
+
+nameElement : Element Msg
+nameElement =
+    Element.html <|
+        Html.div
+            [ Html.Attributes.style "background" "-webkit-linear-gradient(left, white, #009DC5)"
+            , Html.Attributes.style "-webkit-background-clip" "text"
+            , Html.Attributes.style "-webkit-text-fill-color" "transparent"
+            ]
+        <|
+            [ Html.text "Logan Brutsche" ]
+
+
+nameGradientStyles : List (Attribute Msg)
+nameGradientStyles =
+    List.map Element.htmlAttribute
+        [ Html.Attributes.style "background" "#eee"
+        , Html.Attributes.style "background" "-webkit-linear-gradient(left, #eee, #333)"
+        , Html.Attributes.style "-webkit-background-clip" "text"
+        , Html.Attributes.style "-webkit-text-fill-color" "transparent"
+        ]
+
+
+viewPortfolioElements : DisplayProfile -> Element Msg
+viewPortfolioElements dProfile =
+    Element.text "ports"
 
 
 viewWorkPage : DisplayProfile -> Element Msg
