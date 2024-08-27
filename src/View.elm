@@ -90,6 +90,8 @@ headerEl dProfile model =
             , Element.centerY
             , Element.paddingXY 70 0
             , Font.size 20
+            , Fonts.poppins
+            , Font.bold
             ]
             [ routingButton dProfile (Element.text "WORK") Route.Work model.route
             , routingButton dProfile (Element.text "ABOUT") Route.About model.route
@@ -104,7 +106,8 @@ routingButton dProfile labelEl route currentRoute =
         { label =
             Element.el
                 (if route == currentRoute then
-                    [ Font.bold ]
+                    [ Font.extraBold
+                    ]
 
                  else
                     []
@@ -142,14 +145,14 @@ bodyEl dProfile model =
                 viewContactPage dProfile
 
 
-viewWorkPage : DisplayProfile -> Element Msg
-viewWorkPage dProfile =
-    Element.text "viewWorkPage"
-
-
 viewAboutPage : DisplayProfile -> Element Msg
 viewAboutPage dProfile =
     Element.text "viewAboutPage"
+
+
+viewWorkPage : DisplayProfile -> Element Msg
+viewWorkPage dProfile =
+    Element.text "viewWorkPage"
 
 
 viewContactPage : DisplayProfile -> Element Msg
