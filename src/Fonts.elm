@@ -33,3 +33,7 @@ prompt =
 
 robotoCondensed =
     Font.family [ Font.typeface "roboto condensed" ]
+
+
+poppins =
+    Font.family [ Font.typeface "poppins" ]
