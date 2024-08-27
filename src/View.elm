@@ -211,7 +211,27 @@ nameGradientStyles =
 
 viewPortfolioElements : DisplayProfile -> Element Msg
 viewPortfolioElements dProfile =
-    Element.text "ports"
+    Element.column
+        [ Element.centerX
+        , Element.spacing 132
+        , Element.width Element.fill
+        ]
+        [ portfolioEntryEl dProfile
+            (Element.image
+                [ Element.height <| Element.px 50 ]
+                { src = "eestisse-title.png"
+                , description = "eestisse"
+                }
+            )
+            "2024"
+            "Solo Project"
+            [ "An LLM-powered tool that explains the counter-intuitive Estonian grammar to English speakers (for example, why \"eestisse\" means \"into Estonia\"). The tool takes English or Estonian text, translates it, and explains word by word how the Estonian is constructed."
+            , "The central feature was surprisingly easy to build, due to LLM's strength in language tasks."
+            ]
+            [ newTabLink [] "https://eestisse.ee" "eestisse.ee"
+            , newTabLink [] "https://github.com/eestisse/eestisse" "github"
+            ]
+        ]
 
 
 viewWorkPage : DisplayProfile -> Element Msg
@@ -234,3 +254,16 @@ blueBorderedText dProfile text =
         , Border.color Theme.lightBlue
         ]
         (Element.text text)
+
+
+portfolioEntryEl : DisplayProfile -> Element Msg -> String -> String -> List String -> List (Element Msg) -> Element Msg
+portfolioEntryEl dProfile titleEl dateString roleString bodyStrings linkOutEls =
+    Element.column
+        [ Background.color <| Element.rgba255 217 217 217 0.2
+        , Border.rounded 40
+        , Element.paddingXY 60 43
+        , Element.width (Element.fill |> Element.maximum 1050)
+        , Element.centerX
+        ]
+        [ Element.text "stuff's gonna go here :D"
+        ]
