@@ -100,10 +100,10 @@ updateLoadedModel msg model =
         GotBodyViewport result ->
             case result of
                 Err domErr ->
-                    let
-                        _ =
-                            Debug.log "error getting body viewport" domErr
-                    in
+                    -- let
+                    --     _ =
+                    --         Debug.log "error getting body viewport" domErr
+                    -- in
                     ( model, Cmd.none )
 
                 Ok viewport ->
