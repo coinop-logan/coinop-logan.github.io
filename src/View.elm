@@ -126,9 +126,27 @@ bodyEl dProfile model =
         , addId "body-element"
         ]
     <|
-        viewRoute dProfile model.route
+        case model.route of
+            Route.Work ->
+                viewWorkPage dProfile
+
+            Route.About ->
+                viewAboutPage dProfile
+
+            Route.Contact ->
+                viewContactPage dProfile
 
 
-viewRoute : DisplayProfile -> Route -> Element Msg
-viewRoute dProfile route =
-    Debug.todo ""
+viewWorkPage : DisplayProfile -> Element Msg
+viewWorkPage dProfile =
+    Element.text "viewWorkPage"
+
+
+viewAboutPage : DisplayProfile -> Element Msg
+viewAboutPage dProfile =
+    Element.text "viewAboutPage"
+
+
+viewContactPage : DisplayProfile -> Element Msg
+viewContactPage dProfile =
+    Element.text "viewContactPage"
