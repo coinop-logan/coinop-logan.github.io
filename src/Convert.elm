@@ -12,13 +12,3 @@ animationProgressFloat startTime now =
             (now |> Time.posixToMillis) - (startTime |> Time.posixToMillis)
     in
     toFloat millisElapsed / (toFloat <| Time.posixToMillis Config.tabSwitchAnimationInterval)
-
-
-otherTab : Tab -> Tab
-otherTab tab =
-    case tab of
-        CurrentWork ->
-            PastWork
-
-        PastWork ->
-            CurrentWork

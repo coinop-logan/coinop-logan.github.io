@@ -40,7 +40,6 @@ initLoadedModel viewport now url key =
         , bodyViewport = Nothing
         , time_bySecond = now
         , animateTime = now
-        , tabState = OnTab CurrentWork
         , brickWall = BrickWall.init now viewport.scene.height
         }
     , Cmd.batch
@@ -159,63 +158,8 @@ updateLoadedModel msg model =
 
         Animate time ->
             ( { model | animateTime = time }
-                |> endAnimationIfNecessary
             , Cmd.none
             )
-
-        CurrentWorkClicked ->
-            if Config.animateTabs then
-                case model.tabState of
-                    OnTab PastWork ->
-                        ( { model
-                            | tabState =
-                                SwitchingTo CurrentWork model.animateTime
-                          }
-                        , Cmd.none
-                        )
-
-                    SwitchingTo CurrentWork _ ->
-                        ( model, Cmd.none )
-
-                    OnTab CurrentWork ->
-                        ( model, Cmd.none )
-
-                    SwitchingTo PastWork startTime ->
-                        ( model |> reverseAnimation
-                        , Cmd.none
-                        )
-
-            else
-                ( { model | tabState = OnTab CurrentWork }
-                , Cmd.none
-                )
-
-        PortfolioClicked ->
-            if Config.animateTabs then
-                case model.tabState of
-                    OnTab CurrentWork ->
-                        ( { model
-                            | tabState =
-                                SwitchingTo PastWork model.animateTime
-                          }
-                        , Cmd.none
-                        )
-
-                    SwitchingTo PastWork _ ->
-                        ( model, Cmd.none )
-
-                    OnTab PastWork ->
-                        ( model, Cmd.none )
-
-                    SwitchingTo CurrentWork startTime ->
-                        ( model |> reverseAnimation
-                        , Cmd.none
-                        )
-
-            else
-                ( { model | tabState = OnTab PastWork }
-                , Cmd.none
-                )
 
         AddBricks now ->
             ( { model
@@ -248,42 +192,6 @@ updateLoadedModel msg model =
             --         Debug.log "hi " "hi"
             -- in
             ( model, Cmd.none )
-
-
-endAnimationIfNecessary : LoadedModel -> LoadedModel
-endAnimationIfNecessary model =
-    case model.tabState of
-        OnTab _ ->
-            model
-
-        SwitchingTo targetTab animateStartTime ->
-            if animationProgressFloat animateStartTime model.animateTime >= 1 then
-                { model | tabState = OnTab targetTab }
-
-            else
-                model
-
-
-reverseAnimation : LoadedModel -> LoadedModel
-reverseAnimation model =
-    case model.tabState of
-        OnTab _ ->
-            model
-
-        SwitchingTo targetTab animateStartTime ->
-            let
-                targetAnimationProgressFloat =
-                    1 - animationProgressFloat animateStartTime model.animateTime
-
-                newStartTime =
-                    ((toFloat <| Time.posixToMillis model.animateTime) - (toFloat <| Time.posixToMillis Config.tabSwitchAnimationInterval) * targetAnimationProgressFloat)
-                        |> round
-                        |> Time.millisToPosix
-            in
-            { model
-                | tabState =
-                    SwitchingTo (otherTab targetTab) newStartTime
-            }
 
 
 subscriptions : Model -> Sub Msg

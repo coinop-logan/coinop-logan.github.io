@@ -35,7 +35,6 @@ type alias LoadedModel =
     , bodyViewport : Maybe Viewport
     , time_bySecond : Time.Posix
     , animateTime : Time.Posix
-    , tabState : TabState
     , brickWall : BrickWall
     }
 
@@ -50,18 +49,6 @@ type Msg
     | OnUrlChange Url
     | UpdateNow Time.Posix
     | Animate Time.Posix
-    | CurrentWorkClicked
-    | PortfolioClicked
     | AddBricks Time.Posix
       -- | NameElementSizingInfoGot (Result Browser.Dom.Error Browser.Dom.Element)
     | Test
-
-
-type Tab
-    = CurrentWork
-    | PastWork
-
-
-type TabState
-    = OnTab Tab
-    | SwitchingTo Tab Time.Posix

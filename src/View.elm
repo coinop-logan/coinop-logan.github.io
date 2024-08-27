@@ -111,7 +111,7 @@ routingButton dProfile labelEl route isOnRoute =
 
 bodyEl : DisplayProfile -> LoadedModel -> Element Msg
 bodyEl dProfile model =
-    Element.column
+    Element.el
         [ Element.clipY
         , Element.scrollbarX
         , Element.width Element.fill
@@ -125,13 +125,10 @@ bodyEl dProfile model =
                     BrickWall.Draw.view model.animateTime bodyViewport.scene.width bodyViewport.scene.height model.brickWall
         , addId "body-element"
         ]
-        [ Element.el
-            [ Element.centerX
-            , Element.width <| Element.px 400
-            , Element.height <| Element.px 3333
-            , Background.color <| Element.rgb 1 0 0
-            ]
-          <|
-            Element.text
-                (Route.toString model.route)
-        ]
+    <|
+        viewRoute dProfile model.route
+
+
+viewRoute : DisplayProfile -> Route -> Element Msg
+viewRoute dProfile route =
+    Debug.todo ""
