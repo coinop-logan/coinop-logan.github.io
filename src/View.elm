@@ -15,6 +15,7 @@ import Embed.Youtube
 import Embed.Youtube.Attributes
 import Fonts
 import Responsive exposing (..)
+import Route exposing (Route)
 import TabGraphics
 import Theme
 import Time
@@ -77,11 +78,35 @@ view model =
 
 headerEl : DisplayProfile -> LoadedModel -> Element Msg
 headerEl dProfile model =
-    Element.row
+    Element.el
         [ Element.width Element.fill
-        , Element.height <| Element.px 50
+        , Element.height <| Element.px 134
+        , Background.color Theme.headerBgColor
         ]
-        []
+    <|
+        Element.row
+            [ Element.alignRight
+            , Element.spacing 75
+            , Element.centerY
+            ]
+            [ routingButton dProfile (Element.text "WORK") Route.Work (model.route == Route.Work) ]
+
+
+routingButton : DisplayProfile -> Element Msg -> Route -> Bool -> Element Msg
+routingButton dProfile labelEl route isOnRoute =
+    Input.button
+        [ Element.padding 10 ]
+        { label =
+            Element.el
+                (if isOnRoute then
+                    [ Font.bold ]
+
+                 else
+                    []
+                )
+                labelEl
+        , onPress = Just <| GotoRoute route
+        }
 
 
 bodyEl : DisplayProfile -> LoadedModel -> Element Msg
@@ -108,5 +133,5 @@ bodyEl dProfile model =
             ]
           <|
             Element.text
-                "hi"
+                (Route.toString model.route)
         ]

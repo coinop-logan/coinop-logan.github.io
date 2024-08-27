@@ -1,6 +1,6 @@
 module Main exposing (..)
 
-import Browser
+import Browser.Hash as Hash
 import Html exposing (Html, button, div, text)
 import Html.Events exposing (onClick)
 import State
@@ -10,9 +10,11 @@ import View
 
 main : Program Flags Model Msg
 main =
-    Browser.document
+    Hash.application
         { init = State.init
         , view = View.root
         , update = State.update
         , subscriptions = State.subscriptions
+        , onUrlChange = OnUrlChange
+        , onUrlRequest = OnUrlRequest
         }

@@ -1,10 +1,14 @@
 module Types exposing (..)
 
 import BrickWall.BrickWall as BrickWall exposing (BrickWall)
+import Browser
 import Browser.Dom exposing (Viewport)
+import Browser.Navigation
 import CommonTypes exposing (..)
 import Responsive exposing (DisplayProfile)
+import Route exposing (Route)
 import Time
+import Url exposing (Url)
 
 
 type alias Flags =
@@ -19,11 +23,15 @@ type Model
 type alias LoadingModel =
     { viewport : Maybe Viewport
     , time_bySecond : Maybe Time.Posix
+    , key : Browser.Navigation.Key
+    , url : Url
     }
 
 
 type alias LoadedModel =
-    { viewport : Viewport
+    { key : Browser.Navigation.Key
+    , viewport : Viewport
+    , route : Route
     , bodyViewport : Maybe Viewport
     , time_bySecond : Time.Posix
     , animateTime : Time.Posix
@@ -37,6 +45,9 @@ type Msg
     | GotViewport Viewport
     | GotBodyViewport (Result Browser.Dom.Error Viewport)
     | TriggerGetViewports
+    | GotoRoute Route
+    | OnUrlRequest Browser.UrlRequest
+    | OnUrlChange Url
     | UpdateNow Time.Posix
     | Animate Time.Posix
     | CurrentWorkClicked

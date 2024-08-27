@@ -1,22 +1,28 @@
 module State exposing (..)
 
 import BrickWall.BrickWall as BrickWall exposing (BrickWall)
+import Browser
 import Browser.Dom exposing (Viewport)
 import Browser.Events
+import Browser.Navigation as Nav
 import Config
 import Convert exposing (..)
 import Random
 import Responsive exposing (DisplayProfile)
+import Route exposing (Route)
 import Task
 import Time
 import Types exposing (..)
+import Url exposing (Url)
 
 
-init : Flags -> ( Model, Cmd Msg )
-init _ =
+init : Flags -> Url -> Nav.Key -> ( Model, Cmd Msg )
+init _ url key =
     ( Loading
         { viewport = Nothing
         , time_bySecond = Nothing
+        , key = key
+        , url = url
         }
     , Cmd.batch
         [ Time.now |> Task.perform UpdateNow
@@ -25,10 +31,12 @@ init _ =
     )
 
 
-initLoadedModel : Viewport -> Time.Posix -> ( Model, Cmd Msg )
-initLoadedModel viewport now =
+initLoadedModel : Viewport -> Time.Posix -> Url -> Nav.Key -> ( Model, Cmd Msg )
+initLoadedModel viewport now url key =
     ( Loaded
-        { viewport = viewport
+        { key = key
+        , route = Route.parseUrl url
+        , viewport = viewport
         , bodyViewport = Nothing
         , time_bySecond = now
         , animateTime = now
@@ -64,7 +72,7 @@ update msg model =
                         -- test if loaded
                         case ( loadingModelModified.viewport, loadingModelModified.time_bySecond ) of
                             ( Just viewport, Just time_bySecond ) ->
-                                initLoadedModel viewport time_bySecond
+                                initLoadedModel viewport time_bySecond loadingModelModified.url loadingModelModified.key
 
                             _ ->
                                 ( Loading loadingModelModified
@@ -120,6 +128,28 @@ updateLoadedModel msg model =
                 [ getViewportCmd
                 , getBodyViewportCmd
                 ]
+            )
+
+        GotoRoute route ->
+            ( model
+            , Nav.pushUrl model.key (Route.toString route)
+            )
+
+        OnUrlRequest urlRequest ->
+            case urlRequest of
+                Browser.Internal url ->
+                    ( model
+                    , Nav.pushUrl model.key (Url.toString url)
+                    )
+
+                Browser.External url ->
+                    ( model
+                    , Nav.load url
+                    )
+
+        OnUrlChange url ->
+            ( { model | route = Route.parseUrl url }
+            , Cmd.none
             )
 
         UpdateNow newNow ->
