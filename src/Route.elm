@@ -30,10 +30,10 @@ toString : Route -> String
 toString route =
     case route of
         Work ->
-            "#work"
+            "#work/"
 
         Contact ->
-            "#contact"
+            "#contact/"
 
         About ->
-            ""
+            "/"

@@ -41,3 +41,8 @@ portfolioEntryBorderColor =
 headerBgColor : Element.Color
 headerBgColor =
     Element.rgb255 3 9 32
+
+
+lightBlue : Element.Color
+lightBlue =
+    Element.rgb255 0 156 196

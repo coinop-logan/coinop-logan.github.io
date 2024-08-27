@@ -88,17 +88,22 @@ headerEl dProfile model =
             [ Element.alignRight
             , Element.spacing 75
             , Element.centerY
+            , Element.paddingXY 70 0
+            , Font.size 20
             ]
-            [ routingButton dProfile (Element.text "WORK") Route.Work (model.route == Route.Work) ]
+            [ routingButton dProfile (Element.text "WORK") Route.Work model.route
+            , routingButton dProfile (Element.text "ABOUT") Route.About model.route
+            , routingButton dProfile (blueBorderedText dProfile "CONTACT") Route.Contact model.route
+            ]
 
 
-routingButton : DisplayProfile -> Element Msg -> Route -> Bool -> Element Msg
-routingButton dProfile labelEl route isOnRoute =
+routingButton : DisplayProfile -> Element Msg -> Route -> Route -> Element Msg
+routingButton dProfile labelEl route currentRoute =
     Input.button
         [ Element.padding 10 ]
         { label =
             Element.el
-                (if isOnRoute then
+                (if route == currentRoute then
                     [ Font.bold ]
 
                  else
@@ -150,3 +155,15 @@ viewAboutPage dProfile =
 viewContactPage : DisplayProfile -> Element Msg
 viewContactPage dProfile =
     Element.text "viewContactPage"
+
+
+blueBorderedText : DisplayProfile -> String -> Element Msg
+blueBorderedText dProfile text =
+    Element.el
+        [ Element.padding 15
+        , Font.color Theme.lightBlue
+        , Border.rounded 100
+        , Border.width 2
+        , Border.color Theme.lightBlue
+        ]
+        (Element.text text)
