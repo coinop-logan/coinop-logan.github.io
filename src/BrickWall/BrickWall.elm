@@ -105,3 +105,24 @@ updateBrickStates now brickWall =
             brickWall.bricks
                 |> BricksContainer.updateBricks (updateBrickState now)
     }
+
+
+
+-- spawnBricksScaledToAmountToFill : Time.Posix -> BrickWall -> BrickWall
+-- spawnBricksScaledToAmountToFill now brickWall =
+--     let
+--         lastBrickY =
+--             brickWall.bricks
+--                 |> BricksContainer.getLastBrickGridPos
+--                 |> Maybe.map gridPosToRealPos
+--                 |> Maybe.map .y
+--                 |> Maybe.withDefault 0
+--         spaceToTargetY =
+--             brickWall.targetY - lastBrickY
+--         amountToSpawn =
+--             if spaceToTargetY <= 0 then
+--                 0
+--             else
+--                 spaceToTargetY / Config.brickHeight |> ceiling
+--     in
+--     maybeSpawnNewBricksUnderTargetY amountToSpawn now brickWall

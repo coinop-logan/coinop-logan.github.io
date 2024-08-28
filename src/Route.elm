@@ -6,7 +6,7 @@ import Url.Parser as UP
 
 
 type Route
-    = Work
+    = Projects
     | About
     | Contact
 
@@ -20,7 +20,7 @@ parseUrl url =
 routeParser : UP.Parser (Route -> a) a
 routeParser =
     UP.oneOf
-        [ UP.map Work (UP.s "work")
+        [ UP.map Projects (UP.s "projects")
         , UP.map Contact (UP.s "contact")
         , UP.map About UP.top
         ]
@@ -29,8 +29,8 @@ routeParser =
 toString : Route -> String
 toString route =
     case route of
-        Work ->
-            "#work/"
+        Projects ->
+            "#projects/"
 
         Contact ->
             "#contact/"

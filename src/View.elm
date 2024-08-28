@@ -102,7 +102,7 @@ headerEl dProfile model =
             , Fonts.poppins
             , Font.bold
             ]
-            [ routingButton dProfile (Element.text "WORK") Route.Work model.route
+            [ routingButton dProfile (Element.text "PROJECTS") Route.Projects model.route
             , routingButton dProfile (Element.text "ABOUT") Route.About model.route
             , routingButton dProfile (blueBorderedText dProfile "CONTACT") Route.Contact model.route
             ]
@@ -167,14 +167,25 @@ bodyEl dProfile model =
         ]
     <|
         case model.route of
-            Route.Work ->
-                viewWorkPage dProfile
+            Route.Projects ->
+                viewProjectsPage dProfile
 
             Route.About ->
                 viewAboutPage dProfile
 
             Route.Contact ->
                 viewContactPage dProfile
+
+
+viewProjectsPage : DisplayProfile -> Element Msg
+viewProjectsPage dProfile =
+    Element.column
+        [ Element.width Element.fill
+        , Element.spacing 140
+        ]
+        [ nameAndTitleElement dProfile
+        , viewPortfolioElements dProfile
+        ]
 
 
 viewAboutPage : DisplayProfile -> Element Msg
@@ -184,7 +195,20 @@ viewAboutPage dProfile =
         , Element.spacing 140
         ]
         [ nameAndTitleElement dProfile
-        , viewPortfolioElements dProfile
+        , portfolioEntryEl dProfile
+            (Element.el [ Font.size <| responsiveVal dProfile 30 38 ] <| Element.text "Zap Trails")
+            Nothing
+            (responsiveVal dProfile
+                [ "The Nostr network allows users to send \"zaps\" (Lightning Bitcoin) to one another; I see the record of such zaps as quite a data goldmine - a directed graph of socially signaled value. I'm experimenting using this to curate content and route around spam with a family of simple algorithms that I expect to yield extremely impressive results."
+                , "My first goal is to demonstrate the basic utility of one of these algorithms, via a tool or visualizations; then I hope to get some traction from the Nostr community, and seek grant funding to pursue further application and research in this area."
+                ]
+                [ "I recently discovered the Nostr network, a decentralized social media platform. In practice it's something like Twitter or Medium, depending on the client you use, but without any centralized moderation or control. One of the features of this network is \"zapping\" users for content, which is to send a Lightning Bitcoin payment as a financial upvote."
+                , "I see the the record of such zaps as quite a data goldmine - a directed graph of socially signaled value. I'm experimenting with a family of fairly simple algorithms for content curation on Nostr, and hope to prove that they elegantly solve data curation problems, finding valuable new content and routing around spam - an otherwise tricky problem in a sea of unmoderated content and pseudonymous accounts."
+                , "In addition, I believe that a community primarily using such a technique to construct feeds would begin to behave like something of a neural net, with users as neurons and zaps as synapse firings, forming connections and propagating content further through the network. I discuss this further in the article linked below."
+                , "My first goal is to demonstrate the basic utility of one of these algorithms, via a tool or visualizations; then I hope to get some traction from the Nostr community, and seek grant funding to pursue further application and research in this area."
+                ]
+            )
+            [ blueOutlineNewTabLink dProfile "https://habla.news/a/naddr1qvzqqqr4gupzqyhjp3nd83hxklumz9elp6gmth2zrhr804hrcrktpmplygwtw4jjqqxnzde38q6rwwph8qcrvdpjwz7qav" "writeup on Nostr" ]
         ]
 
 
@@ -244,8 +268,7 @@ viewPortfolioElements dProfile =
                 , description = "eestisse"
                 }
             )
-            "2024"
-            "Solo Project"
+            (Just ( "2024", "Solo Project" ))
             [ "An LLM-powered tool that explains the counter-intuitive Estonian grammar to English speakers (for example, why \"eestisse\" means \"into Estonia\"). The tool takes English or Estonian text, translates it, and explains word by word how the Estonian is constructed."
             , "The central feature was surprisingly easy to build, due to LLM's strength in language tasks."
             ]
@@ -260,8 +283,7 @@ viewPortfolioElements dProfile =
                 , description = "coinfight"
                 }
             )
-            "2022 / 2023"
-            "Solo Project"
+            (Just ( "2022 / 2023", "Solo Project" ))
             [ "An RTS game where users fight over crypto in-game. Players must invest real crypto into their units (i.e. $1.50 for a Fighter, $0.50 for a worker); if these units are killed, this investment is dropped onto the battlefield for anyone else to pick up, capture, and withdraw. This is a zero-sum game where the goal is to get more out than you put in. \"Like Poker, but the chips shoot at each other!\""
             , "The goal of Coinfight was to give players the experience of fighting over real money in real time. To avoid the cumbersome limits of blockchain processing, Coinfight only used the blockchain to process deposits and withdrawals, a rare but rewarding architectural approach among web3 games."
             ]
@@ -277,8 +299,7 @@ viewPortfolioElements dProfile =
                 , description = "smokesignal"
                 }
             )
-            "2020 / 2021"
-            "Tech Lead"
+            (Just ( "2020 / 2021", "Tech Lead" ))
             [ "SmokeSignal was an uncensorable, global chat forum. It implemented Reddit-like functionality (nested comments in topical forums) and allowed users to tip each other for posts."
             , "As with DAIHard, below, a major goal of SmokeSignal was to be both radically free (no censorship or moderation) and unkillable (no central organization or nation-state could stop it)."
             , "Thus, the main technical challenge was in making something suitably decentralized so as to not be attackable, while still integrating with traditional frameworks and services for the purposes of marketing and usability. For example, while all core functionality was implemented on the Ethereum blockchain and an interface hosted on IPFS, a traditional web server was used to serve SEO information for the otherwise decentralized content."
@@ -297,8 +318,7 @@ viewPortfolioElements dProfile =
              <|
                 Element.text "DAIHard"
             )
-            "2019 / 2020"
-            "Solo Developer"
+            (Just ( "2019 / 2020", "Solo Developer" ))
             [ "DAIHard was a crypto/fiat exchange built entirely with Ethereum smart contracts, so that there was no central server anyone could take down. The application was designed to continue to function even in adversarial jurisdictions. Note that this app used no backend server at all, even for encrypted chat between users."
             , "As part of this project, I spent two months in Zimbabwe researching the viability of crypto adoption in the face of a hyperinflated currency. A summary of my findings can be found in the below-linked ZimDai paper \"ZimDai: Blueprint for an Economic Jailbreak\"."
             , "(The visual design for this project was contracted out.)"
@@ -318,8 +338,7 @@ viewPortfolioElements dProfile =
              <|
                 Element.text "Toastycoin"
             )
-            "2017"
-            "Solo Project"
+            (Just ( "2017", "Solo Project" ))
             [ "Toastycoin was an experimental dapp that used \"burnable payment\" contracts on the Ethereum blockchain to allow users to contract work from strangers on the Internet, without any previous trust or association. The burnable payment contracts used game theory to facilitate this: while loss of funds was not guaranteed, what was guaranteed was that scammers attempting to game the system would be punished and would not make a profit."
             , "See the \"game theory writeup\" link under the DAIHard project above, to read more about this game theory, as DAIHard was simply a narrowed use-case of the burnable payments developed for Toastycoin."
             ]
@@ -350,11 +369,6 @@ blueOutlineNewTabLink dProfile url labelText =
         }
 
 
-viewWorkPage : DisplayProfile -> Element Msg
-viewWorkPage dProfile =
-    Element.text "viewWorkPage"
-
-
 viewContactPage : DisplayProfile -> Element Msg
 viewContactPage dProfile =
     Element.text "viewContactPage"
@@ -372,8 +386,8 @@ blueBorderedText dProfile text =
         (Element.text text)
 
 
-portfolioEntryEl : DisplayProfile -> Element Msg -> String -> String -> List String -> List (Element Msg) -> Element Msg
-portfolioEntryEl dProfile titleEl dateString roleString bodyStrings linkOutEls =
+portfolioEntryEl : DisplayProfile -> Element Msg -> Maybe ( String, String ) -> List String -> List (Element Msg) -> Element Msg
+portfolioEntryEl dProfile titleEl maybeDateAndRoleString bodyStrings linkOutEls =
     Element.column
         [ Background.color <| Element.rgba255 217 217 217 0.2
         , Border.rounded 40
@@ -382,7 +396,7 @@ portfolioEntryEl dProfile titleEl dateString roleString bodyStrings linkOutEls =
         , Element.width (Element.fill |> Element.maximum 1050)
         , Element.centerX
         ]
-        [ projectHeaderEl dProfile titleEl dateString roleString
+        [ projectHeaderEl dProfile titleEl maybeDateAndRoleString
         , Element.column
             [ Element.width Element.fill
             , Element.spacing 50
@@ -395,8 +409,8 @@ portfolioEntryEl dProfile titleEl dateString roleString bodyStrings linkOutEls =
         ]
 
 
-projectHeaderEl : DisplayProfile -> Element Msg -> String -> String -> Element Msg
-projectHeaderEl dProfile titleEl dateString roleString =
+projectHeaderEl : DisplayProfile -> Element Msg -> Maybe ( String, String ) -> Element Msg
+projectHeaderEl dProfile titleEl maybeDateAndRoleString =
     let
         projectTitleHbreak =
             Element.el
@@ -412,17 +426,22 @@ projectHeaderEl dProfile titleEl dateString roleString =
         ]
         [ titleEl
         , projectTitleHbreak
-        , Element.row
-            [ Element.width Element.fill
-            , Fonts.poppins
-            , Font.size 25
-            ]
-            [ Element.text dateString
-            , Element.el
-                [ Element.alignRight ]
-              <|
-                Element.text roleString
-            ]
+        , case maybeDateAndRoleString of
+            Just ( dateString, roleString ) ->
+                Element.row
+                    [ Element.width Element.fill
+                    , Fonts.poppins
+                    , Font.size 25
+                    ]
+                    [ Element.text dateString
+                    , Element.el
+                        [ Element.alignRight ]
+                      <|
+                        Element.text roleString
+                    ]
+
+            Nothing ->
+                Element.none
         ]
 
 
