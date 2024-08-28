@@ -194,6 +194,7 @@ nameElement =
             [ Html.Attributes.style "background" "-webkit-linear-gradient(left, white, #009DC5)"
             , Html.Attributes.style "-webkit-background-clip" "text"
             , Html.Attributes.style "-webkit-text-fill-color" "transparent"
+            , Html.Attributes.style "line-height" "normal"
             ]
         <|
             [ Html.text "Logan Brutsche" ]
