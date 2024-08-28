@@ -221,7 +221,7 @@ nameElement : Element Msg
 nameElement =
     Element.html <|
         Html.div
-            [ Html.Attributes.style "background" "-webkit-linear-gradient(left, #FFFFFF, #009DC5)"
+            [ Html.Attributes.style "background" "-webkit-linear-gradient(left, #88E7FF, #1D86A1)"
             , Html.Attributes.style "-webkit-background-clip" "text"
             , Html.Attributes.style "-webkit-text-fill-color" "transparent"
             , Html.Attributes.style "line-height" "normal"
