@@ -38,8 +38,8 @@ portfolioEntryBorderColor =
     Element.rgb 0.5 0.5 0.5
 
 
-headerBgColor : Element.Color
-headerBgColor =
+darkNavyBlue : Element.Color
+darkNavyBlue =
     Element.rgb255 3 9 32
 
 

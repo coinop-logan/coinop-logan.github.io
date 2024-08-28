@@ -40,7 +40,7 @@ initLoadedModel viewport now url key =
         , bodyViewport = Nothing
         , time_bySecond = now
         , animateTime = now
-        , brickWall = BrickWall.init now viewport.scene.height
+        , brickWall = BrickWall.init now 0
         }
     , Cmd.batch
         [ getViewportCmd

@@ -71,7 +71,7 @@ view model =
         [ Element.width Element.fill
         , Element.height Element.fill
         , Font.color Theme.defaultFontColor
-        , Background.color Theme.bgColor
+        , Background.color Theme.darkNavyBlue
         ]
         [ headerEl dProfile model
         , bodyEl dProfile model
@@ -83,7 +83,7 @@ headerEl dProfile model =
     Element.el
         [ Element.width Element.fill
         , Element.height <| Element.px 134
-        , Background.color Theme.headerBgColor
+        , Background.color Theme.darkNavyBlue
         ]
     <|
         Element.row
@@ -215,7 +215,7 @@ viewPortfolioElements dProfile =
         ]
         [ portfolioEntryEl dProfile
             (Element.image
-                [ Element.height <| Element.px 50 ]
+                [ Element.width <| Element.px 220 ]
                 { src = "eestisse-title.png"
                 , description = "eestisse"
                 }
@@ -230,7 +230,8 @@ viewPortfolioElements dProfile =
             ]
         , portfolioEntryEl dProfile
             (Element.image
-                [ Element.height <| Element.px 50 ]
+                [ Element.width <| Element.px 330
+                ]
                 { src = "coinfight-title.png"
                 , description = "coinfight"
                 }
@@ -247,7 +248,7 @@ viewPortfolioElements dProfile =
             ]
         , portfolioEntryEl dProfile
             (Element.image
-                [ Element.height <| Element.px 50 ]
+                [ Element.width <| Element.px 230 ]
                 { src = "smokesignal-title.svg"
                 , description = "smokesignal"
                 }
@@ -263,7 +264,15 @@ viewPortfolioElements dProfile =
             , blueOutlineNewTabLink dProfile "https://github.com/team-toast/SmokeSignal" "github"
             ]
         , portfolioEntryEl dProfile
-            daihardLogoEl
+            (Element.el
+                [ Font.size 60
+                , Font.bold
+                , Fonts.poppins
+                , Font.color Theme.lightBlue
+                ]
+             <|
+                Element.text "DAIHard"
+            )
             "2019 / 2020"
             "Solo Developer"
             [ "DAIHard was a crypto/fiat exchange built entirely with Ethereum smart contracts, so that there was no central server anyone could take down. The application was designed to continue to function even in adversarial jurisdictions. Note that this app used no backend server at all, even for encrypted chat between users."
@@ -276,7 +285,15 @@ viewPortfolioElements dProfile =
             , blueOutlineNewTabLink dProfile "https://github.com/coinop-logan/ZimDai/blob/master/whitepaper.pdf" "ZimDai paper"
             ]
         , portfolioEntryEl dProfile
-            (Element.el [ Font.size 38 ] <| Element.text "Toastycoin")
+            (Element.el
+                [ Font.size 60
+                , Font.bold
+                , Fonts.poppins
+                , Font.color Theme.lightBlue
+                ]
+             <|
+                Element.text "Toastycoin"
+            )
             "2017"
             "Solo Project"
             [ "Toastycoin was an experimental dapp that used \"burnable payment\" contracts on the Ethereum blockchain to allow users to contract work from strangers on the Internet, without any previous trust or association. The burnable payment contracts used game theory to facilitate this: while loss of funds was not guaranteed, what was guaranteed was that scammers attempting to game the system would be punished and would not make a profit."
@@ -307,17 +324,6 @@ blueOutlineNewTabLink dProfile url labelText =
                 ]
                 (Element.text labelText)
         }
-
-
-daihardLogoEl : Element Msg
-daihardLogoEl =
-    Element.row
-        [ Font.size 38
-        , Font.bold
-        ]
-        [ Element.el [ Font.color <| Element.rgb 1 1 1 ] <| Element.text "DAI"
-        , Element.el [ Font.color <| Element.rgb255 255 0 110 ] <| Element.text "Hard"
-        ]
 
 
 viewWorkPage : DisplayProfile -> Element Msg
