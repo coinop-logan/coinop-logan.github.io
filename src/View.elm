@@ -134,6 +134,12 @@ bodyEl dProfile model =
                 Just bodyViewport ->
                     BrickWall.Draw.view model.animateTime bodyViewport.scene.width bodyViewport.scene.height model.brickWall
         , addId "body-element"
+        , Element.paddingEach
+            { bottom = 100
+            , top = 0
+            , right = 0
+            , left = 0
+            }
         ]
     <|
         case model.route of
@@ -162,7 +168,7 @@ nameAndTitleElement : DisplayProfile -> Element Msg
 nameAndTitleElement dProfile =
     Element.column
         [ Element.centerX
-        , Element.spacing 44
+        , Element.spacing 0
         , Fonts.poppins
         , Element.paddingEach
             { top = 135
@@ -191,23 +197,13 @@ nameElement : Element Msg
 nameElement =
     Element.html <|
         Html.div
-            [ Html.Attributes.style "background" "-webkit-linear-gradient(left, white, #009DC5)"
+            [ Html.Attributes.style "background" "-webkit-linear-gradient(left, #FFFFFF, #009DC5)"
             , Html.Attributes.style "-webkit-background-clip" "text"
             , Html.Attributes.style "-webkit-text-fill-color" "transparent"
             , Html.Attributes.style "line-height" "normal"
             ]
         <|
             [ Html.text "Logan Brutsche" ]
-
-
-nameGradientStyles : List (Attribute Msg)
-nameGradientStyles =
-    List.map Element.htmlAttribute
-        [ Html.Attributes.style "background" "#eee"
-        , Html.Attributes.style "background" "-webkit-linear-gradient(left, #eee, #333)"
-        , Html.Attributes.style "-webkit-background-clip" "text"
-        , Html.Attributes.style "-webkit-text-fill-color" "transparent"
-        ]
 
 
 viewPortfolioElements : DisplayProfile -> Element Msg
@@ -229,9 +225,98 @@ viewPortfolioElements dProfile =
             [ "An LLM-powered tool that explains the counter-intuitive Estonian grammar to English speakers (for example, why \"eestisse\" means \"into Estonia\"). The tool takes English or Estonian text, translates it, and explains word by word how the Estonian is constructed."
             , "The central feature was surprisingly easy to build, due to LLM's strength in language tasks."
             ]
-            [ newTabLink [] "https://eestisse.ee" "eestisse.ee"
-            , newTabLink [] "https://github.com/eestisse/eestisse" "github"
+            [ blueOutlineNewTabLink dProfile "https://eestisse.ee" "eestisse.ee"
+            , blueOutlineNewTabLink dProfile "https://github.com/eestisse/eestisse" "github"
             ]
+        , portfolioEntryEl dProfile
+            (Element.image
+                [ Element.height <| Element.px 50 ]
+                { src = "coinfight-title.png"
+                , description = "coinfight"
+                }
+            )
+            "2022 / 2023"
+            "Solo Project"
+            [ "An RTS game where users fight over crypto in-game. Players must invest real crypto into their units (i.e. $1.50 for a Fighter, $0.50 for a worker); if these units are killed, this investment is dropped onto the battlefield for anyone else to pick up, capture, and withdraw. This is a zero-sum game where the goal is to get more out than you put in. \"Like Poker, but the chips shoot at each other!\""
+            , "The goal of Coinfight was to give players the experience of fighting over real money in real time. To avoid the cumbersome limits of blockchain processing, Coinfight only used the blockchain to process deposits and withdrawals, a rare but rewarding architectural approach among web3 games."
+            ]
+            [ blueOutlineNewTabLink dProfile "https://www.youtube.com/watch?v=7tw10KUO1_U" "demo video"
+            , blueOutlineNewTabLink dProfile "https://medium.com/p/472636deec57" "dev blog post"
+            , blueOutlineNewTabLink dProfile "https://coinfight.io/" "coinfight.io"
+            , blueOutlineNewTabLink dProfile "https://github.com/coinop-logan/coinfight" "github"
+            ]
+        , portfolioEntryEl dProfile
+            (Element.image
+                [ Element.height <| Element.px 50 ]
+                { src = "smokesignal-title.svg"
+                , description = "smokesignal"
+                }
+            )
+            "2020 / 2021"
+            "Tech Lead"
+            [ "SmokeSignal was an uncensorable, global chat forum. It implemented Reddit-like functionality (nested comments in topical forums) and allowed users to tip each other for posts."
+            , "As with DAIHard, below, a major goal of SmokeSignal was to be both radically free (no censorship or moderation) and unkillable (no central organization or nation-state could stop it)."
+            , "Thus, the main technical challenge was in making something suitably decentralized so as to not be attackable, while still integrating with traditional frameworks and services for the purposes of marketing and usability. For example, while all core functionality was implemented on the Ethereum blockchain and an interface hosted on IPFS, a traditional web server was used to serve SEO information for the otherwise decentralized content."
+            ]
+            [ blueOutlineNewTabLink dProfile "https://medium.com/daihard-buidlers/introducing-smokesignal-da8f19bc27af" "intro post"
+            , blueOutlineNewTabLink dProfile "https://www.youtube.com/watch?v=pV70Q0wgnnU" "demo video"
+            , blueOutlineNewTabLink dProfile "https://github.com/team-toast/SmokeSignal" "github"
+            ]
+        , portfolioEntryEl dProfile
+            daihardLogoEl
+            "2019 / 2020"
+            "Solo Developer"
+            [ "DAIHard was a crypto/fiat exchange built entirely with Ethereum smart contracts, so that there was no central server anyone could take down. The application was designed to continue to function even in adversarial jurisdictions. Note that this app used no backend server at all, even for encrypted chat between users."
+            , "As part of this project, I spent two months in Zimbabwe researching the viability of crypto adoption in the face of a hyperinflated currency. A summary of my findings can be found in the below-linked ZimDai paper \"ZimDai: Blueprint for an Economic Jailbreak\"."
+            , "(The visual design for this project was contracted out.)"
+            ]
+            [ blueOutlineNewTabLink dProfile "https://www.youtube.com/watch?v=WR4WovM0qwg" "demo video"
+            , blueOutlineNewTabLink dProfile "https://medium.com/@coinop.logan/daihard-game-theory-21a456ef224e" "game theory writeup"
+            , blueOutlineNewTabLink dProfile "https://github.com/team-toast/DAIHard" "github"
+            , blueOutlineNewTabLink dProfile "https://github.com/coinop-logan/ZimDai/blob/master/whitepaper.pdf" "ZimDai paper"
+            ]
+        , portfolioEntryEl dProfile
+            (Element.el [ Font.size 38 ] <| Element.text "Toastycoin")
+            "2017"
+            "Solo Project"
+            [ "Toastycoin was an experimental dapp that used \"burnable payment\" contracts on the Ethereum blockchain to allow users to contract work from strangers on the Internet, without any previous trust or association. The burnable payment contracts used game theory to facilitate this: while loss of funds was not guaranteed, what was guaranteed was that scammers attempting to game the system would be punished and would not make a profit."
+            , "See the \"game theory writeup\" link under the DAIHard project above, to read more about this game theory, as DAIHard was simply a narrowed use-case of the burnable payments developed for Toastycoin."
+            ]
+            [ blueOutlineNewTabLink dProfile "https://medium.com/@coinop.logan/preventing-scammer-profit-with-burnable-payments-ad2e9b632ef2" "Burnable Payments proposal"
+            , blueOutlineNewTabLink dProfile "https://medium.com/@coinop.logan/toasted-money-part-2-b5dfd0b1e946" "experiment conclusion"
+            , blueOutlineNewTabLink dProfile "https://github.com/coinop-logan/toastycoin" "github"
+            ]
+        ]
+
+
+blueOutlineNewTabLink : DisplayProfile -> String -> String -> Element Msg
+blueOutlineNewTabLink dProfile url labelText =
+    Element.newTabLink
+        []
+        { url = url
+        , label =
+            Element.el
+                [ Element.padding 15
+                , Font.color Theme.lightBlue
+                , Fonts.poppins
+                , Font.bold
+                , Font.size 25
+                , Border.rounded 100
+                , Border.width 3
+                , Border.color Theme.lightBlue
+                ]
+                (Element.text labelText)
+        }
+
+
+daihardLogoEl : Element Msg
+daihardLogoEl =
+    Element.row
+        [ Font.size 38
+        , Font.bold
+        ]
+        [ Element.el [ Font.color <| Element.rgb 1 1 1 ] <| Element.text "DAI"
+        , Element.el [ Font.color <| Element.rgb255 255 0 110 ] <| Element.text "Hard"
         ]
 
 
@@ -263,8 +348,68 @@ portfolioEntryEl dProfile titleEl dateString roleString bodyStrings linkOutEls =
         [ Background.color <| Element.rgba255 217 217 217 0.2
         , Border.rounded 40
         , Element.paddingXY 60 43
+        , Element.spacing 80
         , Element.width (Element.fill |> Element.maximum 1050)
         , Element.centerX
         ]
-        [ Element.text "stuff's gonna go here :D"
+        [ projectHeaderEl dProfile titleEl dateString roleString
+        , Element.column
+            [ Element.width Element.fill
+            , Element.spacing 50
+            ]
+            [ projectBodyTextEl dProfile bodyStrings
+            , Element.row
+                [ Element.spacing 26 ]
+                linkOutEls
+            ]
         ]
+
+
+projectHeaderEl : DisplayProfile -> Element Msg -> String -> String -> Element Msg
+projectHeaderEl dProfile titleEl dateString roleString =
+    let
+        projectTitleHbreak =
+            Element.el
+                [ Element.width Element.fill
+                , Element.height <| Element.px 3
+                , Background.color <| Element.rgb 1 1 1
+                ]
+                Element.none
+    in
+    Element.column
+        [ Element.spacing 30
+        , Element.width Element.fill
+        ]
+        [ titleEl
+        , projectTitleHbreak
+        , Element.row
+            [ Element.width Element.fill
+            , Fonts.poppins
+            , Font.size 25
+            ]
+            [ Element.text dateString
+            , Element.el
+                [ Element.alignRight ]
+              <|
+                Element.text roleString
+            ]
+        ]
+
+
+projectBodyTextEl : DisplayProfile -> List String -> Element Msg
+projectBodyTextEl dProfile bodyStrings =
+    Element.column
+        [ Element.width Element.fill
+        , Element.spacing 15
+        , Font.size 25
+        , Font.light
+        , Fonts.poppins
+        ]
+        (bodyStrings
+            |> List.map
+                (\bodyString ->
+                    Element.paragraph
+                        []
+                        [ Element.text bodyString ]
+                )
+        )
