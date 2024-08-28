@@ -32,10 +32,14 @@ init : Time.Posix -> Float -> BrickWall
 init now targetYPrefill =
     let
         initialNeededRows =
-            (realPosToGridPos { x = 0, y = targetYPrefill }
-                |> Tuple.second
-            )
-                + 1
+            if targetYPrefill == 0 then
+                0
+
+            else
+                (realPosToGridPos { x = 0, y = targetYPrefill }
+                    |> Tuple.second
+                )
+                    + 1
 
         masterSeed0 =
             Random.initialSeed (Time.posixToMillis now)

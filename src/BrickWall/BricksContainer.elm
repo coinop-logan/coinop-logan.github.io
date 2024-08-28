@@ -92,7 +92,8 @@ addEmptyRowIfNeeded : List (Maybe Brick) -> List (Maybe Brick)
 addEmptyRowIfNeeded bricks =
     let
         numRowsTarget =
-            getLastRowWithJust bricks + 1
+            getLastRowWithJust bricks
+                + 1
     in
     bricks
         |> padListWithNothings (numRowsTarget * Config.wallWidth)
@@ -143,7 +144,7 @@ parentsExist bricks ( i, j ) =
         ( a, b ) =
             getParentsGridPos ( i, j )
     in
-    (j < 0 || i < 0 || i >= Config.wallWidth)
+    (j <= 0 || i < 0 || i >= Config.wallWidth)
         || (brickExistsAt bricks a && brickExistsAt bricks b)
 
 
