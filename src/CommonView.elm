@@ -11,20 +11,21 @@ zIndex index =
     Element.htmlAttribute (Html.Attributes.style "z-index" (String.fromFloat index))
 
 
-toHtml : List (Attribute msg) -> Element msg -> Html msg
-toHtml attrs el =
-    Element.layoutWith
-        { options =
-            [ Element.noStaticStyleSheet
-            , Element.focusStyle
-                { borderColor = Nothing
-                , backgroundColor = Nothing
-                , shadow = Nothing
-                }
-            ]
-        }
-        attrs
-        el
+
+-- toHtml : List (Attribute msg) -> Element msg -> Html msg
+-- toHtml attrs el =
+--     Element.layoutWith
+--         { options =
+--             [ Element.noStaticStyleSheet
+--             , Element.focusStyle
+--                 { borderColor = Nothing
+--                 , backgroundColor = Nothing
+--                 , shadow = Nothing
+--                 }
+--             ]
+--         }
+--         attrs
+--         el
 
 
 linkAttributes : List (Attribute msg)
