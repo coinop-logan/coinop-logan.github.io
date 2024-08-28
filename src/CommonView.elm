@@ -4,9 +4,6 @@ import Element exposing (Attribute, Element)
 import Element.Font as Font
 import Html exposing (Html)
 import Html.Attributes
-import Html.Events
-import Json.Decode
-import List.Extra as List
 
 
 zIndex : Float -> Attribute msg
@@ -28,21 +25,6 @@ toHtml attrs el =
         }
         attrs
         el
-
-
-stackElementsInZ : List (Attribute msg) -> List (Element msg) -> Element msg
-stackElementsInZ attributes elements =
-    let
-        foldHelper : Element msg -> Element msg -> Element msg
-        foldHelper newEl combinedPreviousEls =
-            Element.el
-                (attributes ++ [ Element.inFront newEl ])
-                combinedPreviousEls
-    in
-    List.foldl1
-        foldHelper
-        elements
-        |> Maybe.withDefault Element.none
 
 
 linkAttributes : List (Attribute msg)
