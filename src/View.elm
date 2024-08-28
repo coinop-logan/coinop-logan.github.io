@@ -70,7 +70,7 @@ view model =
     Element.column
         [ Element.width Element.fill
         , Element.height Element.fill
-        , Font.color Theme.defaultFontColor
+        , Font.color <| Element.rgb 1 1 1
         , Background.color Theme.darkNavyBlue
         ]
         [ headerEl dProfile model
