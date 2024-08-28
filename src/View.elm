@@ -80,17 +80,24 @@ view model =
 
 headerEl : DisplayProfile -> LoadedModel -> Element Msg
 headerEl dProfile model =
-    Element.el
+    Element.row
         [ Element.width Element.fill
         , Element.height <| Element.px 134
         , Background.color Theme.darkNavyBlue
+        , Element.paddingXY 70 0
+        , Element.clipY
         ]
-    <|
-        Element.row
+        [ Element.el
+            [ Font.size 45
+            , Fonts.poppins
+            , Font.extraBold
+            , Element.moveDown <| headerNameVeritcalDisplacement dProfile model.bodyViewport
+            ]
+            nameElement
+        , Element.row
             [ Element.alignRight
             , Element.spacing 75
             , Element.centerY
-            , Element.paddingXY 70 0
             , Font.size 20
             , Fonts.poppins
             , Font.bold
@@ -99,6 +106,23 @@ headerEl dProfile model =
             , routingButton dProfile (Element.text "ABOUT") Route.About model.route
             , routingButton dProfile (blueBorderedText dProfile "CONTACT") Route.Contact model.route
             ]
+        ]
+
+
+headerNameVeritcalDisplacement : DisplayProfile -> Maybe Viewport -> Float
+headerNameVeritcalDisplacement dProfile maybeBodyViewport =
+    case maybeBodyViewport of
+        Just bodyViewport ->
+            let
+                scrolledThroughNameFloat =
+                    (bodyViewport.viewport.y - 200) / 120.0
+            in
+            70
+                - (scrolledThroughNameFloat * 60)
+                |> max 0
+
+        Nothing ->
+            100
 
 
 routingButton : DisplayProfile -> Element Msg -> Route -> Route -> Element Msg
