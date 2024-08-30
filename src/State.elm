@@ -41,7 +41,7 @@ initLoadedModel viewport now url key =
         , time_bySecond = now
         , animateTime = now
         , brickWall = BrickWall.init now 0
-        , showContactModal = True
+        , showContactModal = False
         }
     , Cmd.batch
         [ getViewportCmd
