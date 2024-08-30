@@ -113,7 +113,14 @@ headerEl dProfile model =
             ]
             [ routingButton dProfile (Element.text "PROJECTS") Route.Projects model.route
             , routingButton dProfile (Element.text "ABOUT") Route.About model.route
-            , routingButton dProfile (blueBorderedText dProfile "CONTACT") Route.Contact model.route
+            , Input.button
+                []
+                { label =
+                    Element.el
+                        []
+                        (blueBorderedText dProfile "CONTACT")
+                , onPress = Just <| SetShowContactModal (not model.showContactModal)
+                }
             , Element.newTabLink
                 []
                 { url = "/resume.pdf"
@@ -196,9 +203,6 @@ bodyEl dProfile model =
 
             Route.About ->
                 viewAboutPage dProfile
-
-            Route.Contact ->
-                viewContactPage dProfile
 
 
 contactModalEl : DisplayProfile -> Element Msg
