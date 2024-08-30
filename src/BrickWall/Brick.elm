@@ -43,12 +43,17 @@ brickGenerator gridPos alreadyPlaced now =
     in
     if alreadyPlaced then
         Random.constant <|
-            Brick homePoint Placed (gradientIdStr gridPos)
+            makePlacedBrick gridPos
 
     else
         Random.map
             (\brickState -> Brick homePoint brickState (gradientIdStr gridPos))
             (brickOriginGenerator homePoint |> Random.map (\originInfo -> Moving originInfo now))
+
+
+makePlacedBrick : ( Int, Int ) -> Brick
+makePlacedBrick gridPos =
+    Brick (gridPosToRealPos gridPos) Placed (gradientIdStr gridPos)
 
 
 brickOriginGenerator : Point -> Random.Generator ( Point, Float )

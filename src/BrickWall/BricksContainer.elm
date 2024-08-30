@@ -27,6 +27,14 @@ fromList bricksList =
         |> Bricks
 
 
+indexedUpdate : (( Int, Int ) -> Maybe Brick -> Maybe Brick) -> BricksContainer -> BricksContainer
+indexedUpdate func (Bricks bricks) =
+    List.indexedMap
+        (\i -> func (listPosToGridPos i))
+        bricks
+        |> Bricks
+
+
 addNewBrickIfNotExists : ( Int, Int ) -> Brick -> BricksContainer -> BricksContainer
 addNewBrickIfNotExists gridPos brick (Bricks bricks) =
     case getBrick gridPos bricks of
@@ -119,6 +127,14 @@ getLastRowWithJust bricks =
         |> Maybe.map listPosToGridPos
         |> Maybe.map Tuple.second
         |> Maybe.withDefault 0
+
+
+getFirstGridPosWithNothing : BricksContainer -> ( Int, Int )
+getFirstGridPosWithNothing (Bricks bricks) =
+    bricks
+        |> List.findIndex Maybe.isNothing
+        |> Maybe.map listPosToGridPos
+        |> Maybe.withDefault ( 0, 0 )
 
 
 getLastBrickGridPos : BricksContainer -> Maybe ( Int, Int )

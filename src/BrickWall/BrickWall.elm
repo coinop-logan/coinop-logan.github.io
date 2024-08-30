@@ -5,6 +5,7 @@ import BrickWall.BricksContainer as BricksContainer exposing (BricksContainer)
 import BrickWall.Common exposing (..)
 import BrickWall.Config as Config
 import List.Extra as List
+import Maybe.Extra as Maybe
 import Random
 import Time
 
@@ -53,6 +54,26 @@ init now targetYPrefill =
     , bricks = BricksContainer.fromList bricksList
     , titleArea = Nothing
     , targetY = targetYPrefill
+    }
+
+
+instantlyPlaceBricksAboveYIfNothing : Float -> BrickWall -> BrickWall
+instantlyPlaceBricksAboveYIfNothing y brickWall =
+    { brickWall
+        | bricks =
+            brickWall.bricks
+                |> BricksContainer.indexedUpdate
+                    (\gridPos maybeBrick ->
+                        if (gridPosToRealPos gridPos |> .y) < y then
+                            if Maybe.isNothing maybeBrick then
+                                Just <| makePlacedBrick gridPos
+
+                            else
+                                maybeBrick
+
+                        else
+                            maybeBrick
+                    )
     }
 
 
@@ -105,6 +126,14 @@ updateBrickStates now brickWall =
             brickWall.bricks
                 |> BricksContainer.updateBricks (updateBrickState now)
     }
+
+
+getYOfFirstNothing : BrickWall -> Float
+getYOfFirstNothing brickWall =
+    brickWall.bricks
+        |> BricksContainer.getFirstGridPosWithNothing
+        |> gridPosToRealPos
+        |> .y
 
 
 
