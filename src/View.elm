@@ -256,9 +256,12 @@ nameElement =
 
 viewPortfolioElements : DisplayProfile -> Element Msg
 viewPortfolioElements dProfile =
+    let
+        itemSpacing =
+            130
+    in
     Element.column
-        [ Element.centerX
-        , Element.spacing 132
+        [ Element.spacing itemSpacing
         , Element.width Element.fill
         ]
         [ portfolioEntryEl dProfile
@@ -292,41 +295,73 @@ viewPortfolioElements dProfile =
             , blueOutlineNewTabLink dProfile "https://coinfight.io/" "coinfight.io"
             , blueOutlineNewTabLink dProfile "https://github.com/coinop-logan/coinfight" "github"
             ]
-        , portfolioEntryEl dProfile
-            (Element.image
-                [ Element.width <| Element.px 230 ]
-                { src = "smokesignal-title.svg"
-                , description = "smokesignal"
-                }
-            )
-            (Just ( "2020 / 2021", "Tech Lead" ))
-            [ "SmokeSignal was an uncensorable, global chat forum. It implemented Reddit-like functionality (nested comments in topical forums) and allowed users to tip each other for posts."
-            , "As with DAIHard, below, a major goal of SmokeSignal was to be both radically free (no censorship or moderation) and unkillable (no central organization or nation-state could stop it)."
-            , "Thus, the main technical challenge was in making something suitably decentralized so as to not be attackable, while still integrating with traditional frameworks and services for the purposes of marketing and usability. For example, while all core functionality was implemented on the Ethereum blockchain and an interface hosted on IPFS, a traditional web server was used to serve SEO information for the otherwise decentralized content."
+        , Element.column
+            [ Element.centerX
+            , Element.spacing 66
+            , Element.paddingXY 56 40
+            , Border.rounded 40
+            , Border.width 3
+            , Border.color <| Element.rgb 1 1 1
             ]
-            [ blueOutlineNewTabLink dProfile "https://medium.com/daihard-buidlers/introducing-smokesignal-da8f19bc27af" "intro post"
-            , blueOutlineNewTabLink dProfile "https://www.youtube.com/watch?v=pV70Q0wgnnU" "demo video"
-            , blueOutlineNewTabLink dProfile "https://github.com/team-toast/SmokeSignal" "github"
-            ]
-        , portfolioEntryEl dProfile
-            (Element.el
-                [ Font.size 60
-                , Font.bold
+            [ Element.row
+                [ Element.centerX
+                , Font.size 50
                 , Fonts.poppins
-                , Font.color Theme.lightBlue
                 ]
-             <|
-                Element.text "DAIHard"
-            )
-            (Just ( "2019 / 2020", "Solo Developer" ))
-            [ "DAIHard was a crypto/fiat exchange built entirely with Ethereum smart contracts, so that there was no central server anyone could take down. The application was designed to continue to function even in adversarial jurisdictions. Note that this app used no backend server at all, even for encrypted chat between users."
-            , "As part of this project, I spent two months in Zimbabwe researching the viability of crypto adoption in the face of a hyperinflated currency. A summary of my findings can be found in the below-linked ZimDai paper \"ZimDai: Blueprint for an Economic Jailbreak\"."
-            , "(The visual design for this project was contracted out.)"
-            ]
-            [ blueOutlineNewTabLink dProfile "https://www.youtube.com/watch?v=WR4WovM0qwg" "demo video"
-            , blueOutlineNewTabLink dProfile "https://medium.com/@coinop.logan/daihard-game-theory-21a456ef224e" "game theory writeup"
-            , blueOutlineNewTabLink dProfile "https://github.com/team-toast/DAIHard" "github"
-            , blueOutlineNewTabLink dProfile "https://github.com/coinop-logan/ZimDai/blob/master/whitepaper.pdf" "ZimDai paper"
+                [ Element.text "FoundryDAO Projects - [linky linky]"
+                ]
+            , Element.column
+                [ Element.spacing itemSpacing ]
+                [ portfolioEntryEl dProfile
+                    (Element.el
+                        [ Font.size 60
+                        , Font.bold
+                        , Fonts.poppins
+                        , Font.color Theme.lightBlue
+                        ]
+                     <|
+                        Element.text "Nyms"
+                    )
+                    (Just ( "2021", "Solo Project" ))
+                    [ "TODO" ]
+                    [ blueOutlineNewTabLink dProfile "https://team-toast.github.io/nym/" "home page" ]
+                , portfolioEntryEl dProfile
+                    (Element.image
+                        [ Element.width <| Element.px 230 ]
+                        { src = "smokesignal-title.svg"
+                        , description = "smokesignal"
+                        }
+                    )
+                    (Just ( "2020 / 2021", "Tech Lead" ))
+                    [ "SmokeSignal was an uncensorable, global chat forum. It implemented Reddit-like functionality (nested comments in topical forums) and allowed users to tip each other for posts."
+                    , "As with DAIHard, below, a major goal of SmokeSignal was to be both radically free (no censorship or moderation) and unkillable (no central organization or nation-state could stop it)."
+                    , "Thus, the main technical challenge was in making something suitably decentralized so as to not be attackable, while still integrating with traditional frameworks and services for the purposes of marketing and usability. For example, while all core functionality was implemented on the Ethereum blockchain and an interface hosted on IPFS, a traditional web server was used to serve SEO information for the otherwise decentralized content."
+                    ]
+                    [ blueOutlineNewTabLink dProfile "https://medium.com/daihard-buidlers/introducing-smokesignal-da8f19bc27af" "intro post"
+                    , blueOutlineNewTabLink dProfile "https://www.youtube.com/watch?v=pV70Q0wgnnU" "demo video"
+                    , blueOutlineNewTabLink dProfile "https://github.com/team-toast/SmokeSignal" "github"
+                    ]
+                , portfolioEntryEl dProfile
+                    (Element.el
+                        [ Font.size 60
+                        , Font.bold
+                        , Fonts.poppins
+                        , Font.color Theme.lightBlue
+                        ]
+                     <|
+                        Element.text "DAIHard"
+                    )
+                    (Just ( "2019 / 2020", "Solo Developer" ))
+                    [ "DAIHard was a crypto/fiat exchange built entirely with Ethereum smart contracts, so that there was no central server anyone could take down. The application was designed to continue to function even in adversarial jurisdictions. Note that this app used no backend server at all, even for encrypted chat between users."
+                    , "As part of this project, I spent two months in Zimbabwe researching the viability of crypto adoption in the face of a hyperinflated currency. A summary of my findings can be found in the below-linked ZimDai paper \"ZimDai: Blueprint for an Economic Jailbreak\"."
+                    , "(The visual design for this project was contracted out.)"
+                    ]
+                    [ blueOutlineNewTabLink dProfile "https://www.youtube.com/watch?v=WR4WovM0qwg" "demo video"
+                    , blueOutlineNewTabLink dProfile "https://medium.com/@coinop.logan/daihard-game-theory-21a456ef224e" "game theory writeup"
+                    , blueOutlineNewTabLink dProfile "https://github.com/team-toast/DAIHard" "github"
+                    , blueOutlineNewTabLink dProfile "https://github.com/coinop-logan/ZimDai/blob/master/whitepaper.pdf" "ZimDai paper"
+                    ]
+                ]
             ]
         , portfolioEntryEl dProfile
             (Element.el
