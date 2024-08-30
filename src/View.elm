@@ -105,7 +105,7 @@ headerEl dProfile model =
             nameElement
         , Element.row
             [ Element.alignRight
-            , Element.spacing 75
+            , Element.spacing 53
             , Element.centerY
             , Font.size 20
             , Fonts.poppins
@@ -114,6 +114,21 @@ headerEl dProfile model =
             [ routingButton dProfile (Element.text "PROJECTS") Route.Projects model.route
             , routingButton dProfile (Element.text "ABOUT") Route.About model.route
             , routingButton dProfile (blueBorderedText dProfile "CONTACT") Route.Contact model.route
+            , Element.newTabLink
+                []
+                { url = "/resume.pdf"
+                , label =
+                    Element.row
+                        [ Element.spacing 10 ]
+                        [ Element.text "RESUME"
+                        , Element.image
+                            [ Element.height <| Element.px 22
+                            ]
+                            { src = "/download.png"
+                            , description = "download"
+                            }
+                        ]
+                }
             ]
         ]
 
