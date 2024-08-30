@@ -558,18 +558,30 @@ viewPortfolioElements dProfile =
             ]
         , Element.column
             [ Element.centerX
-            , Element.spacing 66
-            , Element.paddingXY 56 40
+            , Element.spacing 20
+            , Element.paddingEach
+                { left = 56
+                , right = 0
+                , bottom = 20
+                , top = 0
+                }
             , Border.rounded 40
-            , Border.width 3
-            , Border.color <| Element.rgb 1 1 1
+            , Border.widthEach
+                { left = 3
+                , top = 0
+                , bottom = 0
+                , right = 0
+                }
+            , Border.color <| Element.rgb 1 0.6 0.3
             ]
             [ Element.row
-                [ Element.centerX
-                , Font.size 50
+                [ Font.size 30
+                , Font.color <| Element.rgb 1 0.6 0.3
                 , Fonts.poppins
+                , Element.moveUp 15
                 ]
-                [ Element.text "FoundryDAO Projects - [linky linky]"
+                [ Element.text "FoundryDAO Projects - "
+                , newTabLink [] "/resume.pdf" "See resume"
                 ]
             , Element.column
                 [ Element.spacing itemSpacing ]
