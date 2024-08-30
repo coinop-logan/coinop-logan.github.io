@@ -330,32 +330,11 @@ viewAboutPage dProfile =
         ]
         [ nameAndTitleElement dProfile
         , ytVidEl dProfile
-        , portfolioEntryEl dProfile
-            (Element.el [ Font.size <| responsiveVal dProfile 30 38 ] <| Element.text "Zap Trails")
-            Nothing
-            (responsiveVal dProfile
-                [ "The Nostr network allows users to send \"zaps\" (Lightning Bitcoin) to one another; I see the record of such zaps as quite a data goldmine - a directed graph of socially signaled value. I'm experimenting using this to curate content and route around spam with a family of simple algorithms that I expect to yield extremely impressive results."
-                , "My first goal is to demonstrate the basic utility of one of these algorithms, via a tool or visualizations; then I hope to get some traction from the Nostr community, and seek grant funding to pursue further application and research in this area."
-                ]
-                [ "I recently discovered the Nostr network, a decentralized social media platform. In practice it's something like Twitter or Medium, depending on the client you use, but without any centralized moderation or control. One of the features of this network is \"zapping\" users for content, which is to send a Lightning Bitcoin payment as a financial upvote."
-                , "I see the the record of such zaps as quite a data goldmine - a directed graph of socially signaled value. I'm experimenting with a family of fairly simple algorithms for content curation on Nostr, and hope to prove that they elegantly solve data curation problems, finding valuable new content and routing around spam - an otherwise tricky problem in a sea of unmoderated content and pseudonymous accounts."
-                , "In addition, I believe that a community primarily using such a technique to construct feeds would begin to behave like something of a neural net, with users as neurons and zaps as synapse firings, forming connections and propagating content further through the network. I discuss this further in the article linked below."
-                , "My first goal is to demonstrate the basic utility of one of these algorithms, via a tool or visualizations; then I hope to get some traction from the Nostr community, and seek grant funding to pursue further application and research in this area."
-                ]
-            )
-            [ blueOutlineNewTabLink dProfile "https://habla.news/a/naddr1qvzqqqr4gupzqyhjp3nd83hxklumz9elp6gmth2zrhr804hrcrktpmplygwtw4jjqqxnzde38q6rwwph8qcrvdpjwz7qav" "writeup on Nostr" ]
         , Element.column
             [ Element.spacing 80
             , Element.centerX
             ]
-            [ Element.el
-                [ Font.size 43
-                , Font.color <| Element.rgb255 136 231 255
-                , Font.extraBold
-                , Fonts.poppins
-                , Element.centerX
-                ]
-                (Element.text "Testimonials")
+            [ pageSectionHeader "Testimonials"
             , endorsementElement dProfile
                 True
                 "chase.jpg"
@@ -375,7 +354,39 @@ viewAboutPage dProfile =
                 "CEO at SwiftCom"
                 "Logan is a standout software architect,  who consistently delivered collaborative software that worked seamlessly. When faced with challenges, he didn't hesitate to build custom solutions from the ground up. His technical skills are top-notch, but what really makes Logan shine is his ability to communicate effectively and work well with others."
             ]
+        , Element.column
+            [ Element.spacing 80
+            , Element.centerX
+            ]
+            [ pageSectionHeader "Current Projects"
+            , portfolioEntryEl dProfile
+                (Element.el [ Font.size <| responsiveVal dProfile 30 38 ] <| Element.text "Zap Trails")
+                Nothing
+                (responsiveVal dProfile
+                    [ "The Nostr network allows users to send \"zaps\" (Lightning Bitcoin) to one another; I see the record of such zaps as quite a data goldmine - a directed graph of socially signaled value. I'm experimenting using this to curate content and route around spam with a family of simple algorithms that I expect to yield extremely impressive results."
+                    , "My first goal is to demonstrate the basic utility of one of these algorithms, via a tool or visualizations; then I hope to get some traction from the Nostr community, and seek grant funding to pursue further application and research in this area."
+                    ]
+                    [ "I recently discovered the Nostr network, a decentralized social media platform. In practice it's something like Twitter or Medium, depending on the client you use, but without any centralized moderation or control. One of the features of this network is \"zapping\" users for content, which is to send a Lightning Bitcoin payment as a financial upvote."
+                    , "I see the the record of such zaps as quite a data goldmine - a directed graph of socially signaled value. I'm experimenting with a family of fairly simple algorithms for content curation on Nostr, and hope to prove that they elegantly solve data curation problems, finding valuable new content and routing around spam - an otherwise tricky problem in a sea of unmoderated content and pseudonymous accounts."
+                    , "In addition, I believe that a community primarily using such a technique to construct feeds would begin to behave like something of a neural net, with users as neurons and zaps as synapse firings, forming connections and propagating content further through the network. I discuss this further in the article linked below."
+                    , "My first goal is to demonstrate the basic utility of one of these algorithms, via a tool or visualizations; then I hope to get some traction from the Nostr community, and seek grant funding to pursue further application and research in this area."
+                    ]
+                )
+                [ blueOutlineNewTabLink dProfile "https://habla.news/a/naddr1qvzqqqr4gupzqyhjp3nd83hxklumz9elp6gmth2zrhr804hrcrktpmplygwtw4jjqqxnzde38q6rwwph8qcrvdpjwz7qav" "writeup on Nostr" ]
+            ]
         ]
+
+
+pageSectionHeader : String -> Element Msg
+pageSectionHeader text =
+    Element.el
+        [ Font.size 43
+        , Font.color <| Element.rgb255 136 231 255
+        , Font.extraBold
+        , Fonts.poppins
+        , Element.centerX
+        ]
+        (Element.text text)
 
 
 endorsementElement : DisplayProfile -> Bool -> String -> String -> String -> String -> Element Msg
