@@ -148,7 +148,10 @@ updateLoadedModel msg model =
                     )
 
         OnUrlChange url ->
-            ( { model | route = Route.parseUrl url }
+            ( { model
+                | route = Route.parseUrl url
+                , bodyViewport = Nothing
+              }
             , Cmd.none
             )
 
