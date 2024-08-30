@@ -51,11 +51,11 @@ addId idStr =
         Html.Attributes.id idStr
 
 
-hbreak : Element msg
-hbreak =
+hbreak : Element.Color -> Element msg
+hbreak color =
     Element.el
         [ Element.width Element.fill
         , Element.height <| Element.px 3
-        , Background.color <| Element.rgb 1 1 1
+        , Background.color color
         ]
         Element.none

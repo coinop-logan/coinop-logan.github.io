@@ -245,7 +245,7 @@ contactModalEl dProfile =
                 ]
               <|
                 Element.text "Get in touch"
-            , hbreak
+            , hbreak <| Element.rgb 1 1 1
             , Element.el
                 [ Font.size 30
                 , Font.bold
@@ -357,18 +357,33 @@ viewAboutPage dProfile =
                 ]
                 (Element.text "Testimonials")
             , endorsementElement dProfile
-                "schalk.png"
+                True
+                "chase.jpg"
+                "Chase Van Etten"
+                "CEO at OPFN"
+                "Logan is the rare engineer that is both competent with his tools and genuinely cares about business goals. He's an excellent partner throughout product development, challenges assumptions that would be easy to overlook, and is considerate of his teammates. Logan knows technology is still the best tool for empowering individuals and takes that responsibility seriously."
+            , endorsementElement dProfile
+                False
+                "schalk.jpg"
                 "Schalk Dormehl"
                 "CTO of Swiftcom"
-                [ "Logan is excellent at plotting out complex projects, then pushing forward in the execution with a consistent, healthy momentum."
-                , "He keeps the whole scope of the project in mind, and can fill in any needed gaps in things like UX design and cloud infrastructure."
-                ]
+                "Logan is excellent at plotting out complex projects, then pushing forward in the execution with a consistent, healthy momentum. He keeps the whole scope of the project in mind, and can fill in any needed gaps in things like UX design and cloud infrastructure."
+            , endorsementElement dProfile
+                True
+                "chris.jpg"
+                "Chris Lemmer"
+                "CEO at SwiftCom"
+                "Logan is a standout software architect,  who consistently delivered collaborative software that worked seamlessly. When faced with challenges, he didn't hesitate to build custom solutions from the ground up. His technical skills are top-notch, but what really makes Logan shine is his ability to communicate effectively and work well with others."
             ]
         ]
 
 
-endorsementElement : DisplayProfile -> String -> String -> String -> List String -> Element Msg
-endorsementElement dProfile picSrc name role quoteLines =
+endorsementElement : DisplayProfile -> Bool -> String -> String -> String -> String -> Element Msg
+endorsementElement dProfile isReversed picSrc nameString roleString quoteString =
+    let
+        picPath =
+            responsiveVal dProfile "endorsements/mobile/" "endorsements/desktop/"
+    in
     Element.row
         [ Border.rounded 40
         , Border.width 3
@@ -377,23 +392,55 @@ endorsementElement dProfile picSrc name role quoteLines =
         , Element.height <| Element.px <| 375
         , Element.clip
         ]
-        [ Element.image
+        ([ Element.image
             [ Element.height Element.fill
             ]
-            { src = "endorsements/" ++ picSrc
-            , description = name
+            { src = picPath ++ picSrc
+            , description = nameString
             }
-        , Element.el
+         , Element.el
             [ Element.height Element.fill
             , Element.width <| Element.px 3
             , Background.color <| Element.rgb 1 1 1
             ]
             Element.none
-        , Element.el
+         , Element.column
             [ Element.width Element.fill
+            , Element.paddingXY 72 56
+            , Element.spacing 41
             ]
-            Element.none
-        ]
+            [ Element.column
+                [ Element.spacing 11
+                , Font.color <| Element.rgb255 136 231 255
+                , Fonts.poppins
+                ]
+                [ Element.el
+                    [ Font.size 30
+                    , Font.bold
+                    ]
+                  <|
+                    Element.text nameString
+                , hbreak <| Element.rgb255 136 231 255
+                , Element.el
+                    [ Font.size 20
+                    ]
+                  <|
+                    Element.text roleString
+                ]
+            , Element.paragraph
+                [ Font.size 20
+                , Fonts.poppins
+                ]
+                [ Element.text quoteString ]
+            ]
+         ]
+            |> (if isReversed then
+                    List.reverse
+
+                else
+                    identity
+               )
+        )
 
 
 nameAndTitleElement : DisplayProfile -> Element Msg
@@ -654,7 +701,7 @@ projectHeaderEl dProfile titleEl maybeDateAndRoleString =
         , Element.width Element.fill
         ]
         [ titleEl
-        , hbreak
+        , hbreak <| Element.rgb 1 1 1
         , case maybeDateAndRoleString of
             Just ( dateString, roleString ) ->
                 Element.row
