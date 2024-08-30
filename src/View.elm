@@ -210,6 +210,55 @@ viewAboutPage dProfile =
                 ]
             )
             [ blueOutlineNewTabLink dProfile "https://habla.news/a/naddr1qvzqqqr4gupzqyhjp3nd83hxklumz9elp6gmth2zrhr804hrcrktpmplygwtw4jjqqxnzde38q6rwwph8qcrvdpjwz7qav" "writeup on Nostr" ]
+        , Element.column
+            [ Element.spacing 80
+            , Element.centerX
+            ]
+            [ Element.el
+                [ Font.size 43
+                , Font.color <| Element.rgb255 136 231 255
+                , Font.extraBold
+                , Fonts.poppins
+                , Element.centerX
+                ]
+                (Element.text "Testimonials")
+            , endorsementElement dProfile
+                "schalk.png"
+                "Schalk Dormehl"
+                "CTO of Swiftcom"
+                [ "Logan is excellent at plotting out complex projects, then pushing forward in the execution with a consistent, healthy momentum."
+                , "He keeps the whole scope of the project in mind, and can fill in any needed gaps in things like UX design and cloud infrastructure."
+                ]
+            ]
+        ]
+
+
+endorsementElement : DisplayProfile -> String -> String -> String -> List String -> Element Msg
+endorsementElement dProfile picSrc name role quoteLines =
+    Element.row
+        [ Border.rounded 40
+        , Border.width 3
+        , Border.color <| Element.rgb 1 1 1
+        , Element.width <| Element.px <| Config.bodyContentWidth dProfile
+        , Element.height <| Element.px <| 375
+        , Element.clip
+        ]
+        [ Element.image
+            [ Element.height Element.fill
+            ]
+            { src = "endorsements/" ++ picSrc
+            , description = name
+            }
+        , Element.el
+            [ Element.height Element.fill
+            , Element.width <| Element.px 3
+            , Background.color <| Element.rgb 1 1 1
+            ]
+            Element.none
+        , Element.el
+            [ Element.width Element.fill
+            ]
+            Element.none
         ]
 
 
