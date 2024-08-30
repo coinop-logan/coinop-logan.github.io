@@ -195,6 +195,7 @@ viewAboutPage dProfile =
         , Element.spacing 140
         ]
         [ nameAndTitleElement dProfile
+        , ytVidEl dProfile
         , portfolioEntryEl dProfile
             (Element.el [ Font.size <| responsiveVal dProfile 30 38 ] <| Element.text "Zap Trails")
             Nothing
@@ -252,6 +253,25 @@ nameElement =
             ]
         <|
             [ Html.text "Logan Brutsche" ]
+
+
+ytVidEl : DisplayProfile -> Element Msg
+ytVidEl dProfile =
+    Element.column
+        [ Element.width Element.fill
+        , Element.spacing 15
+        ]
+        [ Element.el
+            [ Element.centerX ]
+          <|
+            Element.html <|
+                Embed.Youtube.toHtml <|
+                    Embed.Youtube.attributes
+                        [ Embed.Youtube.Attributes.width <| Config.bodyContentWidth dProfile
+                        , Embed.Youtube.Attributes.height <| floor <| toFloat (Config.bodyContentWidth dProfile) / 1.8
+                        ]
+                        (Embed.Youtube.fromString "nS8HTce95NY")
+        ]
 
 
 viewPortfolioElements : DisplayProfile -> Element Msg
@@ -428,7 +448,7 @@ portfolioEntryEl dProfile titleEl maybeDateAndRoleString bodyStrings linkOutEls 
         , Border.rounded 40
         , Element.paddingXY 60 43
         , Element.spacing 80
-        , Element.width (Element.fill |> Element.maximum 1050)
+        , Element.width <| Element.px (Config.bodyContentWidth dProfile)
         , Element.centerX
         ]
         [ projectHeaderEl dProfile titleEl maybeDateAndRoleString
