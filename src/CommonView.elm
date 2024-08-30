@@ -1,6 +1,7 @@
 module CommonView exposing (..)
 
 import Element exposing (Attribute, Element)
+import Element.Background as Background
 import Element.Font as Font
 import Html exposing (Html)
 import Html.Attributes
@@ -48,3 +49,13 @@ addId : String -> Attribute msg
 addId idStr =
     Element.htmlAttribute <|
         Html.Attributes.id idStr
+
+
+hbreak : Element msg
+hbreak =
+    Element.el
+        [ Element.width Element.fill
+        , Element.height <| Element.px 3
+        , Background.color <| Element.rgb 1 1 1
+        ]
+        Element.none

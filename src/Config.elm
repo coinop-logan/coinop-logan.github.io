@@ -27,3 +27,8 @@ bodyWidth dProfile =
 bodyContentWidth : DisplayProfile -> Int
 bodyContentWidth dProfile =
     responsiveVal dProfile 330 1050
+
+
+headerHeight : DisplayProfile -> Int
+headerHeight dProfile =
+    134

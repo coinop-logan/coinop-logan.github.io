@@ -36,6 +36,7 @@ type alias LoadedModel =
     , time_bySecond : Time.Posix
     , animateTime : Time.Posix
     , brickWall : BrickWall
+    , showContactModal : Bool
     }
 
 
@@ -50,5 +51,5 @@ type Msg
     | UpdateNow Time.Posix
     | Animate Time.Posix
     | AddBricks Time.Posix
-      -- | NameElementSizingInfoGot (Result Browser.Dom.Error Browser.Dom.Element)
+    | SetShowContactModal Bool
     | Test

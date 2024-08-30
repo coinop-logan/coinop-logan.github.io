@@ -41,6 +41,7 @@ initLoadedModel viewport now url key =
         , time_bySecond = now
         , animateTime = now
         , brickWall = BrickWall.init now 0
+        , showContactModal = True
         }
     , Cmd.batch
         [ getViewportCmd
@@ -186,6 +187,11 @@ updateLoadedModel msg model =
         --               }
         --             , Cmd.none
         --             )
+        SetShowContactModal flag ->
+            ( { model | showContactModal = flag }
+            , Cmd.none
+            )
+
         Test ->
             -- let
             --     _ =

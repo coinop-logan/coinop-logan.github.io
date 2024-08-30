@@ -28,26 +28,35 @@ root : Model -> Browser.Document Msg
 root model =
     { title = "Logan Brutsche - Portfolio"
     , body =
-        [ Element.layoutWith
-            { options =
-                [ Element.focusStyle
-                    { borderColor = Nothing
-                    , backgroundColor = Nothing
-                    , shadow = Nothing
-                    }
-                ]
-            }
-            [ Element.width Element.fill
-            , Element.height Element.fill
-            ]
-          <|
-            case model of
-                Loading _ ->
+        case model of
+            Loading _ ->
+                [ Element.layout
+                    []
                     viewLoadingMessage
+                ]
 
-                Loaded loadedModel ->
+            Loaded loadedModel ->
+                [ Element.layoutWith
+                    { options =
+                        [ Element.focusStyle
+                            { borderColor = Nothing
+                            , backgroundColor = Nothing
+                            , shadow = Nothing
+                            }
+                        ]
+                    }
+                    [ Element.width Element.fill
+                    , Element.height Element.fill
+                    , Element.inFront <|
+                        if loadedModel.showContactModal then
+                            contactModalEl (Responsive.viewportToDisplayProfile loadedModel.viewport)
+
+                        else
+                            Element.none
+                    ]
+                  <|
                     view loadedModel
-        ]
+                ]
     }
 
 
@@ -82,7 +91,7 @@ headerEl : DisplayProfile -> LoadedModel -> Element Msg
 headerEl dProfile model =
     Element.row
         [ Element.width Element.fill
-        , Element.height <| Element.px 134
+        , Element.height <| Element.px <| Config.headerHeight dProfile
         , Background.color Theme.darkNavyBlue
         , Element.paddingXY 70 0
         , Element.clipY
@@ -175,6 +184,112 @@ bodyEl dProfile model =
 
             Route.Contact ->
                 viewContactPage dProfile
+
+
+contactModalEl : DisplayProfile -> Element Msg
+contactModalEl dProfile =
+    Element.column
+        [ Font.size 40
+        , Element.alignTop
+        , Element.moveDown <| toFloat <| Config.headerHeight dProfile
+        , Element.centerX
+        , Element.width <| Element.px <| Config.bodyContentWidth dProfile
+        , Font.color <| Element.rgb 1 1 1
+        ]
+        [ Element.column
+            [ Background.color <| Element.rgb255 29 134 161
+            , Element.width Element.fill
+            , Fonts.poppins
+            , Element.spacing 29
+            , Element.paddingEach
+                { left = 80
+                , right = 80
+                , top = 54
+                , bottom = 20
+                }
+            ]
+            [ Input.button
+                [ Element.alignRight
+                ]
+                { label =
+                    Element.image
+                        [ Element.height <| Element.px 39
+                        ]
+                        { src = "/x.png"
+                        , description = "close"
+                        }
+                , onPress = Just <| SetShowContactModal False
+                }
+            , Element.el
+                [ Font.size 70
+                , Font.bold
+                ]
+              <|
+                Element.text "Get in touch"
+            , hbreak
+            , Element.el
+                [ Font.size 30
+                , Font.bold
+                ]
+              <|
+                Element.text "coinop.logan@gmail.com"
+            ]
+        , Element.column
+            [ Background.gradient
+                { angle = pi
+                , steps =
+                    [ Element.rgb255 29 134 161
+                    , Element.rgb255 100 200 220
+                    ]
+                }
+            , Element.width Element.fill
+            , Border.roundEach
+                { topLeft = 0
+                , topRight = 0
+                , bottomLeft = 40
+                , bottomRight = 40
+                }
+            , Element.paddingEach
+                { left = 80
+                , right = 80
+                , top = 40
+                , bottom = 90
+                }
+            , Element.spacing 80
+            ]
+            [ Element.column
+                [ Font.size 30
+                , Font.italic
+                , Element.paddingXY 20 0
+                ]
+                [ Element.text "Rockstar developer"
+                , Element.text "looing for a rockstar team"
+                , Element.text "and challenging work"
+                ]
+            , Element.row
+                [ Element.spacing <| responsiveVal dProfile 30 50
+                ]
+                (List.map (viewContactLink dProfile)
+                    [ ( "github.png", "https://github.com/coinop-logan/" )
+                    , ( "telegram.png", "https://t.me/coinoplogan" )
+                    , ( "medium.png", "https://medium.com/@coinop.logan" )
+                    ]
+                )
+            ]
+        ]
+
+
+viewContactLink : DisplayProfile -> ( String, String ) -> Element Msg
+viewContactLink dProfile ( imgFName, url ) =
+    Element.newTabLink
+        []
+        { url = url
+        , label =
+            Element.image [ Element.height <| Element.px <| responsiveVal dProfile 55 85 ]
+                { src = "/sm-icons/" ++ imgFName
+                , description = imgFName
+                }
+        }
 
 
 viewProjectsPage : DisplayProfile -> Element Msg
@@ -515,21 +630,12 @@ portfolioEntryEl dProfile titleEl maybeDateAndRoleString bodyStrings linkOutEls 
 
 projectHeaderEl : DisplayProfile -> Element Msg -> Maybe ( String, String ) -> Element Msg
 projectHeaderEl dProfile titleEl maybeDateAndRoleString =
-    let
-        projectTitleHbreak =
-            Element.el
-                [ Element.width Element.fill
-                , Element.height <| Element.px 3
-                , Background.color <| Element.rgb 1 1 1
-                ]
-                Element.none
-    in
     Element.column
         [ Element.spacing 30
         , Element.width Element.fill
         ]
         [ titleEl
-        , projectTitleHbreak
+        , hbreak
         , case maybeDateAndRoleString of
             Just ( dateString, roleString ) ->
                 Element.row
