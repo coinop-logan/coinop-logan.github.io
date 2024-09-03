@@ -5,6 +5,8 @@ import Browser
 import Browser.Dom exposing (Viewport)
 import Browser.Navigation
 import CommonTypes exposing (..)
+import NymDemo.State as NymDemo
+import NymDemo.Types as NymDemo
 import Responsive exposing (DisplayProfile)
 import Route exposing (Route)
 import Time
@@ -37,6 +39,7 @@ type alias LoadedModel =
     , animateTime : Time.Posix
     , brickWall : BrickWall
     , showContactModal : Bool
+    , nymDemoModel : NymDemo.Model
     }
 
 
@@ -52,4 +55,5 @@ type Msg
     | Animate Time.Posix
     | AddBricks Time.Posix
     | SetShowContactModal Bool
+    | NymDemoMsg NymDemo.Msg
     | Test

@@ -7,6 +7,7 @@ import Browser.Events
 import Browser.Navigation as Nav
 import Config
 import Convert exposing (..)
+import NymDemo.State as NymDemo
 import Random
 import Responsive exposing (DisplayProfile)
 import Route exposing (Route)
@@ -42,6 +43,7 @@ initLoadedModel viewport now url key =
         , animateTime = now
         , brickWall = BrickWall.init now 0
         , showContactModal = False
+        , nymDemoModel = NymDemo.initModel (Random.initialSeed <| Time.posixToMillis now)
         }
     , Cmd.batch
         [ getViewportCmd
@@ -207,6 +209,15 @@ updateLoadedModel msg model =
         SetShowContactModal flag ->
             ( { model | showContactModal = flag }
             , Cmd.none
+            )
+
+        NymDemoMsg nymDemoMsg ->
+            let
+                ( newModel, cmd ) =
+                    NymDemo.update nymDemoMsg model.nymDemoModel
+            in
+            ( { model | nymDemoModel = newModel }
+            , cmd |> Cmd.map NymDemoMsg
             )
 
         Test ->

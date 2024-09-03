@@ -16,6 +16,8 @@ import Embed.Youtube.Attributes
 import Fonts
 import Html
 import Html.Attributes
+import NymDemo.Types as NymDemo
+import NymDemo.View as NymDemo
 import Responsive exposing (..)
 import Route exposing (Route)
 import TabGraphics
@@ -199,7 +201,7 @@ bodyEl dProfile model =
     <|
         case model.route of
             Route.Projects ->
-                viewProjectsPage dProfile
+                viewProjectsPage dProfile model.nymDemoModel
 
             Route.About ->
                 viewAboutPage dProfile
@@ -311,14 +313,14 @@ viewContactLink dProfile ( imgFName, url ) =
         }
 
 
-viewProjectsPage : DisplayProfile -> Element Msg
-viewProjectsPage dProfile =
+viewProjectsPage : DisplayProfile -> NymDemo.Model -> Element Msg
+viewProjectsPage dProfile nymDemoModel =
     Element.column
         [ Element.width Element.fill
         , Element.spacing <| responsiveVal dProfile 43 140
         ]
         [ nameAndTitleElement dProfile
-        , viewPortfolioElements dProfile
+        , viewPortfolioElements dProfile nymDemoModel
         ]
 
 
@@ -370,15 +372,16 @@ viewAboutPage dProfile =
                     Element.text "Zap Trails"
                 )
                 Nothing
-                (responsiveVal dProfile
-                    [ "The Nostr network allows users to send \"zaps\" (Lightning Bitcoin) to one another; I see the record of such zaps as quite a data goldmine - a directed graph of socially signaled value. I'm experimenting using this to curate content and route around spam with a family of simple algorithms that I expect to yield extremely impressive results."
-                    , "My first goal is to demonstrate the basic utility of one of these algorithms, via a tool or visualizations; then I hope to get some traction from the Nostr community, and seek grant funding to pursue further application and research in this area."
-                    ]
-                    [ "I recently discovered the Nostr network, a decentralized social media platform. In practice it's something like Twitter or Medium, depending on the client you use, but without any centralized moderation or control. One of the features of this network is \"zapping\" users for content, which is to send a Lightning Bitcoin payment as a financial upvote."
-                    , "I see the the record of such zaps as quite a data goldmine - a directed graph of socially signaled value. I'm experimenting with a family of fairly simple algorithms for content curation on Nostr, and hope to prove that they elegantly solve data curation problems, finding valuable new content and routing around spam - an otherwise tricky problem in a sea of unmoderated content and pseudonymous accounts."
-                    , "In addition, I believe that a community primarily using such a technique to construct feeds would begin to behave like something of a neural net, with users as neurons and zaps as synapse firings, forming connections and propagating content further through the network. I discuss this further in the article linked below."
-                    , "My first goal is to demonstrate the basic utility of one of these algorithms, via a tool or visualizations; then I hope to get some traction from the Nostr community, and seek grant funding to pursue further application and research in this area."
-                    ]
+                (List.map (Element.text >> List.singleton >> Element.paragraph []) <|
+                    responsiveVal dProfile
+                        [ "The Nostr network allows users to send \"zaps\" (Lightning Bitcoin) to one another; I see the record of such zaps as quite a data goldmine - a directed graph of socially signaled value. I'm experimenting using this to curate content and route around spam with a family of simple algorithms that I expect to yield extremely impressive results."
+                        , "My first goal is to demonstrate the basic utility of one of these algorithms, via a tool or visualizations; then I hope to get some traction from the Nostr community, and seek grant funding to pursue further application and research in this area."
+                        ]
+                        [ "I recently discovered the Nostr network, a decentralized social media platform. In practice it's something like Twitter or Medium, depending on the client you use, but without any centralized moderation or control. One of the features of this network is \"zapping\" users for content, which is to send a Lightning Bitcoin payment as a financial upvote."
+                        , "I see the the record of such zaps as quite a data goldmine - a directed graph of socially signaled value. I'm experimenting with a family of fairly simple algorithms for content curation on Nostr, and hope to prove that they elegantly solve data curation problems, finding valuable new content and routing around spam - an otherwise tricky problem in a sea of unmoderated content and pseudonymous accounts."
+                        , "In addition, I believe that a community primarily using such a technique to construct feeds would begin to behave like something of a neural net, with users as neurons and zaps as synapse firings, forming connections and propagating content further through the network. I discuss this further in the article linked below."
+                        , "My first goal is to demonstrate the basic utility of one of these algorithms, via a tool or visualizations; then I hope to get some traction from the Nostr community, and seek grant funding to pursue further application and research in this area."
+                        ]
                 )
                 [ blueOutlineNewTabLink dProfile "https://habla.news/a/naddr1qvzqqqr4gupzqyhjp3nd83hxklumz9elp6gmth2zrhr804hrcrktpmplygwtw4jjqqxnzde38q6rwwph8qcrvdpjwz7qav" "writeup on Nostr" ]
             ]
@@ -523,8 +526,8 @@ ytVidEl dProfile =
         ]
 
 
-viewPortfolioElements : DisplayProfile -> Element Msg
-viewPortfolioElements dProfile =
+viewPortfolioElements : DisplayProfile -> NymDemo.Model -> Element Msg
+viewPortfolioElements dProfile nymDemoModel =
     let
         itemSpacing =
             responsiveVal dProfile 37 130
@@ -541,9 +544,11 @@ viewPortfolioElements dProfile =
                 }
             )
             (Just ( "2024", "Solo Project" ))
-            [ "An LLM-powered tool that explains the counter-intuitive Estonian grammar to English speakers (for example, why \"eestisse\" means \"into Estonia\"). The tool takes English or Estonian text, translates it, and explains word by word how the Estonian is constructed."
-            , "The central feature was surprisingly easy to build, due to LLM's strength in language tasks."
-            ]
+            (List.map (Element.text >> List.singleton >> Element.paragraph []) <|
+                [ "An LLM-powered tool that explains the counter-intuitive Estonian grammar to English speakers (for example, why \"eestisse\" means \"into Estonia\"). The tool takes English or Estonian text, translates it, and explains word by word how the Estonian is constructed."
+                , "The central feature was surprisingly easy to build, due to LLM's strength in language tasks."
+                ]
+            )
             [ blueOutlineNewTabLink dProfile "https://eestisse.ee" "eestisse.ee"
             , blueOutlineNewTabLink dProfile "https://github.com/eestisse/eestisse" "github"
             ]
@@ -556,9 +561,11 @@ viewPortfolioElements dProfile =
                 }
             )
             (Just ( "2022 / 2023", "Solo Project" ))
-            [ "An RTS game where users fight over crypto in-game. Players must invest real crypto into their units (i.e. $1.50 for a Fighter, $0.50 for a worker); if these units are killed, this investment is dropped onto the battlefield for anyone else to pick up, capture, and withdraw. This is a zero-sum game where the goal is to get more out than you put in. \"Like Poker, but the chips shoot at each other!\""
-            , "The goal of Coinfight was to give players the experience of fighting over real money in real time. To avoid the cumbersome limits of blockchain processing, Coinfight only used the blockchain to process deposits and withdrawals, a rare but rewarding architectural approach among web3 games."
-            ]
+            (List.map (Element.text >> List.singleton >> Element.paragraph []) <|
+                [ "An RTS game where users fight over crypto in-game. Players must invest real crypto into their units (i.e. $1.50 for a Fighter, $0.50 for a worker); if these units are killed, this investment is dropped onto the battlefield for anyone else to pick up, capture, and withdraw. This is a zero-sum game where the goal is to get more out than you put in. \"Like Poker, but the chips shoot at each other!\""
+                , "The goal of Coinfight was to give players the experience of fighting over real money in real time. To avoid the cumbersome limits of blockchain processing, Coinfight only used the blockchain to process deposits and withdrawals, a rare but rewarding architectural approach among web3 games."
+                ]
+            )
             [ blueOutlineNewTabLink dProfile "https://www.youtube.com/watch?v=7tw10KUO1_U" "demo video"
             , blueOutlineNewTabLink dProfile "https://medium.com/p/472636deec57" "dev blog post"
             , blueOutlineNewTabLink dProfile "https://coinfight.io/" "coinfight.io"
@@ -606,7 +613,9 @@ viewPortfolioElements dProfile =
                         Element.text "Nyms"
                     )
                     (Just ( "2021", "Solo Project" ))
-                    [ "An experimental NFT/identicon project that consumes 113 bits of entropy (72 for structure and 41 for color) to produce over one thousand quintillion (1,000,000,000,000,000,000,000,000,000,000,000) visually distinct 3D mammalian faces." ]
+                    [ NymDemo.testView nymDemoModel |> Element.map NymDemoMsg
+                    , Element.paragraph [] [ Element.text "An experimental NFT/identicon project that consumes 113 bits of entropy (72 for structure and 41 for color) to produce over one thousand quintillion (1,000,000,000,000,000,000,000,000,000,000,000) visually distinct 3D mammalian faces." ]
+                    ]
                     [ blueOutlineNewTabLink dProfile "https://team-toast.github.io/nym/" "more info"
                     , blueOutlineNewTabLink dProfile "https://opensea.io/collection/alpha-nyms" "Alpha Nym NFT set"
                     ]
@@ -618,10 +627,12 @@ viewPortfolioElements dProfile =
                         }
                     )
                     (Just ( "2020 / 2021", "Tech Lead" ))
-                    [ "SmokeSignal was an uncensorable, global chat forum. It implemented Reddit-like functionality (nested comments in topical forums) and allowed users to tip each other for posts."
-                    , "As with DAIHard, below, a major goal of SmokeSignal was to be both radically free (no censorship or moderation) and unkillable (no central organization or nation-state could stop it)."
-                    , "Thus, the main technical challenge was in making something suitably decentralized so as to not be attackable, while still integrating with traditional frameworks and services for the purposes of marketing and usability. For example, while all core functionality was implemented on the Ethereum blockchain and an interface hosted on IPFS, a traditional web server was used to serve SEO information for the otherwise decentralized content."
-                    ]
+                    (List.map (Element.text >> List.singleton >> Element.paragraph []) <|
+                        [ "SmokeSignal was an uncensorable, global chat forum. It implemented Reddit-like functionality (nested comments in topical forums) and allowed users to tip each other for posts."
+                        , "As with DAIHard, below, a major goal of SmokeSignal was to be both radically free (no censorship or moderation) and unkillable (no central organization or nation-state could stop it)."
+                        , "Thus, the main technical challenge was in making something suitably decentralized so as to not be attackable, while still integrating with traditional frameworks and services for the purposes of marketing and usability. For example, while all core functionality was implemented on the Ethereum blockchain and an interface hosted on IPFS, a traditional web server was used to serve SEO information for the otherwise decentralized content."
+                        ]
+                    )
                     [ blueOutlineNewTabLink dProfile "https://medium.com/daihard-buidlers/introducing-smokesignal-da8f19bc27af" "intro post"
                     , blueOutlineNewTabLink dProfile "https://www.youtube.com/watch?v=pV70Q0wgnnU" "demo video"
                     , blueOutlineNewTabLink dProfile "https://github.com/team-toast/SmokeSignal" "github"
@@ -637,10 +648,12 @@ viewPortfolioElements dProfile =
                         Element.text "DAIHard"
                     )
                     (Just ( "2019 / 2020", "Solo Developer" ))
-                    [ "DAIHard was a crypto/fiat exchange built entirely with Ethereum smart contracts, so that there was no central server anyone could take down. The application was designed to continue to function even in adversarial jurisdictions. Note that this app used no backend server at all, even for encrypted chat between users."
-                    , "As part of this project, I spent two months in Zimbabwe researching the viability of crypto adoption in the face of a hyperinflated currency. A summary of my findings can be found in the below-linked ZimDai paper \"ZimDai: Blueprint for an Economic Jailbreak\"."
-                    , "(The visual design for this project was contracted out.)"
-                    ]
+                    (List.map (Element.text >> List.singleton >> Element.paragraph []) <|
+                        [ "DAIHard was a crypto/fiat exchange built entirely with Ethereum smart contracts, so that there was no central server anyone could take down. The application was designed to continue to function even in adversarial jurisdictions. Note that this app used no backend server at all, even for encrypted chat between users."
+                        , "As part of this project, I spent two months in Zimbabwe researching the viability of crypto adoption in the face of a hyperinflated currency. A summary of my findings can be found in the below-linked ZimDai paper \"ZimDai: Blueprint for an Economic Jailbreak\"."
+                        , "(The visual design for this project was contracted out.)"
+                        ]
+                    )
                     [ blueOutlineNewTabLink dProfile "https://www.youtube.com/watch?v=WR4WovM0qwg" "demo video"
                     , blueOutlineNewTabLink dProfile "https://medium.com/@coinop.logan/daihard-game-theory-21a456ef224e" "game theory writeup"
                     , blueOutlineNewTabLink dProfile "https://github.com/team-toast/DAIHard" "github"
@@ -659,9 +672,11 @@ viewPortfolioElements dProfile =
                 Element.text "Toastycoin"
             )
             (Just ( "2017", "Solo Project" ))
-            [ "Toastycoin was an experimental dapp that used \"burnable payment\" contracts on the Ethereum blockchain to allow users to contract work from strangers on the Internet, without any previous trust or association. The burnable payment contracts used game theory to facilitate this: while loss of funds was not guaranteed, what was guaranteed was that scammers attempting to game the system would be punished and would not make a profit."
-            , "See the \"game theory writeup\" link under the DAIHard project above, to read more about this game theory, as DAIHard was simply a narrowed use-case of the burnable payments developed for Toastycoin."
-            ]
+            (List.map (Element.text >> List.singleton >> Element.paragraph []) <|
+                [ "Toastycoin was an experimental dapp that used \"burnable payment\" contracts on the Ethereum blockchain to allow users to contract work from strangers on the Internet, without any previous trust or association. The burnable payment contracts used game theory to facilitate this: while loss of funds was not guaranteed, what was guaranteed was that scammers attempting to game the system would be punished and would not make a profit."
+                , "See the \"game theory writeup\" link under the DAIHard project above, to read more about this game theory, as DAIHard was simply a narrowed use-case of the burnable payments developed for Toastycoin."
+                ]
+            )
             [ blueOutlineNewTabLink dProfile "https://medium.com/@coinop.logan/preventing-scammer-profit-with-burnable-payments-ad2e9b632ef2" "Burnable Payments proposal"
             , blueOutlineNewTabLink dProfile "https://medium.com/@coinop.logan/toasted-money-part-2-b5dfd0b1e946" "experiment conclusion"
             , blueOutlineNewTabLink dProfile "https://github.com/coinop-logan/toastycoin" "github"
@@ -706,8 +721,8 @@ blueBorderedText dProfile text =
         (Element.text text)
 
 
-portfolioEntryEl : DisplayProfile -> Element Msg -> Maybe ( String, String ) -> List String -> List (Element Msg) -> Element Msg
-portfolioEntryEl dProfile titleEl maybeDateAndRoleString bodyStrings linkOutEls =
+portfolioEntryEl : DisplayProfile -> Element Msg -> Maybe ( String, String ) -> List (Element Msg) -> List (Element Msg) -> Element Msg
+portfolioEntryEl dProfile titleEl maybeDateAndRoleString bodyEls linkOutEls =
     Element.column
         [ Background.color <| Element.rgba255 217 217 217 0.2
         , Border.rounded <| responsiveVal dProfile 20 40
@@ -723,7 +738,7 @@ portfolioEntryEl dProfile titleEl maybeDateAndRoleString bodyStrings linkOutEls 
             [ Element.width Element.fill
             , Element.spacing <| responsiveVal dProfile 40 50
             ]
-            [ projectBodyTextEl dProfile bodyStrings
+            [ projectBodyEl dProfile bodyEls
             , Element.wrappedRow
                 [ Element.spacing <| responsiveVal dProfile 7 26 ]
                 linkOutEls
@@ -758,8 +773,8 @@ projectHeaderEl dProfile titleEl maybeDateAndRoleString =
         ]
 
 
-projectBodyTextEl : DisplayProfile -> List String -> Element Msg
-projectBodyTextEl dProfile bodyStrings =
+projectBodyEl : DisplayProfile -> List (Element Msg) -> Element Msg
+projectBodyEl dProfile bodyEls =
     Element.column
         [ Element.width Element.fill
         , Element.spacing 15
@@ -767,11 +782,4 @@ projectBodyTextEl dProfile bodyStrings =
         , Font.light
         , Fonts.poppins
         ]
-        (bodyStrings
-            |> List.map
-                (\bodyString ->
-                    Element.paragraph
-                        []
-                        [ Element.text bodyString ]
-                )
-        )
+        bodyEls
