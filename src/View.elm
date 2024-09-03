@@ -16,6 +16,7 @@ import Embed.Youtube.Attributes
 import Fonts
 import Html
 import Html.Attributes
+import NymDemo.Config
 import NymDemo.Types as NymDemo
 import NymDemo.View as NymDemo
 import Responsive exposing (..)
@@ -613,7 +614,12 @@ viewPortfolioElements dProfile nymDemoModel =
                         Element.text "Nyms"
                     )
                     (Just ( "2021", "Solo Project" ))
-                    [ NymDemo.testView nymDemoModel |> Element.map NymDemoMsg
+                    [ Element.el
+                        [ Element.width <| Element.px (NymDemo.Config.nymDemoRenderDimensions dProfile |> Tuple.first)
+                        , Element.centerX
+                        , Element.explain Debug.todo
+                        ]
+                        (NymDemo.view dProfile nymDemoModel |> Element.map NymDemoMsg)
                     , Element.paragraph [] [ Element.text "An experimental NFT/identicon project that consumes 113 bits of entropy (72 for structure and 41 for color) to produce over one thousand quintillion (1,000,000,000,000,000,000,000,000,000,000,000) visually distinct 3D mammalian faces." ]
                     ]
                     [ blueOutlineNewTabLink dProfile "https://team-toast.github.io/nym/" "more info"
