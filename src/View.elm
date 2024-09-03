@@ -93,28 +93,28 @@ headerEl dProfile model =
         [ Element.width Element.fill
         , Element.height <| Element.px <| Config.headerHeight dProfile
         , Background.color Theme.darkNavyBlue
-        , Element.paddingXY 70 0
+        , Element.paddingXY (responsiveVal dProfile 20 70) 0
         , Element.clipY
         ]
         [ Element.el
-            [ Font.size 45
+            [ Font.size <| responsiveVal dProfile 35 45
             , Fonts.poppins
             , Font.extraBold
             , Element.moveDown <| headerNameVeritcalDisplacement dProfile model.bodyViewport
             ]
-            nameElement
+            (nameElement (responsiveVal dProfile "LB" "Logan Brutsche"))
         , Element.row
             [ Element.alignRight
-            , Element.spacing 53
+            , Element.spacing <| responsiveVal dProfile 6 53
             , Element.centerY
-            , Font.size 20
+            , Font.size <| responsiveVal dProfile 10 20
             , Fonts.poppins
             , Font.bold
             ]
             [ routingButton dProfile (Element.text "PROJECTS") Route.Projects model.route
             , routingButton dProfile (Element.text "ABOUT") Route.About model.route
             , Input.button
-                []
+                [ Element.paddingXY 5 15 ]
                 { label =
                     Element.el
                         []
@@ -122,14 +122,14 @@ headerEl dProfile model =
                 , onPress = Just <| SetShowContactModal (not model.showContactModal)
                 }
             , Element.newTabLink
-                []
+                [ Element.paddingXY 5 15 ]
                 { url = "/resume.pdf"
                 , label =
                     Element.row
-                        [ Element.spacing 10 ]
+                        [ Element.spacing <| responsiveVal dProfile 5 10 ]
                         [ Element.text "RESUME"
                         , Element.image
-                            [ Element.height <| Element.px 22
+                            [ Element.height <| Element.px <| responsiveVal dProfile 11 22
                             ]
                             { src = "/download.png"
                             , description = "download"
@@ -159,7 +159,7 @@ headerNameVeritcalDisplacement dProfile maybeBodyViewport =
 routingButton : DisplayProfile -> Element Msg -> Route -> Route -> Element Msg
 routingButton dProfile labelEl route currentRoute =
     Input.button
-        [ Element.padding 10 ]
+        [ Element.paddingXY 5 15 ]
         { label =
             Element.el
                 (if route == currentRoute then
@@ -315,7 +315,7 @@ viewProjectsPage : DisplayProfile -> Element Msg
 viewProjectsPage dProfile =
     Element.column
         [ Element.width Element.fill
-        , Element.spacing 140
+        , Element.spacing <| responsiveVal dProfile 43 140
         ]
         [ nameAndTitleElement dProfile
         , viewPortfolioElements dProfile
@@ -326,15 +326,15 @@ viewAboutPage : DisplayProfile -> Element Msg
 viewAboutPage dProfile =
     Element.column
         [ Element.width Element.fill
-        , Element.spacing 140
+        , Element.spacing <| responsiveVal dProfile 43 140
         ]
         [ nameAndTitleElement dProfile
         , ytVidEl dProfile
         , Element.column
-            [ Element.spacing 80
+            [ Element.spacing <| responsiveVal dProfile 30 80
             , Element.centerX
             ]
-            [ pageSectionHeader "Testimonials"
+            [ pageSectionHeader dProfile "Testimonials"
             , endorsementElement dProfile
                 True
                 "chase.jpg"
@@ -355,12 +355,20 @@ viewAboutPage dProfile =
                 "Logan is a standout software architect,  who consistently delivered collaborative software that worked seamlessly. When faced with challenges, he didn't hesitate to build custom solutions from the ground up. His technical skills are top-notch, but what really makes Logan shine is his ability to communicate effectively and work well with others."
             ]
         , Element.column
-            [ Element.spacing 80
+            [ Element.spacing <| responsiveVal dProfile 30 80
             , Element.centerX
             ]
-            [ pageSectionHeader "Current Projects"
+            [ pageSectionHeader dProfile "Current Projects"
             , portfolioEntryEl dProfile
-                (Element.el [ Font.size <| responsiveVal dProfile 30 38 ] <| Element.text "Zap Trails")
+                (Element.el
+                    [ Font.size <| responsiveVal dProfile 20 60
+                    , Font.bold
+                    , Fonts.poppins
+                    , Font.color Theme.lightBlue
+                    ]
+                 <|
+                    Element.text "Zap Trails"
+                )
                 Nothing
                 (responsiveVal dProfile
                     [ "The Nostr network allows users to send \"zaps\" (Lightning Bitcoin) to one another; I see the record of such zaps as quite a data goldmine - a directed graph of socially signaled value. I'm experimenting using this to curate content and route around spam with a family of simple algorithms that I expect to yield extremely impressive results."
@@ -377,10 +385,10 @@ viewAboutPage dProfile =
         ]
 
 
-pageSectionHeader : String -> Element Msg
-pageSectionHeader text =
+pageSectionHeader : DisplayProfile -> String -> Element Msg
+pageSectionHeader dProfile text =
     Element.el
-        [ Font.size 43
+        [ Font.size <| responsiveVal dProfile 20 43
         , Font.color <| Element.rgb255 136 231 255
         , Font.extraBold
         , Fonts.poppins
@@ -396,11 +404,11 @@ endorsementElement dProfile isReversed picSrc nameString roleString quoteString 
             responsiveVal dProfile "endorsements/mobile/" "endorsements/desktop/"
     in
     Element.row
-        [ Border.rounded 40
+        [ Border.rounded <| responsiveVal dProfile 20 40
         , Border.width 3
         , Border.color <| Element.rgb 1 1 1
         , Element.width <| Element.px <| Config.bodyContentWidth dProfile
-        , Element.height <| Element.px <| 375
+        , Element.height <| Element.px <| responsiveVal dProfile 256 375
         , Element.clip
         ]
         ([ Element.image
@@ -417,29 +425,29 @@ endorsementElement dProfile isReversed picSrc nameString roleString quoteString 
             Element.none
          , Element.column
             [ Element.width Element.fill
-            , Element.paddingXY 72 56
-            , Element.spacing 41
+            , responsiveVal dProfile (Element.paddingXY 18 33) (Element.paddingXY 72 56)
+            , Element.spacing <| responsiveVal dProfile 23 41
             ]
             [ Element.column
-                [ Element.spacing 11
+                [ Element.spacing <| responsiveVal dProfile 3 11
                 , Font.color <| Element.rgb255 136 231 255
                 , Fonts.poppins
                 ]
                 [ Element.el
-                    [ Font.size 30
+                    [ Font.size <| responsiveVal dProfile 12 30
                     , Font.bold
                     ]
                   <|
                     Element.text nameString
                 , hbreak <| Element.rgb255 136 231 255
                 , Element.el
-                    [ Font.size 20
+                    [ Font.size <| responsiveVal dProfile 12 20
                     ]
                   <|
                     Element.text roleString
                 ]
             , Element.paragraph
-                [ Font.size 20
+                [ Font.size <| responsiveVal dProfile 10 20
                 , Fonts.poppins
                 ]
                 [ Element.text quoteString ]
@@ -461,7 +469,7 @@ nameAndTitleElement dProfile =
         , Element.spacing 0
         , Fonts.poppins
         , Element.paddingEach
-            { top = 135
+            { top = responsiveVal dProfile 36 135
             , bottom = 0
             , right = 0
             , left = 0
@@ -469,22 +477,22 @@ nameAndTitleElement dProfile =
         ]
         [ Element.el
             [ Element.centerX
-            , Font.size 80
+            , Font.size <| responsiveVal dProfile 35 80
             , Font.extraBold
             ]
           <|
-            nameElement
+            nameElement "Logan Brutsche"
         , Element.el
             [ Element.centerX
-            , Font.size 40
+            , Font.size <| responsiveVal dProfile 15 40
             ]
           <|
             Element.text "Full-Stack Software Architect"
         ]
 
 
-nameElement : Element Msg
-nameElement =
+nameElement : String -> Element Msg
+nameElement name =
     Element.html <|
         Html.div
             [ Html.Attributes.style "background" "-webkit-linear-gradient(left, #88E7FF, #1D86A1)"
@@ -493,7 +501,7 @@ nameElement =
             , Html.Attributes.style "line-height" "normal"
             ]
         <|
-            [ Html.text "Logan Brutsche" ]
+            [ Html.text name ]
 
 
 ytVidEl : DisplayProfile -> Element Msg
@@ -519,7 +527,7 @@ viewPortfolioElements : DisplayProfile -> Element Msg
 viewPortfolioElements dProfile =
     let
         itemSpacing =
-            130
+            responsiveVal dProfile 37 130
     in
     Element.column
         [ Element.spacing itemSpacing
@@ -527,7 +535,7 @@ viewPortfolioElements dProfile =
         ]
         [ portfolioEntryEl dProfile
             (Element.image
-                [ Element.width <| Element.px 220 ]
+                [ Element.width <| Element.px <| responsiveVal dProfile 120 220 ]
                 { src = "eestisse-title.png"
                 , description = "eestisse"
                 }
@@ -541,7 +549,7 @@ viewPortfolioElements dProfile =
             ]
         , portfolioEntryEl dProfile
             (Element.image
-                [ Element.width <| Element.px 330
+                [ Element.width <| Element.px <| responsiveVal dProfile 140 330
                 ]
                 { src = "coinfight-title.png"
                 , description = "coinfight"
@@ -558,14 +566,15 @@ viewPortfolioElements dProfile =
             ]
         , Element.column
             [ Element.centerX
-            , Element.spacing 20
+            , Element.spacing <| responsiveVal dProfile 5 20
+            , Element.moveLeft <| responsiveVal dProfile 5 0
             , Element.paddingEach
-                { left = 56
+                { left = responsiveVal dProfile 5 56
                 , right = 0
-                , bottom = 20
+                , bottom = responsiveVal dProfile 5 20
                 , top = 0
                 }
-            , Border.rounded 40
+            , Border.rounded <| responsiveVal dProfile 15 40
             , Border.widthEach
                 { left = 3
                 , top = 0
@@ -575,10 +584,11 @@ viewPortfolioElements dProfile =
             , Border.color <| Element.rgb 1 0.6 0.3
             ]
             [ Element.row
-                [ Font.size 30
+                [ Font.size <| responsiveVal dProfile 15 30
                 , Font.color <| Element.rgb 1 0.6 0.3
                 , Fonts.poppins
-                , Element.moveUp 15
+                , Element.moveUp <| responsiveVal dProfile 7 15
+                , Element.moveRight <| responsiveVal dProfile 15 0
                 ]
                 [ Element.text "FoundryDAO Projects - "
                 , newTabLink [] "/resume.pdf" "See resume"
@@ -587,7 +597,7 @@ viewPortfolioElements dProfile =
                 [ Element.spacing itemSpacing ]
                 [ portfolioEntryEl dProfile
                     (Element.el
-                        [ Font.size 60
+                        [ Font.size <| responsiveVal dProfile 20 60
                         , Font.bold
                         , Fonts.poppins
                         , Font.color Theme.lightBlue
@@ -596,11 +606,13 @@ viewPortfolioElements dProfile =
                         Element.text "Nyms"
                     )
                     (Just ( "2021", "Solo Project" ))
-                    [ "TODO" ]
-                    [ blueOutlineNewTabLink dProfile "https://team-toast.github.io/nym/" "home page" ]
+                    [ "An experimental NFT/identicon project that consumes 113 bits of entropy (72 for structure and 41 for color) to produce over one thousand quintillion (1,000,000,000,000,000,000,000,000,000,000,000) visually distinct 3D mammalian faces." ]
+                    [ blueOutlineNewTabLink dProfile "https://team-toast.github.io/nym/" "more info"
+                    , blueOutlineNewTabLink dProfile "https://opensea.io/collection/alpha-nyms" "Alpha Nym NFT set"
+                    ]
                 , portfolioEntryEl dProfile
                     (Element.image
-                        [ Element.width <| Element.px 230 ]
+                        [ Element.width <| Element.px <| responsiveVal dProfile 120 230 ]
                         { src = "smokesignal-title.svg"
                         , description = "smokesignal"
                         }
@@ -616,7 +628,7 @@ viewPortfolioElements dProfile =
                     ]
                 , portfolioEntryEl dProfile
                     (Element.el
-                        [ Font.size 60
+                        [ Font.size <| responsiveVal dProfile 20 60
                         , Font.bold
                         , Fonts.poppins
                         , Font.color Theme.lightBlue
@@ -638,7 +650,7 @@ viewPortfolioElements dProfile =
             ]
         , portfolioEntryEl dProfile
             (Element.el
-                [ Font.size 60
+                [ Font.size <| responsiveVal dProfile 20 60
                 , Font.bold
                 , Fonts.poppins
                 , Font.color Theme.lightBlue
@@ -664,11 +676,11 @@ blueOutlineNewTabLink dProfile url labelText =
         { url = url
         , label =
             Element.el
-                [ Element.padding 15
+                [ Element.padding <| responsiveVal dProfile 5 15
                 , Font.color Theme.lightBlue
                 , Fonts.poppins
                 , Font.bold
-                , Font.size 25
+                , Font.size <| responsiveVal dProfile 12 25
                 , Border.rounded 100
                 , Border.width 3
                 , Border.color Theme.lightBlue
@@ -685,7 +697,7 @@ viewContactPage dProfile =
 blueBorderedText : DisplayProfile -> String -> Element Msg
 blueBorderedText dProfile text =
     Element.el
-        [ Element.padding 15
+        [ Element.padding <| responsiveVal dProfile 4 15
         , Font.color Theme.lightBlue
         , Border.rounded 100
         , Border.width 2
@@ -698,20 +710,22 @@ portfolioEntryEl : DisplayProfile -> Element Msg -> Maybe ( String, String ) -> 
 portfolioEntryEl dProfile titleEl maybeDateAndRoleString bodyStrings linkOutEls =
     Element.column
         [ Background.color <| Element.rgba255 217 217 217 0.2
-        , Border.rounded 40
-        , Element.paddingXY 60 43
-        , Element.spacing 80
+        , Border.rounded <| responsiveVal dProfile 20 40
+        , responsiveVal dProfile
+            (Element.paddingXY 24 40)
+            (Element.paddingXY 60 43)
+        , Element.spacing <| responsiveVal dProfile 30 80
         , Element.width <| Element.px (Config.bodyContentWidth dProfile)
         , Element.centerX
         ]
         [ projectHeaderEl dProfile titleEl maybeDateAndRoleString
         , Element.column
             [ Element.width Element.fill
-            , Element.spacing 50
+            , Element.spacing <| responsiveVal dProfile 40 50
             ]
             [ projectBodyTextEl dProfile bodyStrings
-            , Element.row
-                [ Element.spacing 26 ]
+            , Element.wrappedRow
+                [ Element.spacing <| responsiveVal dProfile 7 26 ]
                 linkOutEls
             ]
         ]
@@ -720,7 +734,7 @@ portfolioEntryEl dProfile titleEl maybeDateAndRoleString bodyStrings linkOutEls 
 projectHeaderEl : DisplayProfile -> Element Msg -> Maybe ( String, String ) -> Element Msg
 projectHeaderEl dProfile titleEl maybeDateAndRoleString =
     Element.column
-        [ Element.spacing 30
+        [ Element.spacing <| responsiveVal dProfile 21 30
         , Element.width Element.fill
         ]
         [ titleEl
@@ -730,7 +744,7 @@ projectHeaderEl dProfile titleEl maybeDateAndRoleString =
                 Element.row
                     [ Element.width Element.fill
                     , Fonts.poppins
-                    , Font.size 25
+                    , Font.size <| responsiveVal dProfile 15 25
                     ]
                     [ Element.text dateString
                     , Element.el
@@ -749,7 +763,7 @@ projectBodyTextEl dProfile bodyStrings =
     Element.column
         [ Element.width Element.fill
         , Element.spacing 15
-        , Font.size 25
+        , Font.size <| responsiveVal dProfile 12 25
         , Font.light
         , Fonts.poppins
         ]
