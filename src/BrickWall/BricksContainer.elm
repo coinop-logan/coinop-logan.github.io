@@ -5,6 +5,7 @@ import BrickWall.Common exposing (..)
 import BrickWall.Config as Config
 import List.Extra as List
 import Maybe.Extra as Maybe
+import Responsive exposing (DisplayProfile)
 import Time
 
 
@@ -81,19 +82,19 @@ getNextGridPos (Bricks bricks) =
         |> listPosToGridPos
 
 
-getNewBrickCandidatePositions : Float -> BricksContainer -> List ( Int, Int )
-getNewBrickCandidatePositions maxY (Bricks bricks) =
+getNewBrickCandidatePositions : DisplayProfile -> Float -> BricksContainer -> List ( Int, Int )
+getNewBrickCandidatePositions dProfile maxY (Bricks bricks) =
     bricks
         |> addEmptyRowIfNeeded
         |> List.findIndices Maybe.isNothing
         |> List.map listPosToGridPos
-        |> List.filter (gridPosRealPosIsUnderY maxY)
+        |> List.filter (gridPosRealPosIsUnderY dProfile maxY)
         |> List.filter (parentsExist bricks)
 
 
-gridPosRealPosIsUnderY : Float -> ( Int, Int ) -> Bool
-gridPosRealPosIsUnderY y gridPos =
-    (gridPos |> gridPosToRealPos).y < y
+gridPosRealPosIsUnderY : DisplayProfile -> Float -> ( Int, Int ) -> Bool
+gridPosRealPosIsUnderY dProfile y gridPos =
+    (gridPos |> gridPosToRealPos dProfile).y < y
 
 
 addEmptyRowIfNeeded : List (Maybe Brick) -> List (Maybe Brick)

@@ -9,7 +9,7 @@ import Config
 import Convert exposing (..)
 import NymDemo.State as NymDemo
 import Random
-import Responsive exposing (DisplayProfile)
+import Responsive exposing (DisplayProfile, viewportToDisplayProfile)
 import Route exposing (Route)
 import Task
 import Time
@@ -41,7 +41,7 @@ initLoadedModel viewport now url key =
         , bodyViewport = Nothing
         , time_bySecond = now
         , animateTime = now
-        , brickWall = BrickWall.init now 0
+        , brickWall = BrickWall.init (viewportToDisplayProfile viewport) now 0
         , showContactModal = False
         , nymDemoModel = NymDemo.initModel (Random.initialSeed <| Time.posixToMillis now)
         }
@@ -94,8 +94,18 @@ updateLoadedModel msg model =
             ( model, Cmd.none )
 
         GotViewport viewport ->
+            let
+                dProfileChanged =
+                    viewportToDisplayProfile viewport /= viewportToDisplayProfile model.viewport
+            in
             ( { model
                 | viewport = viewport
+                , brickWall =
+                    if not dProfileChanged then
+                        model.brickWall
+
+                    else
+                        BrickWall.init (viewportToDisplayProfile viewport) model.animateTime 0
               }
             , Cmd.none
             )

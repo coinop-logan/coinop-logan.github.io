@@ -1,14 +1,15 @@
 module BrickWall.Config exposing (..)
 
-import Element exposing (Color, Element)
+import Element
+import Responsive exposing (DisplayProfile, responsiveVal)
 
 
-brickWidth =
-    100
+brickWidth dProfile =
+    responsiveVal dProfile 80 100
 
 
-brickHeight =
-    40
+brickHeight dProfile =
+    responsiveVal dProfile 32 40
 
 
 padding =
@@ -55,19 +56,19 @@ brickGradientColor =
     Element.rgb255 46 81 102
 
 
-heightToFillWithCircleGradientPoints : Float
-heightToFillWithCircleGradientPoints =
-    5000
+heightToFillWithCircleGradientPoints : DisplayProfile -> Float
+heightToFillWithCircleGradientPoints dProfile =
+    responsiveVal dProfile 8000 5000
 
 
-vSpaceBetweenCircleGradientPoints : Float
-vSpaceBetweenCircleGradientPoints =
-    1000
+vSpaceBetweenCircleGradientPoints : DisplayProfile -> Float
+vSpaceBetweenCircleGradientPoints dProfile =
+    responsiveVal dProfile 500 1000
 
 
-circleGradientRadius : Float
-circleGradientRadius =
-    700
+circleGradientRadius : DisplayProfile -> Float
+circleGradientRadius dProfile =
+    responsiveVal dProfile 250 700
 
 
 fadedBrickStrokeOpacity : Float

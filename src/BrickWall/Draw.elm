@@ -9,6 +9,7 @@ import Element exposing (Element)
 import List.Extra as List
 import Maybe.Extra as Maybe
 import Point exposing (Point)
+import Responsive exposing (DisplayProfile)
 import Svg exposing (Svg)
 import Svg.Attributes
 import SvgHelpers exposing (colorToSvgString, drawToPointString, moveToPointString, pointToString)
@@ -25,18 +26,18 @@ view now width height model =
                 ]
                 [ Svg.defs
                     []
-                    (radialGradientDefs width)
+                    (radialGradientDefs model.dProfile width)
                 , draw now model
                 ]
 
 
-radialGradientDefs : Float -> List (Svg msg)
-radialGradientDefs screenWidth =
+radialGradientDefs : DisplayProfile -> Float -> List (Svg msg)
+radialGradientDefs dProfile screenWidth =
     let
         gradientCircleCenters =
             let
                 numPointsNeeded =
-                    (Config.heightToFillWithCircleGradientPoints / Config.vSpaceBetweenCircleGradientPoints) + 1 |> floor
+                    (Config.heightToFillWithCircleGradientPoints dProfile / Config.vSpaceBetweenCircleGradientPoints dProfile) + 1 |> floor
             in
             -- start with a list of alternating values we will use for the x value of the point
             List.cycle numPointsNeeded
@@ -44,15 +45,15 @@ radialGradientDefs screenWidth =
                 |> List.indexedMap
                     (\i x ->
                         { x = x
-                        , y = toFloat i * Config.vSpaceBetweenCircleGradientPoints
+                        , y = toFloat i * Config.vSpaceBetweenCircleGradientPoints dProfile
                         }
                     )
 
         maxGridposInfluenced =
-            { x = screenWidth + Config.circleGradientRadius
-            , y = Config.heightToFillWithCircleGradientPoints + Config.circleGradientRadius
+            { x = screenWidth + Config.circleGradientRadius dProfile
+            , y = Config.heightToFillWithCircleGradientPoints dProfile + Config.circleGradientRadius dProfile
             }
-                |> realPosToGridPos
+                |> realPosToGridPos dProfile
     in
     List.range 0 (BricksContainer.gridPosToListPos maxGridposInfluenced)
         |> List.map BricksContainer.listPosToGridPos
@@ -60,7 +61,7 @@ radialGradientDefs screenWidth =
             (\gridPos ->
                 let
                     realPos =
-                        gridPosToRealPos gridPos
+                        gridPosToRealPos dProfile gridPos
 
                     closestGradientPoint =
                         gradientCircleCenters
@@ -72,9 +73,9 @@ radialGradientDefs screenWidth =
                 in
                 Svg.radialGradient
                     [ Svg.Attributes.id <| gradientIdStr gridPos
-                    , Svg.Attributes.cx <| String.fromFloat (localPoint.x / Config.brickWidth)
-                    , Svg.Attributes.cy <| String.fromFloat (localPoint.y / Config.brickWidth)
-                    , Svg.Attributes.r <| String.fromFloat (Config.circleGradientRadius / Config.brickWidth)
+                    , Svg.Attributes.cx <| String.fromFloat (localPoint.x / Config.brickWidth dProfile)
+                    , Svg.Attributes.cy <| String.fromFloat (localPoint.y / Config.brickWidth dProfile)
+                    , Svg.Attributes.r <| String.fromFloat (Config.circleGradientRadius dProfile / Config.brickWidth dProfile)
                     ]
                     [ Svg.stop
                         [ Svg.Attributes.offset "0%"
@@ -103,19 +104,19 @@ draw now brickWall =
         drawnBricks =
             brickWall.bricks
                 |> BricksContainer.toList
-                |> List.map (Maybe.map (drawBrick now fadedAreas))
+                |> List.map (Maybe.map (drawBrick brickWall.dProfile now fadedAreas))
                 |> Maybe.values
     in
     Svg.g [] drawnBricks
 
 
-drawBrick : Time.Posix -> List AreaDef -> Brick -> Svg msg
-drawBrick now fadedAreas brick =
+drawBrick : DisplayProfile -> Time.Posix -> List AreaDef -> Brick -> Svg msg
+drawBrick dProfile now fadedAreas brick =
     let
         isFaded =
             List.any
                 (\area ->
-                    pointIsInArea (pointToCenterPoint brick.homePoint) area
+                    pointIsInArea (pointToCenterPoint dProfile brick.homePoint) area
                 )
                 fadedAreas
 
@@ -131,8 +132,8 @@ drawBrick now fadedAreas brick =
             [ Svg.Attributes.x <| String.fromInt <| floor position.x
             , Svg.Attributes.y <| String.fromInt <| floor position.y
             , Svg.Attributes.class "brickrect"
-            , Svg.Attributes.width <| String.fromInt Config.brickWidth
-            , Svg.Attributes.height <| String.fromInt Config.brickHeight
+            , Svg.Attributes.width <| String.fromInt <| Config.brickWidth dProfile
+            , Svg.Attributes.height <| String.fromInt <| Config.brickHeight dProfile
             , Svg.Attributes.transform transformString
             , Svg.Attributes.strokeWidth "1"
             ]

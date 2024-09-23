@@ -5,6 +5,7 @@ import BrickWall.Config as Config
 import Element
 import Point exposing (Point)
 import Random
+import Responsive exposing (DisplayProfile)
 import Time
 import Utils
 
@@ -35,15 +36,15 @@ updateBrickState now brick =
                 brick
 
 
-brickGenerator : ( Int, Int ) -> Bool -> Time.Posix -> Random.Generator Brick
-brickGenerator gridPos alreadyPlaced now =
+brickGenerator : DisplayProfile -> ( Int, Int ) -> Bool -> Time.Posix -> Random.Generator Brick
+brickGenerator dProfile gridPos alreadyPlaced now =
     let
         homePoint =
-            gridPosToRealPos gridPos
+            gridPosToRealPos dProfile gridPos
     in
     if alreadyPlaced then
         Random.constant <|
-            makePlacedBrick gridPos
+            makePlacedBrick dProfile gridPos
 
     else
         Random.map
@@ -51,9 +52,9 @@ brickGenerator gridPos alreadyPlaced now =
             (brickOriginGenerator homePoint |> Random.map (\originInfo -> Moving originInfo now))
 
 
-makePlacedBrick : ( Int, Int ) -> Brick
-makePlacedBrick gridPos =
-    Brick (gridPosToRealPos gridPos) Placed (gradientIdStr gridPos)
+makePlacedBrick : DisplayProfile -> ( Int, Int ) -> Brick
+makePlacedBrick dProfile gridPos =
+    Brick (gridPosToRealPos dProfile gridPos) Placed (gradientIdStr gridPos)
 
 
 brickOriginGenerator : Point -> Random.Generator ( Point, Float )
