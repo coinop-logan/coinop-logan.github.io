@@ -210,6 +210,22 @@ bodyEl dProfile model =
 
 contactModalEl : DisplayProfile -> Element Msg
 contactModalEl dProfile =
+    let
+        closeButton =
+            Input.button
+                [ Element.alignRight
+                , Element.padding <| responsiveVal dProfile 17 30
+                ]
+                { label =
+                    Element.image
+                        [ Element.height <| Element.px <| responsiveVal dProfile 19 39
+                        ]
+                        { src = "/x.png"
+                        , description = "close"
+                        }
+                , onPress = Just <| SetShowContactModal False
+                }
+    in
     Element.column
         [ Font.size 40
         , Element.alignTop
@@ -217,40 +233,35 @@ contactModalEl dProfile =
         , Element.centerX
         , Element.width <| Element.px <| Config.bodyContentWidth dProfile
         , Font.color <| Element.rgb 1 1 1
+        , Element.inFront <|
+            Element.el
+                [ Element.padding <| responsiveVal dProfile 0 30
+                , Element.alignRight
+                ]
+            <|
+                closeButton
         ]
         [ Element.column
             [ Background.color <| Element.rgb255 29 134 161
             , Element.width Element.fill
             , Fonts.poppins
-            , Element.spacing 29
+            , Element.spacing <| responsiveVal dProfile 16 29
             , Element.paddingEach
-                { left = 80
-                , right = 80
-                , top = 54
+                { left = responsiveVal dProfile 20 80
+                , right = responsiveVal dProfile 20 80
+                , top = responsiveVal dProfile 36 120
                 , bottom = 20
                 }
             ]
-            [ Input.button
-                [ Element.alignRight
-                ]
-                { label =
-                    Element.image
-                        [ Element.height <| Element.px 39
-                        ]
-                        { src = "/x.png"
-                        , description = "close"
-                        }
-                , onPress = Just <| SetShowContactModal False
-                }
-            , Element.el
-                [ Font.size 70
+            [ Element.el
+                [ Font.size <| responsiveVal dProfile 25 70
                 , Font.bold
                 ]
               <|
                 Element.text "Get in touch"
-            , hbreak <| Element.rgb 1 1 1
+            , hbreak (responsiveVal dProfile 2 3) (Element.rgb 1 1 1)
             , Element.el
-                [ Font.size 30
+                [ Font.size <| responsiveVal dProfile 13 30
                 , Font.bold
                 ]
               <|
@@ -268,19 +279,19 @@ contactModalEl dProfile =
             , Border.roundEach
                 { topLeft = 0
                 , topRight = 0
-                , bottomLeft = 40
-                , bottomRight = 40
+                , bottomLeft = responsiveVal dProfile 20 40
+                , bottomRight = responsiveVal dProfile 20 40
                 }
             , Element.paddingEach
-                { left = 80
-                , right = 80
-                , top = 40
-                , bottom = 90
+                { left = responsiveVal dProfile 20 80
+                , right = responsiveVal dProfile 20 80
+                , top = responsiveVal dProfile 10 40
+                , bottom = responsiveVal dProfile 20 90
                 }
-            , Element.spacing 80
+            , Element.spacing <| responsiveVal dProfile 30 80
             ]
             [ Element.column
-                [ Font.size 30
+                [ Font.size <| responsiveVal dProfile 14 30
                 , Font.italic
                 , Element.paddingXY 20 0
                 ]
@@ -289,7 +300,7 @@ contactModalEl dProfile =
                 , Element.text "and challenging work"
                 ]
             , Element.row
-                [ Element.spacing <| responsiveVal dProfile 30 50
+                [ Element.spacing <| responsiveVal dProfile 30 70
                 ]
                 (List.map (viewContactLink dProfile)
                     [ ( "github.png", "https://github.com/coinop-logan/" )
@@ -307,7 +318,7 @@ viewContactLink dProfile ( imgFName, url ) =
         []
         { url = url
         , label =
-            Element.image [ Element.height <| Element.px <| responsiveVal dProfile 55 85 ]
+            Element.image [ Element.height <| Element.px <| responsiveVal dProfile 30 85 ]
                 { src = "/sm-icons/" ++ imgFName
                 , description = imgFName
                 }
@@ -443,7 +454,7 @@ endorsementElement dProfile isReversed picSrc nameString roleString quoteString 
                     ]
                   <|
                     Element.text nameString
-                , hbreak <| Element.rgb255 136 231 255
+                , hbreak 3 <| Element.rgb255 136 231 255
                 , Element.el
                     [ Font.size <| responsiveVal dProfile 12 20
                     ]
@@ -759,7 +770,7 @@ projectHeaderEl dProfile titleEl maybeDateAndRoleString =
         , Element.width Element.fill
         ]
         [ titleEl
-        , hbreak <| Element.rgb 1 1 1
+        , hbreak 3 <| Element.rgb 1 1 1
         , case maybeDateAndRoleString of
             Just ( dateString, roleString ) ->
                 Element.row
