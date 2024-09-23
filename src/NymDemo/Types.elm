@@ -21,11 +21,20 @@ type alias Model =
 
 type Msg
     = NoOp
+    | NewSeed Int
+    | AnimateDelta Float
+    | MaybeChangeLookDir
+    | MaybeChangeSeed Time.Posix
+    | MouseMove MouseMoveData
+
+
+
+-- | MouseClick Point
 
 
 type alias MorphModel =
     { oldNymTemplate : NymTemplate
-    , newNymTempalte : NymTemplate
+    , newNymTemplate : NymTemplate
     , morphProgress : Float
     , morphAccel : Float
     , lastGeneratedSource : BinarySource
@@ -34,3 +43,11 @@ type alias MorphModel =
 
 type alias Point3dM =
     Point3d.Point3d Length.Meters ()
+
+
+type alias MouseMoveData =
+    { offsetX : Int
+    , offsetY : Int
+    , offsetHeight : Float
+    , offsetWidth : Float
+    }

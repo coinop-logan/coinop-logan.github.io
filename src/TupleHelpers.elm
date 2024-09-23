@@ -4,9 +4,9 @@ import List.Extra
 import Tuple
 
 
-tuple3 : a -> b -> c -> (a, b, c)
+tuple3 : a -> b -> c -> ( a, b, c )
 tuple3 a b c =
-    (a, b, c)
+    ( a, b, c )
 
 
 extractTuple3Maybe : ( Maybe a, Maybe b, Maybe c ) -> Maybe ( a, b, c )
@@ -94,3 +94,8 @@ mergeTuple3 ( aFunc, bFunc, cFunc ) ( a, b, c ) ( d, e, f ) =
     , bFunc b e
     , cFunc c f
     )
+
+
+swap : ( a, b ) -> ( b, a )
+swap ( a, b ) =
+    ( b, a )
