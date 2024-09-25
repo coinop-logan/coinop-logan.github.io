@@ -21,9 +21,10 @@ type alias Model =
 
 type Msg
     = NoOp
+    | UpdateNow Time.Posix
     | NewSeed Int
     | AnimateDelta Float
-    | MaybeChangeLookDir
+    | ChangeSomeSeedsAndLookDir
     | MaybeChangeSeed Time.Posix
     | MouseMove MouseMoveData
 

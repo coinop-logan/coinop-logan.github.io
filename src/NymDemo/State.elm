@@ -1,5 +1,6 @@
 module NymDemo.State exposing (..)
 
+import Browser.Events
 import List.Extra as List
 import Nym exposing (BinarySource, Nym, NymTemplate)
 import NymDemo.Common exposing (..)
@@ -55,6 +56,11 @@ update msg model =
     case msg of
         NoOp ->
             ( model, Cmd.none )
+
+        UpdateNow t ->
+            ( { model | now = t }
+            , Cmd.none
+            )
 
         MouseMove moveData ->
             ( { model
@@ -112,9 +118,9 @@ update msg model =
             , Cmd.none
             )
 
-        MaybeChangeLookDir ->
+        ChangeSomeSeedsAndLookDir ->
             let
-                ( newSeed, morphModels ) =
+                ( seed1, morphModels ) =
                     model.morphModels
                         |> List.mapAccuml
                             (\seed morphModel ->
@@ -130,16 +136,30 @@ update msg model =
                                     |> TupleHelpers.swap
                             )
                             model.seed
+
+                ( newLookDir, newSeed ) =
+                    Random.step
+                        lookDirGenerator
+                        seed1
             in
             ( { model
                 | morphModels = morphModels
                 , seed = newSeed
+                , mouseInput = newLookDir
               }
             , Cmd.none
             )
 
         MaybeChangeSeed _ ->
             ( model, Cmd.none )
+
+
+lookDirGenerator : Random.Generator Point
+lookDirGenerator =
+    Random.map2
+        Point
+        (Random.float -0.3 0.3)
+        (Random.float -0.2 0.4)
 
 
 
@@ -225,3 +245,12 @@ mouseMoveIsIdle model =
 mouseClickIsIdle : Model -> Bool
 mouseClickIsIdle model =
     Time.toSecond Time.utc model.now - Time.toSecond Time.utc model.lastMouseClickTime > 4
+
+
+subscriptions : Model -> Sub Msg
+subscriptions _ =
+    Sub.batch
+        [ Browser.Events.onAnimationFrameDelta AnimateDelta
+        , Time.every 2000 (always ChangeSomeSeedsAndLookDir)
+        , Time.every 1000 UpdateNow
+        ]

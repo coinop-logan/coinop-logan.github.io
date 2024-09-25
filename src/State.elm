@@ -8,6 +8,7 @@ import Browser.Navigation as Nav
 import Config
 import Convert exposing (..)
 import NymDemo.State as NymDemo
+import NymDemo.Types as NymDemo
 import Random
 import Responsive exposing (DisplayProfile, viewportToDisplayProfile)
 import Route exposing (Route)
@@ -239,12 +240,18 @@ updateLoadedModel msg model =
 
 
 subscriptions : Model -> Sub Msg
-subscriptions _ =
+subscriptions model =
     Sub.batch
         [ Time.every 1000 UpdateNow
         , Browser.Events.onAnimationFrame Animate
         , Browser.Events.onResize (\_ _ -> TriggerGetViewports)
         , Time.every 15 AddBricks
+        , case model of
+            Loaded lModel ->
+                Sub.map NymDemoMsg <| NymDemo.subscriptions lModel.nymDemoModel
+
+            _ ->
+                Sub.none
         ]
 
 
