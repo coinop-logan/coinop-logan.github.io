@@ -602,15 +602,27 @@ viewPortfolioElements dProfile nymDemoModel =
                 }
             , Border.color <| Element.rgb 1 0.6 0.3
             ]
-            [ Element.row
+            [ Element.column
                 [ Font.size <| responsiveVal dProfile 15 30
-                , Font.color <| Element.rgb 1 0.6 0.3
                 , Fonts.poppins
                 , Element.moveUp <| responsiveVal dProfile 7 15
                 , Element.moveRight <| responsiveVal dProfile 15 0
+                , Element.spacing <| responsiveVal dProfile 5 15
                 ]
-                [ Element.text "FoundryDAO Projects - "
-                , newTabLink [] "/resume.pdf" "See resume"
+                [ Element.row
+                    []
+                    [ Element.el
+                        [ Font.color <| Element.rgb 1 0.6 0.3 ]
+                      <|
+                        Element.text "FoundryDAO Projects "
+                    , Element.text "- "
+                    , newTabLink [] "/resume.pdf" "See resume"
+                    ]
+                , Element.el
+                    [ Font.size <| responsiveVal dProfile 12 26
+                    ]
+                  <|
+                    Element.text "2019 - 2021"
                 ]
             , Element.column
                 [ Element.spacing itemSpacing ]
