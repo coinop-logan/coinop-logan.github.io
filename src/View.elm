@@ -126,7 +126,7 @@ headerEl dProfile model =
                 }
             , Element.newTabLink
                 [ Element.paddingXY 5 15 ]
-                { url = "/resume.pdf"
+                { url = "/LoganBrutsche_resume.pdf"
                 , label =
                     Element.row
                         [ Element.spacing <| responsiveVal dProfile 5 10 ]
@@ -623,7 +623,7 @@ viewPortfolioElements dProfile nymDemoModel =
                       <|
                         Element.text "FoundryDAO Projects "
                     , Element.text "- "
-                    , newTabLink [] "/resume.pdf" "See resume"
+                    , newTabLink [] "/LoganBrutsche_resume.pdf" "See resume"
                     ]
                 , Element.el
                     [ Font.size <| responsiveVal dProfile 12 26
