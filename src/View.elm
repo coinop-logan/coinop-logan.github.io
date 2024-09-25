@@ -181,7 +181,7 @@ bodyEl : DisplayProfile -> LoadedModel -> Element Msg
 bodyEl dProfile model =
     Element.el
         [ Element.clipY
-        , Element.scrollbarX
+        , Element.scrollbarY
         , Element.width Element.fill
         , Element.height Element.fill
         , Element.behindContent <|

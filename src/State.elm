@@ -145,7 +145,14 @@ updateLoadedModel msg model =
 
         GotoRoute route ->
             ( model
-            , Nav.pushUrl model.key (Route.toString route)
+            , Cmd.batch
+                [ Nav.pushUrl model.key (Route.toString route)
+                , Browser.Dom.setViewportOf
+                    "body-element"
+                    0
+                    0
+                    |> Task.attempt (always NoOp)
+                ]
             )
 
         OnUrlRequest urlRequest ->
