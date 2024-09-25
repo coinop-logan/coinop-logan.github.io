@@ -339,6 +339,29 @@ viewProjectsPage dProfile nymDemoModel =
         ]
         [ nameAndTitleElement dProfile
         , viewPortfolioElements dProfile nymDemoModel
+        , Input.button
+            [ Element.centerX
+            , Element.padding <| responsiveVal dProfile 10 15
+            ]
+            { onPress = Just <| GotoRoute Route.About
+            , label =
+                Element.row
+                    [ Element.spacing <| responsiveVal dProfile 10 20
+                    ]
+                    [ Element.el
+                        [ Font.size <| responsiveVal dProfile 20 35
+                        , Font.color <| Element.rgb255 136 231 255
+                        , Fonts.poppins
+                        , Font.bold
+                        ]
+                        (Element.text "Current Work")
+                    , Element.image
+                        [ Element.height <| Element.px <| responsiveVal dProfile 20 35 ]
+                        { src = "/arrow-right.png"
+                        , description = "Current Work"
+                        }
+                    ]
+            }
         ]
 
 
@@ -404,6 +427,29 @@ viewAboutPage dProfile =
                 )
                 [ blueOutlineNewTabLink dProfile "https://habla.news/a/naddr1qvzqqqr4gupzqyhjp3nd83hxklumz9elp6gmth2zrhr804hrcrktpmplygwtw4jjqqxnzde38q6rwwph8qcrvdpjwz7qav" "writeup on Nostr" ]
             ]
+        , Input.button
+            [ Element.centerX
+            , Element.padding <| responsiveVal dProfile 10 15
+            ]
+            { onPress = Just <| GotoRoute Route.Projects
+            , label =
+                Element.row
+                    [ Element.spacing <| responsiveVal dProfile 10 20
+                    ]
+                    [ Element.image
+                        [ Element.height <| Element.px <| responsiveVal dProfile 20 35 ]
+                        { src = "/arrow-left.png"
+                        , description = "Past Projects"
+                        }
+                    , Element.el
+                        [ Font.size <| responsiveVal dProfile 20 35
+                        , Font.color <| Element.rgb255 136 231 255
+                        , Fonts.poppins
+                        , Font.bold
+                        ]
+                        (Element.text "Past Projects")
+                    ]
+            }
         ]
 
 
