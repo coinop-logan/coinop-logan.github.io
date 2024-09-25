@@ -299,17 +299,23 @@ contactModalEl dProfile =
                 , Element.text "looing for a rockstar team"
                 , Element.text "and challenging work"
                 ]
-            , Element.row
-                [ Element.spacing <| responsiveVal dProfile 30 70
-                ]
-                (List.map (viewContactLink dProfile)
-                    [ ( "github.png", "https://github.com/coinop-logan/" )
-                    , ( "telegram.png", "https://t.me/coinoplogan" )
-                    , ( "medium.png", "https://medium.com/@coinop.logan" )
-                    ]
-                )
+            , viewContactLinks dProfile
             ]
         ]
+
+
+viewContactLinks : DisplayProfile -> Element Msg
+viewContactLinks dProfile =
+    Element.row
+        [ Element.spacing <| responsiveVal dProfile 30 70
+        ]
+        (List.map (viewContactLink dProfile)
+            [ ( "telegram.png", "https://t.me/coinoplogan" )
+            , ( "github.png", "https://github.com/coinop-logan/" )
+            , ( "email.png", "mailto:coinop.logan@gmail.com" )
+            , ( "medium.png", "https://medium.com/@coinop.logan" )
+            ]
+        )
 
 
 viewContactLink : DisplayProfile -> ( String, String ) -> Element Msg
@@ -318,7 +324,7 @@ viewContactLink dProfile ( imgFName, url ) =
         []
         { url = url
         , label =
-            Element.image [ Element.height <| Element.px <| responsiveVal dProfile 30 85 ]
+            Element.image [ Element.height <| Element.px <| responsiveVal dProfile 20 60 ]
                 { src = "/sm-icons/" ++ imgFName
                 , description = imgFName
                 }
@@ -343,12 +349,18 @@ viewAboutPage dProfile =
         , Element.spacing <| responsiveVal dProfile 43 140
         ]
         [ nameAndTitleElement dProfile
-        , ytVidEl dProfile
+        , Element.column
+            [ Element.width Element.fill
+            , Element.spacing <| responsiveVal dProfile 15 30
+            ]
+            [ ytVidEl dProfile
+            , Element.el [ Element.centerX ] <| viewContactLinks dProfile
+            ]
         , Element.column
             [ Element.spacing <| responsiveVal dProfile 30 80
             , Element.centerX
             ]
-            [ pageSectionHeader dProfile "Testimonials"
+            [ pageSectionHeader dProfile "From my Colleagues"
             , endorsementElement dProfile
                 True
                 "chase.jpg"
@@ -359,7 +371,7 @@ viewAboutPage dProfile =
                 False
                 "schalk.jpg"
                 "Schalk Dormehl"
-                "CTO of Swiftcom"
+                "Cofounder of FoundryDAO\nCTO of Swiftcom"
                 "Logan is excellent at plotting out complex projects, then pushing forward in the execution with a consistent, healthy momentum. He keeps the whole scope of the project in mind, and can fill in any needed gaps in things like UX design and cloud infrastructure."
             , endorsementElement dProfile
                 True
@@ -385,15 +397,10 @@ viewAboutPage dProfile =
                 )
                 Nothing
                 (List.map (Element.text >> List.singleton >> Element.paragraph []) <|
-                    responsiveVal dProfile
-                        [ "The Nostr network allows users to send \"zaps\" (Lightning Bitcoin) to one another; I see the record of such zaps as quite a data goldmine - a directed graph of socially signaled value. I'm experimenting using this to curate content and route around spam with a family of simple algorithms that I expect to yield extremely impressive results."
-                        , "My first goal is to demonstrate the basic utility of one of these algorithms, via a tool or visualizations; then I hope to get some traction from the Nostr community, and seek grant funding to pursue further application and research in this area."
-                        ]
-                        [ "I recently discovered the Nostr network, a decentralized social media platform. In practice it's something like Twitter or Medium, depending on the client you use, but without any centralized moderation or control. One of the features of this network is \"zapping\" users for content, which is to send a Lightning Bitcoin payment as a financial upvote."
-                        , "I see the the record of such zaps as quite a data goldmine - a directed graph of socially signaled value. I'm experimenting with a family of fairly simple algorithms for content curation on Nostr, and hope to prove that they elegantly solve data curation problems, finding valuable new content and routing around spam - an otherwise tricky problem in a sea of unmoderated content and pseudonymous accounts."
-                        , "In addition, I believe that a community primarily using such a technique to construct feeds would begin to behave like something of a neural net, with users as neurons and zaps as synapse firings, forming connections and propagating content further through the network. I discuss this further in the article linked below."
-                        , "My first goal is to demonstrate the basic utility of one of these algorithms, via a tool or visualizations; then I hope to get some traction from the Nostr community, and seek grant funding to pursue further application and research in this area."
-                        ]
+                    [ "I recently discovered the Nostr network, a decentralized social media platform. In practice it's something like Twitter or Medium, depending on the client you use, but without any centralized moderation or control. A complex challenge with such projects is content curation, and filtering out spam."
+                    , "I'm experimenting with a family of algorithms for content curation on Nostr, which addresses this problem by crawling the network's \"zaps\". Zaps are Bitcoin lightning payments that users on Nostr use as a financial upvote, boosting the signal's content while providing funds to the creator. This \"zap network\" is a latent data goldmine that I hope to show can be the core of an elegant solution to the data curation problem."
+                    , "My first goal is to demonstrate the basic utility of one of these algorithms, via a tool or visualizations; then I hope to get some traction from the Nostr community, and seek grant funding to pursue further application and research in this area."
+                    ]
                 )
                 [ blueOutlineNewTabLink dProfile "https://habla.news/a/naddr1qvzqqqr4gupzqyhjp3nd83hxklumz9elp6gmth2zrhr804hrcrktpmplygwtw4jjqqxnzde38q6rwwph8qcrvdpjwz7qav" "writeup on Nostr" ]
             ]
