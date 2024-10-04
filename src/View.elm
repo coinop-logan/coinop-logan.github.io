@@ -480,7 +480,8 @@ endorsementElement dProfile isReversed picSrc nameString roleString quoteString 
         , Element.clip
         ]
         ([ Element.image
-            [ Element.height Element.fill
+            [ Element.width <| Element.px <| responsiveVal dProfile 126 375
+            , Element.height <| Element.px <| responsiveVal dProfile 256 375
             ]
             { src = picPath ++ picSrc
             , description = nameString
