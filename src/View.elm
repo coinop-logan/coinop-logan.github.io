@@ -182,15 +182,17 @@ bodyEl dProfile model =
     Element.el
         [ Element.clipY
         , Element.scrollbarY
+        , Html.Attributes.style "min-height" "auto"
+            |> Element.htmlAttribute
         , Element.width Element.fill
         , Element.height Element.fill
         , Element.behindContent <|
-            case model.bodyViewport of
+            case model.brickWall of
                 Nothing ->
                     Element.none
 
-                Just bodyViewport ->
-                    BrickWall.Draw.view model.animateTime bodyViewport.scene.width bodyViewport.scene.height model.brickWall
+                Just brickWall ->
+                    BrickWall.Draw.view model.animateTime brickWall
         , addId "body-element"
         , Element.paddingEach
             { bottom = 100
