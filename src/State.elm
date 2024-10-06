@@ -42,7 +42,7 @@ initLoadedModel viewport now url key =
         , bodyViewport = Nothing
         , time_bySecond = now
         , animateTime = now
-        , brickWall = BrickWall.init (viewportToDisplayProfile viewport) now 0
+        , brickWall = BrickWall.init (viewportToDisplayProfile viewport) now (calcNeededPrefill viewport)
         , showContactModal = False
         , nymDemoModel = NymDemo.initModel (Random.initialSeed <| Time.posixToMillis now)
         }
@@ -88,6 +88,11 @@ update msg model =
                 |> Tuple.mapFirst Loaded
 
 
+calcNeededPrefill : Viewport -> Float
+calcNeededPrefill viewport =
+    viewport.viewport.x + viewport.viewport.height
+
+
 updateLoadedModel : Msg -> LoadedModel -> ( LoadedModel, Cmd Msg )
 updateLoadedModel msg model =
     case msg of
@@ -106,7 +111,7 @@ updateLoadedModel msg model =
                         model.brickWall
 
                     else
-                        BrickWall.init (viewportToDisplayProfile viewport) model.animateTime 0
+                        BrickWall.init (viewportToDisplayProfile viewport) model.animateTime (calcNeededPrefill viewport)
               }
             , Cmd.none
             )
