@@ -2,6 +2,7 @@ module BrickWall.Brick exposing (..)
 
 import BrickWall.Common exposing (..)
 import BrickWall.Config as Config
+import Browser.Dom exposing (Viewport)
 import Element
 import Point exposing (Point)
 import Random
@@ -36,15 +37,15 @@ updateBrickState now brick =
                 brick
 
 
-brickGenerator : DisplayProfile -> ( Int, Int ) -> Bool -> Time.Posix -> Random.Generator Brick
-brickGenerator dProfile gridPos alreadyPlaced now =
+brickGenerator : Viewport -> ( Int, Int ) -> Bool -> Time.Posix -> Random.Generator Brick
+brickGenerator bodyViewport gridPos alreadyPlaced now =
     let
         homePoint =
-            gridPosToRealPos dProfile gridPos
+            gridPosToRealPos (calcBrickDims bodyViewport) gridPos
     in
     if alreadyPlaced then
         Random.constant <|
-            makePlacedBrick dProfile gridPos
+            makePlacedBrick (calcBrickDims bodyViewport) gridPos
 
     else
         Random.map
@@ -52,9 +53,9 @@ brickGenerator dProfile gridPos alreadyPlaced now =
             (brickOriginGenerator homePoint |> Random.map (\originInfo -> Moving originInfo now))
 
 
-makePlacedBrick : DisplayProfile -> ( Int, Int ) -> Brick
-makePlacedBrick dProfile gridPos =
-    Brick (gridPosToRealPos dProfile gridPos) Placed (gradientIdStr gridPos)
+makePlacedBrick : BrickDims -> ( Int, Int ) -> Brick
+makePlacedBrick brickDims gridPos =
+    Brick (gridPosToRealPos brickDims gridPos) Placed (gradientIdStr gridPos)
 
 
 brickOriginGenerator : Point -> Random.Generator ( Point, Float )
@@ -99,16 +100,3 @@ getBrickPosAndRot now brick =
                 ( Point.interpolate progressFloat originPoint brick.homePoint
                 , Utils.interpolateFloat progressFloat originAngle 0
                 )
-
-
-
--- brickFillColorGenerator : Random.Generator Element.Color
--- brickFillColorGenerator =
---     Random.map3
---         Element.rgb
---         (Random.float 0.1 0.2)
---         (Random.float 0 0.1)
---         (Random.float 0 0.08)
--- brickStrokeColorGenerator : Random.Generator Element.Color
--- brickStrokeColorGenerator =
---     Debug.todo ""

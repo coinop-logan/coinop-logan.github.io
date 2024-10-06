@@ -42,7 +42,7 @@ initLoadedModel viewport now url key =
         , bodyViewport = Nothing
         , time_bySecond = now
         , animateTime = now
-        , brickWall = BrickWall.init (viewportToDisplayProfile viewport) now (calcNeededPrefill viewport)
+        , brickWall = Nothing
         , showContactModal = False
         , nymDemoModel = NymDemo.initModel (Random.initialSeed <| Time.posixToMillis now)
         }
@@ -100,18 +100,8 @@ updateLoadedModel msg model =
             ( model, Cmd.none )
 
         GotViewport viewport ->
-            let
-                dProfileChanged =
-                    viewportToDisplayProfile viewport /= viewportToDisplayProfile model.viewport
-            in
             ( { model
                 | viewport = viewport
-                , brickWall =
-                    if not dProfileChanged then
-                        model.brickWall
-
-                    else
-                        BrickWall.init (viewportToDisplayProfile viewport) model.animateTime (calcNeededPrefill viewport)
               }
             , Cmd.none
             )
@@ -129,13 +119,19 @@ updateLoadedModel msg model =
                     ( { model
                         | bodyViewport = Just viewport
                         , brickWall =
-                            let
-                                oldBW =
-                                    model.brickWall
-                            in
-                            { oldBW
-                                | targetY = viewport.viewport.y + viewport.viewport.height
-                            }
+                            Just <|
+                                case model.brickWall of
+                                    Nothing ->
+                                        BrickWall.init viewport model.animateTime
+
+                                    Just brickWall ->
+                                        if viewport.scene.width /= brickWall.bodyViewport.scene.width then
+                                            BrickWall.init viewport model.animateTime
+
+                                        else
+                                            { brickWall
+                                                | bodyViewport = viewport
+                                            }
                       }
                     , Cmd.none
                     )
@@ -191,44 +187,33 @@ updateLoadedModel msg model =
             )
 
         AddBricks now ->
-            ( { model
-                | brickWall =
-                    let
-                        numToSpawn =
-                            case model.bodyViewport of
-                                Just bodyViewport ->
-                                    if bodyViewport.viewport.y > BrickWall.getYOfFirstNothing model.brickWall then
-                                        15
+            ( case model.brickWall of
+                Nothing ->
+                    model
 
-                                    else
+                Just brickWall ->
+                    { model
+                        | brickWall =
+                            Just <|
+                                let
+                                    numToSpawn =
                                         3
 
-                                Nothing ->
-                                    3
-                    in
-                    model.brickWall
-                        |> BrickWall.maybeSpawnNewBricksUnderTargetY numToSpawn now
-              }
+                                    -- case model.bodyViewport of
+                                    --     Just bodyViewport ->
+                                    --         if bodyViewport.viewport.y > BrickWall.getYOfFirstNothing brickWall then
+                                    --             15
+                                    --         else
+                                    --             3
+                                    --     Nothing ->
+                                    --         3
+                                in
+                                brickWall
+                                    |> BrickWall.maybeSpawnNewBricksUnderTargetY numToSpawn now
+                    }
             , getBodyViewportCmd
             )
 
-        -- NameElementSizingInfoGot result ->
-        --     case result of
-        --         Err _ ->
-        --             ( model, Cmd.none )
-        --         Ok nameElementSizingInfo ->
-        --             ( { model
-        --                 | brickWall =
-        --                     let
-        --                         oldBW =
-        --                             model.brickWall
-        --                     in
-        --                     { oldBW
-        --                         | titleArea = Just nameElementSizingInfo.element
-        --                     }
-        --               }
-        --             , Cmd.none
-        --             )
         SetShowContactModal flag ->
             ( { model | showContactModal = flag }
             , Cmd.none
@@ -257,7 +242,7 @@ subscriptions model =
         [ Time.every 1000 UpdateNow
         , Browser.Events.onAnimationFrame Animate
         , Browser.Events.onResize (\_ _ -> TriggerGetViewports)
-        , Time.every 15 AddBricks
+        , Time.every 80 AddBricks
         , case model of
             Loaded lModel ->
                 Sub.map NymDemoMsg <| NymDemo.subscriptions lModel.nymDemoModel

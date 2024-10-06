@@ -37,7 +37,7 @@ type alias LoadedModel =
     , bodyViewport : Maybe Viewport
     , time_bySecond : Time.Posix
     , animateTime : Time.Posix
-    , brickWall : BrickWall
+    , brickWall : Maybe BrickWall
     , showContactModal : Bool
     , nymDemoModel : NymDemo.Model
     }

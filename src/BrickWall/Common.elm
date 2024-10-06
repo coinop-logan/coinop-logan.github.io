@@ -1,44 +1,45 @@
 module BrickWall.Common exposing (..)
 
 import BrickWall.Config as Config
+import Browser.Dom exposing (Viewport)
 import Point exposing (Point)
 import Random
 import Responsive exposing (DisplayProfile)
 
 
-gridPosToRealPos : DisplayProfile -> ( Int, Int ) -> Point
-gridPosToRealPos dProfile ( i, j ) =
+gridPosToRealPos : BrickDims -> ( Int, Int ) -> Point
+gridPosToRealPos ( brickWidth, brickHeight ) ( i, j ) =
     { x =
-        (toFloat <| i * (Config.brickWidth dProfile + Config.padding))
+        toFloat (i * (brickWidth + Config.padding))
             - (if modBy 2 j == 0 then
-                Config.brickWidth dProfile / 2
+                toFloat brickWidth / 2
 
                else
-                0
+                0.0
               )
             + (Config.padding / 2)
-    , y = (toFloat <| j * (Config.brickHeight dProfile + Config.padding)) + Config.padding / 2
+    , y = toFloat (j * (brickHeight + Config.padding)) + Config.padding / 2
     }
 
 
-realPosToGridPos : DisplayProfile -> Point -> ( Int, Int )
-realPosToGridPos dProfile point =
+realPosToGridPos : BrickDims -> Point -> ( Int, Int )
+realPosToGridPos ( brickWidth, brickHeight ) point =
     let
         j =
-            floor <| (point.y - (Config.padding / 2)) / (Config.brickHeight dProfile + Config.padding)
+            floor <| (point.y - (Config.padding / 2)) / toFloat (brickHeight + Config.padding)
 
         i =
             floor <|
                 (point.x
                     - (Config.padding / 2)
                     + (if modBy 2 j == 0 then
-                        Config.brickWidth dProfile
+                        toFloat brickWidth
 
                        else
                         0
                       )
                 )
-                    / (Config.brickWidth dProfile + Config.padding)
+                    / toFloat (brickWidth + Config.padding)
     in
     ( i, j )
 
@@ -56,12 +57,33 @@ type alias AreaDef =
     }
 
 
-pointToCenterPoint : DisplayProfile -> Point -> Point
-pointToCenterPoint dProfile p =
+type alias BrickDims =
+    ( Int, Int )
+
+
+calcBrickDims : Viewport -> ( Int, Int )
+calcBrickDims bodyViewport =
+    ( calcBrickWidth bodyViewport
+    , calcBrickHeight bodyViewport
+    )
+
+
+calcBrickWidth : Viewport -> Int
+calcBrickWidth bodyViewport =
+    floor bodyViewport.scene.width // Config.numColumns bodyViewport
+
+
+calcBrickHeight : Viewport -> Int
+calcBrickHeight bodyViewport =
+    floor <| toFloat (calcBrickWidth bodyViewport) * 0.4
+
+
+pointToCenterPoint : Viewport -> Point -> Point
+pointToCenterPoint bodyViewport p =
     Point.add
         p
-        { x = Config.brickWidth dProfile / 2
-        , y = Config.brickHeight dProfile / 2
+        { x = toFloat (calcBrickWidth bodyViewport) / 2
+        , y = toFloat (calcBrickHeight bodyViewport) / 2
         }
 
 

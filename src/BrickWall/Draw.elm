@@ -5,6 +5,7 @@ import BrickWall.BrickWall as BrickWall exposing (BrickWall)
 import BrickWall.BricksContainer as BricksContainer
 import BrickWall.Common exposing (..)
 import BrickWall.Config as Config
+import Browser.Dom exposing (Viewport)
 import Element exposing (Element)
 import List.Extra as List
 import Maybe.Extra as Maybe
@@ -16,52 +17,52 @@ import SvgHelpers exposing (colorToSvgString, drawToPointString, moveToPointStri
 import Time
 
 
-view : Time.Posix -> Float -> Float -> BrickWall -> Element msg
-view now width height model =
+view : Time.Posix -> BrickWall -> Element msg
+view now brickWall =
     Element.el [ Element.clipX, Element.width Element.fill ] <|
         Element.html <|
             Svg.svg
-                [ Svg.Attributes.width <| String.fromFloat width
-                , Svg.Attributes.height <| String.fromFloat height
+                [ Svg.Attributes.width <| String.fromFloat brickWall.bodyViewport.scene.width
+                , Svg.Attributes.height <| String.fromFloat brickWall.bodyViewport.scene.height
                 ]
                 [ Svg.defs
                     []
-                    (radialGradientDefs model.dProfile width)
-                , draw now model
+                    (radialGradientDefs brickWall)
+                , draw now brickWall
                 ]
 
 
-radialGradientDefs : DisplayProfile -> Float -> List (Svg msg)
-radialGradientDefs dProfile screenWidth =
+radialGradientDefs : BrickWall -> List (Svg msg)
+radialGradientDefs brickWall =
     let
         gradientCircleCenters =
             let
                 numPointsNeeded =
-                    (Config.heightToFillWithCircleGradientPoints dProfile / Config.vSpaceBetweenCircleGradientPoints dProfile) + 1 |> floor
+                    (heightToFillWithCircleGradientPoints brickWall.bodyViewport / vSpaceBetweenCircleGradientPoints brickWall.bodyViewport) + 1 |> floor
             in
             -- start with a list of alternating values we will use for the x value of the point
             List.cycle numPointsNeeded
-                [ screenWidth, 0.0 ]
+                [ brickWall.bodyViewport.viewport.width, 0.0 ]
                 |> List.indexedMap
                     (\i x ->
                         { x = x
-                        , y = toFloat i * Config.vSpaceBetweenCircleGradientPoints dProfile
+                        , y = toFloat i * vSpaceBetweenCircleGradientPoints brickWall.bodyViewport
                         }
                     )
 
         maxGridposInfluenced =
-            { x = screenWidth + Config.circleGradientRadius dProfile
-            , y = Config.heightToFillWithCircleGradientPoints dProfile + Config.circleGradientRadius dProfile
+            { x = brickWall.bodyViewport.viewport.width + circleGradientRadius brickWall.bodyViewport
+            , y = heightToFillWithCircleGradientPoints brickWall.bodyViewport + circleGradientRadius brickWall.bodyViewport
             }
-                |> realPosToGridPos dProfile
+                |> realPosToGridPos (calcBrickDims brickWall.bodyViewport)
     in
-    List.range 0 (BricksContainer.gridPosToListPos maxGridposInfluenced)
-        |> List.map BricksContainer.listPosToGridPos
+    List.range 0 (BricksContainer.gridPosToListPos brickWall.bricks maxGridposInfluenced)
+        |> List.map (BricksContainer.listPosToGridPos brickWall.bricks.numColumns)
         |> List.map
             (\gridPos ->
                 let
                     realPos =
-                        gridPosToRealPos dProfile gridPos
+                        gridPosToRealPos (calcBrickDims brickWall.bodyViewport) gridPos
 
                     closestGradientPoint =
                         gradientCircleCenters
@@ -73,9 +74,9 @@ radialGradientDefs dProfile screenWidth =
                 in
                 Svg.radialGradient
                     [ Svg.Attributes.id <| gradientIdStr gridPos
-                    , Svg.Attributes.cx <| String.fromFloat (localPoint.x / Config.brickWidth dProfile)
-                    , Svg.Attributes.cy <| String.fromFloat (localPoint.y / Config.brickWidth dProfile)
-                    , Svg.Attributes.r <| String.fromFloat (Config.circleGradientRadius dProfile / Config.brickWidth dProfile)
+                    , Svg.Attributes.cx <| String.fromFloat (localPoint.x / toFloat (calcBrickWidth brickWall.bodyViewport))
+                    , Svg.Attributes.cy <| String.fromFloat (localPoint.y / toFloat (calcBrickWidth brickWall.bodyViewport))
+                    , Svg.Attributes.r <| String.fromFloat (circleGradientRadius brickWall.bodyViewport / toFloat (calcBrickWidth brickWall.bodyViewport))
                     ]
                     [ Svg.stop
                         [ Svg.Attributes.offset "0%"
@@ -104,19 +105,19 @@ draw now brickWall =
         drawnBricks =
             brickWall.bricks
                 |> BricksContainer.toList
-                |> List.map (Maybe.map (drawBrick brickWall.dProfile now fadedAreas))
+                |> List.map (Maybe.map (drawBrick brickWall.bodyViewport now fadedAreas))
                 |> Maybe.values
     in
     Svg.g [] drawnBricks
 
 
-drawBrick : DisplayProfile -> Time.Posix -> List AreaDef -> Brick -> Svg msg
-drawBrick dProfile now fadedAreas brick =
+drawBrick : Viewport -> Time.Posix -> List AreaDef -> Brick -> Svg msg
+drawBrick bodyViewport now fadedAreas brick =
     let
         isFaded =
             List.any
                 (\area ->
-                    pointIsInArea (pointToCenterPoint dProfile brick.homePoint) area
+                    pointIsInArea (pointToCenterPoint bodyViewport brick.homePoint) area
                 )
                 fadedAreas
 
@@ -132,8 +133,8 @@ drawBrick dProfile now fadedAreas brick =
             [ Svg.Attributes.x <| String.fromInt <| floor position.x
             , Svg.Attributes.y <| String.fromInt <| floor position.y
             , Svg.Attributes.class "brickrect"
-            , Svg.Attributes.width <| String.fromInt <| Config.brickWidth dProfile
-            , Svg.Attributes.height <| String.fromInt <| Config.brickHeight dProfile
+            , Svg.Attributes.width <| String.fromInt <| calcBrickWidth bodyViewport
+            , Svg.Attributes.height <| String.fromInt <| calcBrickHeight bodyViewport
             , Svg.Attributes.transform transformString
             , Svg.Attributes.strokeWidth "1"
             ]
@@ -168,3 +169,18 @@ pointIsInArea point area =
         && point.y
         < area.y
         + area.height
+
+
+heightToFillWithCircleGradientPoints : Viewport -> Float
+heightToFillWithCircleGradientPoints bodyViewport =
+    bodyViewport.scene.height
+
+
+vSpaceBetweenCircleGradientPoints : Viewport -> Float
+vSpaceBetweenCircleGradientPoints bodyViewport =
+    bodyViewport.scene.width
+
+
+circleGradientRadius : Viewport -> Float
+circleGradientRadius bodyViewport =
+    bodyViewport.scene.width / 2

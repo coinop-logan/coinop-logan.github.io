@@ -4,6 +4,7 @@ import BrickWall.Brick as Brick exposing (..)
 import BrickWall.BricksContainer as BricksContainer exposing (BricksContainer)
 import BrickWall.Common exposing (..)
 import BrickWall.Config as Config
+import Browser.Dom exposing (Viewport)
 import List.Extra as List
 import Maybe.Extra as Maybe
 import Random
@@ -15,48 +16,47 @@ type alias BrickWall =
     { masterSeed : Random.Seed
     , bricks : BricksContainer
     , titleArea : Maybe AreaDef
-    , targetY : Float
-    , dProfile : DisplayProfile
+    , bodyViewport : Viewport
     }
 
 
-initBrick : DisplayProfile -> Time.Posix -> Bool -> (Random.Seed -> ( Int, Int ) -> ( Random.Seed, Brick ))
-initBrick dProfile now alreadyPlaced seed gridPos =
+initBrick : Viewport -> Time.Posix -> Bool -> (Random.Seed -> ( Int, Int ) -> ( Random.Seed, Brick ))
+initBrick bodyViewport now alreadyPlaced seed gridPos =
     let
         ( brick, newSeed ) =
             Random.step
-                (Brick.brickGenerator dProfile gridPos alreadyPlaced now)
+                (Brick.brickGenerator bodyViewport gridPos alreadyPlaced now)
                 seed
     in
     ( newSeed, brick )
 
 
-init : DisplayProfile -> Time.Posix -> Float -> BrickWall
-init dProfile now targetYPrefill =
+init : Viewport -> Time.Posix -> BrickWall
+init bodyViewport now =
     let
-        initialNeededRows =
-            if targetYPrefill == 0 then
-                0
-
-            else
-                (realPosToGridPos dProfile { x = 0, y = targetYPrefill }
-                    |> Tuple.second
-                )
-                    + 1
-
         masterSeed0 =
             Random.initialSeed (Time.posixToMillis now)
 
+        numColumns =
+            bodyViewport.scene.width
+                / toFloat (calcBrickWidth bodyViewport)
+                |> floor
+                |> (+) 1
+
+        numRowsPrefill =
+            (bodyViewport.viewport.y + bodyViewport.viewport.height)
+                / toFloat (calcBrickHeight bodyViewport)
+                |> floor
+
         ( masterSeed1, bricksList ) =
-            List.range 0 ((Config.wallWidth * initialNeededRows) - 1)
-                |> List.map BricksContainer.listPosToGridPos
-                |> List.mapAccuml (initBrick dProfile now True) masterSeed0
+            List.range 0 ((numColumns * numRowsPrefill) - 1)
+                |> List.map (BricksContainer.listPosToGridPos numColumns)
+                |> List.mapAccuml (initBrick bodyViewport now True) masterSeed0
     in
     { masterSeed = masterSeed1
-    , bricks = BricksContainer.fromList bricksList
+    , bricks = BricksContainer.init numColumns bricksList
     , titleArea = Nothing
-    , targetY = targetYPrefill
-    , dProfile = dProfile
+    , bodyViewport = bodyViewport
     }
 
 
@@ -67,9 +67,9 @@ instantlyPlaceBricksAboveYIfNothing y brickWall =
             brickWall.bricks
                 |> BricksContainer.indexedUpdate
                     (\gridPos maybeBrick ->
-                        if (gridPosToRealPos brickWall.dProfile gridPos |> .y) < y then
+                        if (gridPosToRealPos (calcBrickDims brickWall.bodyViewport) gridPos |> .y) < y then
                             if Maybe.isNothing maybeBrick then
-                                Just <| makePlacedBrick brickWall.dProfile gridPos
+                                Just <| makePlacedBrick (calcBrickDims brickWall.bodyViewport) gridPos
 
                             else
                                 maybeBrick
@@ -99,7 +99,7 @@ maybeSpawnNewBrickUnderTargetY : Time.Posix -> BrickWall -> BrickWall
 maybeSpawnNewBrickUnderTargetY now brickWall =
     let
         candidatePositions =
-            BricksContainer.getNewBrickCandidatePositions brickWall.dProfile brickWall.targetY brickWall.bricks
+            BricksContainer.getNewBrickCandidatePositions brickWall.bodyViewport (getTargetY brickWall) brickWall.bricks
 
         ( chosenPos, seed1 ) =
             case candidatePositions of
@@ -112,7 +112,7 @@ maybeSpawnNewBrickUnderTargetY now brickWall =
                         brickWall.masterSeed
 
         ( seed2, brick ) =
-            initBrick brickWall.dProfile now False seed1 chosenPos
+            initBrick brickWall.bodyViewport now False seed1 chosenPos
     in
     { brickWall
         | bricks =
@@ -120,6 +120,11 @@ maybeSpawnNewBrickUnderTargetY now brickWall =
                 |> BricksContainer.addNewBrickIfNotExists chosenPos brick
         , masterSeed = seed2
     }
+
+
+getTargetY : BrickWall -> Float
+getTargetY brickWall =
+    brickWall.bodyViewport.viewport.y + brickWall.bodyViewport.viewport.height
 
 
 updateBrickStates : Time.Posix -> BrickWall -> BrickWall
@@ -135,7 +140,7 @@ getYOfFirstNothing : BrickWall -> Float
 getYOfFirstNothing brickWall =
     brickWall.bricks
         |> BricksContainer.getFirstGridPosWithNothing
-        |> gridPosToRealPos brickWall.dProfile
+        |> gridPosToRealPos (calcBrickDims brickWall.bodyViewport)
         |> .y
 
 

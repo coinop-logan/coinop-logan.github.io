@@ -3,109 +3,116 @@ module BrickWall.BricksContainer exposing (..)
 import BrickWall.Brick as Brick exposing (Brick)
 import BrickWall.Common exposing (..)
 import BrickWall.Config as Config
+import Browser.Dom exposing (Viewport)
 import List.Extra as List
 import Maybe.Extra as Maybe
 import Responsive exposing (DisplayProfile)
 import Time
 
 
-type BricksContainer
-    = Bricks (List (Maybe Brick))
+type alias BricksContainer =
+    { numColumns : Int
+    , bricks : List (Maybe Brick)
+    }
 
 
-
--- initialize : Int -> Int -> (( Int, Int ) -> Brick) -> BricksContainer
--- initialize i j initFunc =
---     Bricks <|
---         List.initialize (i * j)
---             (listPosToGridPos >> initFunc >> Just)
-
-
-fromList : List Brick -> BricksContainer
-fromList bricksList =
-    bricksList
-        |> List.map Just
-        |> Bricks
+init : Int -> List Brick -> BricksContainer
+init numColumns bricksList =
+    { numColumns = numColumns
+    , bricks =
+        bricksList
+            |> List.map Just
+    }
 
 
 indexedUpdate : (( Int, Int ) -> Maybe Brick -> Maybe Brick) -> BricksContainer -> BricksContainer
-indexedUpdate func (Bricks bricks) =
-    List.indexedMap
-        (\i -> func (listPosToGridPos i))
-        bricks
-        |> Bricks
+indexedUpdate func container =
+    { container
+        | bricks =
+            List.indexedMap
+                (\i -> func (listPosToGridPos container.numColumns i))
+                container.bricks
+    }
 
 
 addNewBrickIfNotExists : ( Int, Int ) -> Brick -> BricksContainer -> BricksContainer
-addNewBrickIfNotExists gridPos brick (Bricks bricks) =
-    case getBrick gridPos bricks of
+addNewBrickIfNotExists gridPos brick container =
+    case getBrick container gridPos of
         Just _ ->
-            Bricks bricks
+            container
 
         Nothing ->
-            Bricks bricks |> setBrick gridPos brick
+            container |> setBrick gridPos brick
 
 
 setBrick : ( Int, Int ) -> Brick -> BricksContainer -> BricksContainer
-setBrick gridPos brick (Bricks bricks) =
+setBrick gridPos brick container =
     let
         listPos =
-            gridPosToListPos gridPos
+            gridPosToListPos container gridPos
     in
-    Bricks
-        (bricks
-            |> padListWithNothings (listPos + 1)
-            |> List.setAt listPos (Just brick)
-        )
+    { container
+        | bricks =
+            container.bricks
+                |> padListWithNothings (listPos + 1)
+                |> List.setAt listPos (Just brick)
+    }
 
 
 toList : BricksContainer -> List (Maybe Brick)
-toList (Bricks bricks) =
-    bricks
+toList container =
+    container.bricks
 
 
-listPosToGridPos : Int -> ( Int, Int )
-listPosToGridPos h =
-    ( h |> modBy Config.wallWidth
-    , h // Config.wallWidth
+listPosToGridPos : Int -> Int -> ( Int, Int )
+listPosToGridPos numColumns h =
+    ( h |> modBy numColumns
+    , h // numColumns
     )
 
 
-gridPosToListPos : ( Int, Int ) -> Int
-gridPosToListPos ( i, j ) =
-    j * Config.wallWidth + i
+gridPosToListPos : BricksContainer -> ( Int, Int ) -> Int
+gridPosToListPos container ( i, j ) =
+    j * container.numColumns + i
 
 
 getNextGridPos : BricksContainer -> ( Int, Int )
-getNextGridPos (Bricks bricks) =
-    List.length bricks
-        |> listPosToGridPos
+getNextGridPos container =
+    List.length container.bricks
+        |> listPosToGridPos container.numColumns
 
 
-getNewBrickCandidatePositions : DisplayProfile -> Float -> BricksContainer -> List ( Int, Int )
-getNewBrickCandidatePositions dProfile maxY (Bricks bricks) =
-    bricks
-        |> addEmptyRowIfNeeded
+getNewBrickCandidatePositions : Viewport -> Float -> BricksContainer -> List ( Int, Int )
+getNewBrickCandidatePositions bodyViewport maxY container =
+    let
+        paddedContainer =
+            container
+                |> addEmptyRowIfNeeded
+    in
+    paddedContainer.bricks
         |> List.findIndices Maybe.isNothing
-        |> List.map listPosToGridPos
-        |> List.filter (gridPosRealPosIsUnderY dProfile maxY)
-        |> List.filter (parentsExist bricks)
+        |> List.map (listPosToGridPos paddedContainer.numColumns)
+        |> List.filter (gridPosRealPosIsUnderY bodyViewport maxY)
+        |> List.filter (parentsExist container)
 
 
-gridPosRealPosIsUnderY : DisplayProfile -> Float -> ( Int, Int ) -> Bool
-gridPosRealPosIsUnderY dProfile y gridPos =
-    (gridPos |> gridPosToRealPos dProfile).y < y
+gridPosRealPosIsUnderY : Viewport -> Float -> ( Int, Int ) -> Bool
+gridPosRealPosIsUnderY bodyViewport y gridPos =
+    (gridPos |> gridPosToRealPos (calcBrickDims bodyViewport)).y < y
 
 
-addEmptyRowIfNeeded : List (Maybe Brick) -> List (Maybe Brick)
-addEmptyRowIfNeeded bricks =
+addEmptyRowIfNeeded : BricksContainer -> BricksContainer
+addEmptyRowIfNeeded container =
     let
         numRowsTarget =
-            getLastRowWithJust bricks
+            getLastRowWithJust container
                 + 1
     in
-    bricks
-        |> padListWithNothings (numRowsTarget * Config.wallWidth)
+    { container
+        | bricks =
+            container.bricks
+                |> padListWithNothings (numRowsTarget * container.numColumns)
+    }
 
 
 padListWithNothings : Int -> List (Maybe a) -> List (Maybe a)
@@ -119,30 +126,30 @@ padListWithNothings targetLength l =
             (List.repeat (targetLength - List.length l) Nothing)
 
 
-getLastRowWithJust : List (Maybe Brick) -> Int
-getLastRowWithJust bricks =
-    bricks
+getLastRowWithJust : BricksContainer -> Int
+getLastRowWithJust container =
+    container.bricks
         -- traverse list in reverse order and find first Just
         |> findLastBrickIndex
         -- turn list index into grid pos, take only row, and default to 0
-        |> Maybe.map listPosToGridPos
+        |> Maybe.map (listPosToGridPos container.numColumns)
         |> Maybe.map Tuple.second
         |> Maybe.withDefault 0
 
 
 getFirstGridPosWithNothing : BricksContainer -> ( Int, Int )
-getFirstGridPosWithNothing (Bricks bricks) =
-    bricks
+getFirstGridPosWithNothing container =
+    container.bricks
         |> List.findIndex Maybe.isNothing
-        |> Maybe.map listPosToGridPos
+        |> Maybe.map (listPosToGridPos container.numColumns)
         |> Maybe.withDefault ( 0, 0 )
 
 
 getLastBrickGridPos : BricksContainer -> Maybe ( Int, Int )
-getLastBrickGridPos (Bricks bricks) =
-    bricks
+getLastBrickGridPos container =
+    container.bricks
         |> findLastBrickIndex
-        |> Maybe.map listPosToGridPos
+        |> Maybe.map (listPosToGridPos container.numColumns)
 
 
 findLastBrickIndex : List (Maybe Brick) -> Maybe Int
@@ -155,25 +162,24 @@ findLastBrickIndex bricks =
         |> Maybe.map (\rh -> List.length bricks - rh)
 
 
-parentsExist : List (Maybe Brick) -> ( Int, Int ) -> Bool
-parentsExist bricks ( i, j ) =
+parentsExist : BricksContainer -> ( Int, Int ) -> Bool
+parentsExist container ( i, j ) =
     let
         ( a, b ) =
             getParentsGridPos ( i, j )
     in
-    (j <= 0 || i < 0 || i >= Config.wallWidth)
-        || (brickExistsAt bricks a && brickExistsAt bricks b)
+    (j <= 0 || i < 0 || i >= container.numColumns)
+        || (brickExistsAt container a && brickExistsAt container b)
 
 
-parentsArePlaced : List (Maybe Brick) -> ( Int, Int ) -> Bool
-parentsArePlaced bricks ( i, j ) =
-    -- are the "parents" placed?
+parentsArePlaced : BricksContainer -> ( Int, Int ) -> Bool
+parentsArePlaced container ( i, j ) =
     let
         ( a, b ) =
             getParentsGridPos ( i, j )
     in
-    (j < 0 || i < 0 || i >= Config.wallWidth)
-        || (brickIsPlacedAt bricks a && brickIsPlacedAt bricks b)
+    (j < 0 || i < 0 || i >= container.numColumns)
+        || (brickIsPlacedAt container a && brickIsPlacedAt container b)
 
 
 getParentsGridPos : ( Int, Int ) -> ( ( Int, Int ), ( Int, Int ) )
@@ -191,14 +197,14 @@ getParentsGridPos ( i, j ) =
     )
 
 
-brickExistsAt : List (Maybe Brick) -> ( Int, Int ) -> Bool
-brickExistsAt bricks gridPos =
-    Maybe.isJust <| getBrick gridPos bricks
+brickExistsAt : BricksContainer -> ( Int, Int ) -> Bool
+brickExistsAt container gridPos =
+    Maybe.isJust <| getBrick container gridPos
 
 
-brickIsPlacedAt : List (Maybe Brick) -> ( Int, Int ) -> Bool
-brickIsPlacedAt bricks gridPos =
-    case getBrick gridPos bricks of
+brickIsPlacedAt : BricksContainer -> ( Int, Int ) -> Bool
+brickIsPlacedAt container gridPos =
+    case getBrick container gridPos of
         Nothing ->
             False
 
@@ -206,13 +212,16 @@ brickIsPlacedAt bricks gridPos =
             brick.state == Brick.Placed
 
 
-getBrick : ( Int, Int ) -> List (Maybe Brick) -> Maybe Brick
-getBrick gridPos bricks =
-    bricks
-        |> List.getAt (gridPosToListPos gridPos)
+getBrick : BricksContainer -> ( Int, Int ) -> Maybe Brick
+getBrick container gridPos =
+    container.bricks
+        |> List.getAt (gridPosToListPos container gridPos)
         |> Maybe.join
 
 
 updateBricks : (Brick -> Brick) -> BricksContainer -> BricksContainer
-updateBricks func (Bricks bricks) =
-    Bricks (bricks |> List.map (Maybe.map func))
+updateBricks func container =
+    { container
+        | bricks =
+            container.bricks |> List.map (Maybe.map func)
+    }
