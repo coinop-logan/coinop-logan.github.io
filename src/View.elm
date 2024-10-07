@@ -52,7 +52,7 @@ root model =
                     , Element.height Element.fill
                     , Element.inFront <|
                         if loadedModel.showContactModal then
-                            contactModalEl (Responsive.viewportToDisplayProfile loadedModel.viewport)
+                            contactModalEl (Responsive.viewportToDisplayProfile loadedModel.viewport) (getScrollbarWidthOrZero loadedModel.viewport loadedModel.bodyViewport)
 
                         else
                             Element.none
@@ -61,6 +61,16 @@ root model =
                     view loadedModel
                 ]
     }
+
+
+getScrollbarWidthOrZero : Viewport -> Maybe Viewport -> Float
+getScrollbarWidthOrZero pageViewport maybeBodyViewport =
+    Maybe.map
+        (\bodyViewport ->
+            pageViewport.scene.width - bodyViewport.scene.width
+        )
+        maybeBodyViewport
+        |> Maybe.withDefault 0
 
 
 viewLoadingMessage : Element Msg
@@ -210,8 +220,8 @@ bodyEl dProfile model =
                 viewAboutPage dProfile
 
 
-contactModalEl : DisplayProfile -> Element Msg
-contactModalEl dProfile =
+contactModalEl : DisplayProfile -> Float -> Element Msg
+contactModalEl dProfile scrollbarWidth =
     let
         closeButton =
             Input.button
@@ -242,6 +252,7 @@ contactModalEl dProfile =
                 ]
             <|
                 closeButton
+        , Element.moveLeft (scrollbarWidth / 2)
         ]
         [ Element.column
             [ Background.color <| Element.rgb255 29 134 161
