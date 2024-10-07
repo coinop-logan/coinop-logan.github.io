@@ -128,7 +128,9 @@ headerEl dProfile model =
             [ routingButton dProfile (Element.text "PROJECTS") Route.Projects model.route
             , routingButton dProfile (Element.text "ABOUT") Route.About model.route
             , Input.button
-                [ Element.paddingXY 5 15 ]
+                [ Element.paddingXY 5 15
+                , animatedButtonClass
+                ]
                 { label =
                     Element.el
                         []
@@ -136,7 +138,9 @@ headerEl dProfile model =
                 , onPress = Just <| SetShowContactModal (not model.showContactModal)
                 }
             , Element.newTabLink
-                [ Element.paddingXY 5 15 ]
+                [ Element.paddingXY 5 15
+                , animatedButtonClass
+                ]
                 { url = "/LoganBrutsche_resume.pdf"
                 , label =
                     Element.row
@@ -173,7 +177,9 @@ headerNameVeritcalDisplacement dProfile maybeBodyViewport =
 routingButton : DisplayProfile -> Element Msg -> Route -> Route -> Element Msg
 routingButton dProfile labelEl route currentRoute =
     Input.button
-        [ Element.paddingXY 5 15 ]
+        [ Element.paddingXY 5 15
+        , animatedButtonClass
+        ]
         { label =
             Element.el
                 (if route == currentRoute then
@@ -356,7 +362,7 @@ viewContactLinks dProfile =
 viewContactLink : DisplayProfile -> ( String, String ) -> Element Msg
 viewContactLink dProfile ( imgFName, url ) =
     Element.newTabLink
-        []
+        [ animatedButtonClass ]
         { url = url
         , label =
             Element.image [ Element.height <| Element.px <| responsiveVal dProfile 20 60 ]
@@ -377,6 +383,7 @@ viewProjectsPage dProfile nymDemoModel =
         , Input.button
             [ Element.centerX
             , Element.padding <| responsiveVal dProfile 10 15
+            , animatedButtonClass
             ]
             { onPress = Just <| GotoRoute Route.About
             , label =
@@ -468,6 +475,7 @@ viewAboutPage dProfile =
         , Input.button
             [ Element.centerX
             , Element.padding <| responsiveVal dProfile 10 15
+            , animatedButtonClass
             ]
             { onPress = Just <| GotoRoute Route.Projects
             , label =
@@ -811,7 +819,7 @@ viewPortfolioElements dProfile nymDemoModel =
 blueOutlineNewTabLink : DisplayProfile -> String -> String -> Element Msg
 blueOutlineNewTabLink dProfile url labelText =
     Element.newTabLink
-        []
+        [ animatedButtonClass ]
         { url = url
         , label =
             Element.el
@@ -826,11 +834,6 @@ blueOutlineNewTabLink dProfile url labelText =
                 ]
                 (Element.text labelText)
         }
-
-
-viewContactPage : DisplayProfile -> Element Msg
-viewContactPage dProfile =
-    Element.text "viewContactPage"
 
 
 blueBorderedText : DisplayProfile -> String -> Element Msg
@@ -907,3 +910,8 @@ projectBodyEl dProfile bodyEls =
         , Fonts.poppins
         ]
         bodyEls
+
+
+animatedButtonClass : Attribute Msg
+animatedButtonClass =
+    Element.htmlAttribute <| Html.Attributes.class "animatedButton"
