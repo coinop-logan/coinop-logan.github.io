@@ -9,6 +9,7 @@ import Convert exposing (..)
 import Element exposing (Attribute, Element)
 import Element.Background as Background
 import Element.Border as Border
+import Element.Events as Events
 import Element.Font as Font
 import Element.Input as Input
 import Embed.Youtube
@@ -190,7 +191,8 @@ routingButton dProfile labelEl route currentRoute =
 bodyEl : DisplayProfile -> LoadedModel -> Element Msg
 bodyEl dProfile model =
     Element.el
-        [ Element.clipY
+        [ addId "body-element"
+        , Element.clipY
         , Element.scrollbarY
         , Html.Attributes.style "min-height" "auto"
             |> Element.htmlAttribute
@@ -203,7 +205,12 @@ bodyEl dProfile model =
 
                 Just brickWall ->
                     BrickWall.Draw.view model.animateTime brickWall
-        , addId "body-element"
+        , Element.inFront <|
+            if model.showContactModal then
+                modalDarkenedClickableBackdrop
+
+            else
+                Element.none
         , Element.paddingEach
             { bottom = 100
             , top = 0
@@ -218,6 +225,16 @@ bodyEl dProfile model =
 
             Route.About ->
                 viewAboutPage dProfile
+
+
+modalDarkenedClickableBackdrop =
+    Element.el
+        [ Element.width Element.fill
+        , Element.height Element.fill
+        , Background.color <| Element.rgba 0 0 0 0.6
+        , Events.onClick <| SetShowContactModal False
+        ]
+        Element.none
 
 
 contactModalEl : DisplayProfile -> Float -> Element Msg
