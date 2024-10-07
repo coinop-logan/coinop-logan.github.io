@@ -2,12 +2,14 @@ module BrickWall.Config exposing (..)
 
 import Browser.Dom exposing (Viewport)
 import Element
-import Responsive exposing (DisplayProfile, responsiveVal)
+import Responsive exposing (responsiveVal, viewportToDisplayProfile)
 
 
 numColumns : Viewport -> Int
 numColumns bodyViewport =
-    10
+    -- this is a bit sloppy, because elsewhere we get DisplayProfiles from the full page viewport, which is slightly differently sized due to scrollbar...
+    -- however, this only affects a corner case, and the effect itself isn't even that bad
+    responsiveVal (viewportToDisplayProfile bodyViewport) 5 10
 
 
 padding =
