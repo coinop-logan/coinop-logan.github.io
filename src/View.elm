@@ -424,7 +424,10 @@ viewAboutPage dProfile =
                 "chase.jpg"
                 "Chase Van Etten"
                 "CEO at OPFN"
-                "Logan is the rare engineer that is both competent with his tools and genuinely cares about business goals. He's an excellent partner throughout product development, challenges assumptions that would be easy to overlook, and is considerate of his teammates. Logan knows technology is still the best tool for empowering individuals and takes that responsibility seriously."
+                (responsiveVal dProfile
+                    "Logan is the rare engineer that is both competent with his tools and genuinely cares about business goals. He's an excellent partner throughout product development, challenges assumptions that would be easy to overlook, and is considerate of his teammates."
+                    "Logan is the rare engineer that is both competent with his tools and genuinely cares about business goals. He's an excellent partner throughout product development, challenges assumptions that would be easy to overlook, and is considerate of his teammates. Logan knows technology is still the best tool for empowering individuals and takes that responsibility seriously."
+                )
             , endorsementElement dProfile
                 False
                 "schalk.jpg"
@@ -436,7 +439,7 @@ viewAboutPage dProfile =
                 "chris.jpg"
                 "Chris Lemmer"
                 "CEO at SwiftCom"
-                "Logan is a standout software architect,  who consistently delivered collaborative software that worked seamlessly. When faced with challenges, he didn't hesitate to build custom solutions from the ground up. His technical skills are top-notch, but what really makes Logan shine is his ability to communicate effectively and work well with others."
+                "Logan is a standout software architect, who consistently delivers software that works seamlessly. When needed, he builds custom solutions from the ground up. Aside from his technical skills, what really makes Logan shine is his ability to communicate effectively and work well with others."
             ]
         , Element.column
             [ Element.spacing <| responsiveVal dProfile 30 80
@@ -529,8 +532,10 @@ endorsementElement dProfile isReversed picSrc nameString roleString quoteString 
             Element.none
          , Element.column
             [ Element.width Element.fill
-            , responsiveVal dProfile (Element.paddingXY 18 33) (Element.paddingXY 72 56)
-            , Element.spacing <| responsiveVal dProfile 23 41
+            , responsiveVal dProfile (Element.paddingXY 18 33) (Element.paddingXY 55 44)
+            , Element.spacing <| responsiveVal dProfile 20 30
+            , Element.height <| Element.px <| responsiveVal dProfile 256 375
+            , Element.centerY
             ]
             [ Element.column
                 [ Element.spacing <| responsiveVal dProfile 3 11
