@@ -141,8 +141,8 @@ getFirstGridPosWithNothing : BricksContainer -> ( Int, Int )
 getFirstGridPosWithNothing container =
     container.bricks
         |> List.findIndex Maybe.isNothing
-        |> Maybe.map (listPosToGridPos container.numColumns)
-        |> Maybe.withDefault ( 0, 0 )
+        |> Maybe.withDefault (List.length container.bricks)
+        |> listPosToGridPos container.numColumns
 
 
 getLastBrickGridPos : BricksContainer -> Maybe ( Int, Int )

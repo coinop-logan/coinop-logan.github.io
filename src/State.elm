@@ -197,16 +197,16 @@ updateLoadedModel msg model =
                             Just <|
                                 let
                                     numToSpawn =
-                                        3
+                                        case model.bodyViewport of
+                                            Just bodyViewport ->
+                                                if bodyViewport.viewport.y > BrickWall.getYOfFirstNothing brickWall then
+                                                    15
 
-                                    -- case model.bodyViewport of
-                                    --     Just bodyViewport ->
-                                    --         if bodyViewport.viewport.y > BrickWall.getYOfFirstNothing brickWall then
-                                    --             15
-                                    --         else
-                                    --             3
-                                    --     Nothing ->
-                                    --         3
+                                                else
+                                                    3
+
+                                            Nothing ->
+                                                3
                                 in
                                 brickWall
                                     |> BrickWall.maybeSpawnNewBricksUnderTargetY numToSpawn now
