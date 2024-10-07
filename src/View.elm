@@ -205,12 +205,6 @@ bodyEl dProfile model =
 
                 Just brickWall ->
                     BrickWall.Draw.view model.animateTime brickWall
-        , Element.inFront <|
-            if model.showContactModal then
-                modalDarkenedClickableBackdrop
-
-            else
-                Element.none
         , Element.paddingEach
             { bottom = 100
             , top = 0
@@ -219,14 +213,25 @@ bodyEl dProfile model =
             }
         ]
     <|
-        case model.route of
-            Route.Projects ->
-                viewProjectsPage dProfile model.nymDemoModel
+        Element.el
+            [ Element.width Element.fill
+            , Element.inFront <|
+                if model.showContactModal then
+                    modalDarkenedClickableBackdrop
 
-            Route.About ->
-                viewAboutPage dProfile
+                else
+                    Element.none
+            ]
+        <|
+            case model.route of
+                Route.Projects ->
+                    viewProjectsPage dProfile model.nymDemoModel
+
+                Route.About ->
+                    viewAboutPage dProfile
 
 
+modalDarkenedClickableBackdrop : Element Msg
 modalDarkenedClickableBackdrop =
     Element.el
         [ Element.width Element.fill
