@@ -77,20 +77,33 @@ originPointGenerator homePoint =
             )
 
 
+getMovementProgressFloat : Time.Posix -> Brick -> Float
+getMovementProgressFloat now brick =
+    case brick.state of
+        Placed ->
+            1
+
+        Moving ( _, _ ) spawnTime ->
+            let
+                millisPassedSinceStart =
+                    Time.posixToMillis now - Time.posixToMillis spawnTime
+            in
+            -- 0-1 indicates moving; > 1 means the brick has arrived
+            toFloat millisPassedSinceStart
+                / Config.brickAnimationIntervalMillis
+                |> min 1
+
+
 getBrickPosAndRot : Time.Posix -> Brick -> ( Point, Float )
 getBrickPosAndRot now brick =
     case brick.state of
         Placed ->
             ( brick.homePoint, 0 )
 
-        Moving ( originPoint, originAngle ) spawnTime ->
+        Moving ( originPoint, originAngle ) _ ->
             let
-                millisPassedSinceStart =
-                    Time.posixToMillis now - Time.posixToMillis spawnTime
-
                 progressFloat =
-                    -- 0-1 indicates moving; > 1 means the brick has arrived
-                    toFloat millisPassedSinceStart / Config.brickAnimationIntervalMillis
+                    getMovementProgressFloat now brick
             in
             if progressFloat >= 1 then
                 ( brick.homePoint, 0 )

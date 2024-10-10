@@ -114,13 +114,6 @@ draw now brickWall =
 drawBrick : Viewport -> Time.Posix -> List AreaDef -> Brick -> Svg msg
 drawBrick bodyViewport now fadedAreas brick =
     let
-        isFaded =
-            List.any
-                (\area ->
-                    pointIsInArea (pointToCenterPoint bodyViewport brick.homePoint) area
-                )
-                fadedAreas
-
         ( position, rotation ) =
             Brick.getBrickPosAndRot now brick
 
@@ -128,6 +121,9 @@ drawBrick bodyViewport now fadedAreas brick =
             String.join " "
                 [ SvgHelpers.rotateString rotation
                 ]
+
+        drawOpacityModifier =
+            Brick.getMovementProgressFloat now brick
 
         rectAttrs =
             [ Svg.Attributes.x <| String.fromInt <| floor position.x
@@ -137,20 +133,11 @@ drawBrick bodyViewport now fadedAreas brick =
             , Svg.Attributes.height <| String.fromInt <| calcBrickHeight bodyViewport
             , Svg.Attributes.transform transformString
             , Svg.Attributes.strokeWidth "1"
+            , Svg.Attributes.fill <| "url(#" ++ brick.gradientUrl ++ ")"
+            , Svg.Attributes.stroke "white"
+            , Svg.Attributes.strokeOpacity <| String.fromFloat (Config.brickStrokeOpacity * drawOpacityModifier)
+            , Svg.Attributes.fillOpacity <| String.fromFloat drawOpacityModifier
             ]
-                ++ (if isFaded then
-                        [ Svg.Attributes.fill <| "url(#" ++ brick.gradientUrl ++ ")"
-                        , Svg.Attributes.stroke "white"
-                        , Svg.Attributes.strokeOpacity <| String.fromFloat Config.fadedBrickStrokeOpacity
-                        , Svg.Attributes.fillOpacity <| String.fromFloat Config.fadedBrickFillOpacity
-                        ]
-
-                    else
-                        [ Svg.Attributes.fill <| "url(#" ++ brick.gradientUrl ++ ")"
-                        , Svg.Attributes.stroke "white"
-                        , Svg.Attributes.strokeOpacity <| String.fromFloat Config.brickStrokeOpacity
-                        ]
-                   )
     in
     Svg.rect
         rectAttrs
