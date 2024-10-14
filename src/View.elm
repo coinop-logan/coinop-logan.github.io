@@ -144,7 +144,9 @@ headerEl dProfile model =
                 { url = "/LoganBrutsche_resume.pdf"
                 , label =
                     Element.row
-                        [ Element.spacing <| responsiveVal dProfile 5 10 ]
+                        [ Element.spacing <| responsiveVal dProfile 5 10
+                        , Font.color Theme.lightBlue
+                        ]
                         [ Element.text "RESUME"
                         , Element.image
                             [ Element.height <| Element.px <| responsiveVal dProfile 11 22
@@ -184,10 +186,24 @@ routingButton dProfile labelEl route currentRoute =
             Element.el
                 (if route == currentRoute then
                     [ Font.extraBold
+                    , Font.color <| Element.rgb 1 1 1
+                    , Element.paddingEach
+                        { bottom = 5
+                        , top = 5
+                        , right = 0
+                        , left = 0
+                        }
+                    , Border.widthEach
+                        { bottom = 2
+                        , left = 0
+                        , right = 0
+                        , top = 0
+                        }
+                    , Border.color <| Element.rgb 1 1 1
                     ]
 
                  else
-                    []
+                    [ Font.color Theme.lightBlue ]
                 )
                 labelEl
         , onPress = Just <| GotoRoute route
