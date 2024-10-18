@@ -1,4 +1,4 @@
-module State exposing (..)
+port module State exposing (..)
 
 import BrickWall.BrickWall as BrickWall exposing (BrickWall)
 import Browser
@@ -35,9 +35,13 @@ init _ url key =
 
 initLoadedModel : Viewport -> Time.Posix -> Url -> Nav.Key -> ( Model, Cmd Msg )
 initLoadedModel viewport now url key =
+    let
+        route =
+            Route.parseUrl url
+    in
     ( Loaded
         { key = key
-        , route = Route.parseUrl url
+        , route = route
         , viewport = viewport
         , bodyViewport = Nothing
         , time_bySecond = now
@@ -49,6 +53,12 @@ initLoadedModel viewport now url key =
     , Cmd.batch
         [ getViewportCmd
         , getBodyViewportCmd
+        , case route of
+            Route.Projects (Just fragmentIdStr) ->
+                scrollToProjectId fragmentIdStr
+
+            _ ->
+                Cmd.none
         ]
     )
 
@@ -169,11 +179,20 @@ updateLoadedModel msg model =
                     )
 
         OnUrlChange url ->
+            let
+                route =
+                    Route.parseUrl url
+            in
             ( { model
-                | route = Route.parseUrl url
+                | route = route
                 , bodyViewport = Nothing
               }
-            , Cmd.none
+            , case route of
+                Route.Projects (Just fragmentIdStr) ->
+                    scrollToProjectId fragmentIdStr
+
+                _ ->
+                    Cmd.none
             )
 
         UpdateNow newNow ->
@@ -260,3 +279,6 @@ getViewportCmd =
 getBodyViewportCmd : Cmd Msg
 getBodyViewportCmd =
     Browser.Dom.getViewportOf "body-element" |> Task.attempt GotBodyViewport
+
+
+port scrollToProjectId : String -> Cmd mMsg

@@ -125,7 +125,7 @@ headerEl dProfile model =
             , Fonts.poppins
             , Font.bold
             ]
-            [ routingButton dProfile (Element.text "PROJECTS") Route.Projects model.route
+            [ routingButton dProfile (Element.text "PROJECTS") (Route.Projects Nothing) model.route
             , routingButton dProfile (Element.text "ABOUT") Route.About model.route
             , Input.button
                 [ Element.paddingXY 5 15
@@ -246,7 +246,7 @@ bodyEl dProfile model =
             ]
         <|
             case model.route of
-                Route.Projects ->
+                Route.Projects _ ->
                     viewProjectsPage dProfile model.nymDemoModel
 
                 Route.About ->
@@ -470,6 +470,7 @@ viewAboutPage dProfile =
             ]
             [ pageSectionHeader dProfile "Current Projects"
             , portfolioEntryEl dProfile
+                "zaptrails"
                 (Element.el
                     [ Font.size <| responsiveVal dProfile 20 60
                     , Font.bold
@@ -493,7 +494,7 @@ viewAboutPage dProfile =
             , Element.padding <| responsiveVal dProfile 10 15
             , animatedButtonClass
             ]
-            { onPress = Just <| GotoRoute Route.Projects
+            { onPress = Just <| GotoRoute (Route.Projects Nothing)
             , label =
                 Element.row
                     [ Element.spacing <| responsiveVal dProfile 10 20
@@ -667,6 +668,7 @@ viewPortfolioElements dProfile nymDemoModel =
         , Element.width Element.fill
         ]
         [ portfolioEntryEl dProfile
+            "eestisse"
             (Element.image
                 [ Element.width <| Element.px <| responsiveVal dProfile 120 220 ]
                 { src = "eestisse-title.png"
@@ -683,6 +685,7 @@ viewPortfolioElements dProfile nymDemoModel =
             , blueOutlineNewTabLink dProfile "https://github.com/eestisse/eestisse" "github"
             ]
         , portfolioEntryEl dProfile
+            "coinfight"
             (Element.image
                 [ Element.width <| Element.px <| responsiveVal dProfile 140 330
                 ]
@@ -721,7 +724,8 @@ viewPortfolioElements dProfile nymDemoModel =
             , Border.color <| Element.rgb 1 0.6 0.3
             ]
             [ Element.column
-                [ Font.size <| responsiveVal dProfile 15 30
+                [ addId "foundrydao"
+                , Font.size <| responsiveVal dProfile 15 30
                 , Fonts.poppins
                 , Element.moveUp <| responsiveVal dProfile 7 15
                 , Element.moveRight <| responsiveVal dProfile 15 0
@@ -745,6 +749,7 @@ viewPortfolioElements dProfile nymDemoModel =
             , Element.column
                 [ Element.spacing itemSpacing ]
                 [ portfolioEntryEl dProfile
+                    "nyms"
                     (Element.el
                         [ Font.size <| responsiveVal dProfile 20 60
                         , Font.bold
@@ -768,6 +773,7 @@ viewPortfolioElements dProfile nymDemoModel =
                     , blueOutlineNewTabLink dProfile "https://opensea.io/collection/alpha-nyms" "Alpha Nym NFT set"
                     ]
                 , portfolioEntryEl dProfile
+                    "smokesignal"
                     (Element.image
                         [ Element.width <| Element.px <| responsiveVal dProfile 120 230 ]
                         { src = "smokesignal-title.svg"
@@ -786,6 +792,7 @@ viewPortfolioElements dProfile nymDemoModel =
                     , blueOutlineNewTabLink dProfile "https://github.com/team-toast/SmokeSignal" "github"
                     ]
                 , portfolioEntryEl dProfile
+                    "daihard"
                     (Element.el
                         [ Font.size <| responsiveVal dProfile 20 60
                         , Font.bold
@@ -810,6 +817,7 @@ viewPortfolioElements dProfile nymDemoModel =
                 ]
             ]
         , portfolioEntryEl dProfile
+            "toastycoin"
             (Element.el
                 [ Font.size <| responsiveVal dProfile 20 60
                 , Font.bold
@@ -864,10 +872,11 @@ blueBorderedText dProfile text =
         (Element.text text)
 
 
-portfolioEntryEl : DisplayProfile -> Element Msg -> Maybe ( String, String ) -> List (Element Msg) -> List (Element Msg) -> Element Msg
-portfolioEntryEl dProfile titleEl maybeDateAndRoleString bodyEls linkOutEls =
+portfolioEntryEl : DisplayProfile -> String -> Element Msg -> Maybe ( String, String ) -> List (Element Msg) -> List (Element Msg) -> Element Msg
+portfolioEntryEl dProfile idStr titleEl maybeDateAndRoleString bodyEls linkOutEls =
     Element.column
-        [ Background.color <| Element.rgba255 217 217 217 0.2
+        [ addId idStr
+        , Background.color <| Element.rgba255 217 217 217 0.2
         , Border.rounded <| responsiveVal dProfile 20 40
         , responsiveVal dProfile
             (Element.paddingXY 24 40)
