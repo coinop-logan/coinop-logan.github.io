@@ -829,11 +829,12 @@ viewPortfolioElements dProfile nymDemoModel =
             )
             (Just ( "2017", "Solo Project" ))
             (List.map (Element.text >> List.singleton >> Element.paragraph []) <|
-                [ "Toastycoin was an experimental dapp that used \"burnable payment\" contracts on the Ethereum blockchain to allow users to contract work from strangers on the Internet, without any previous trust or association. The burnable payment contracts used game theory to facilitate this: while loss of funds was not guaranteed, what was guaranteed was that scammers attempting to game the system would be punished and would not make a profit."
+                [ "Toastycoin was an experimental dapp that used \"burnable payment\" contracts on the Ethereum blockchain to allow users to contract work from strangers on the Internet, without any previous trust or association."
+                , "The burnable payment contracts used game theory to facilitate this, centering around the payer's ability to burn the payment (but not get it back) if the worker does not deliver the requested service. Scammers attempting to game the system would be punished more than they profited in nearly every case - all without any moderation/dispute teams, arbitrators, or escrow system."
                 , "See the \"game theory writeup\" link under the DAIHard project above, to read more about this game theory, as DAIHard was simply a narrowed use-case of the burnable payments developed for Toastycoin."
                 ]
             )
-            [ blueOutlineNewTabLink dProfile "https://medium.com/@coinop.logan/preventing-scammer-profit-with-burnable-payments-ad2e9b632ef2" "Burnable Payments proposal"
+            [ blueOutlineNewTabLink dProfile "https://medium.com/@coinop.logan/preventing-scammer-profit-with-burnable-payments-ad2e9b632ef2" "Burnable Payments?"
             , blueOutlineNewTabLink dProfile "https://medium.com/@coinop.logan/toasted-money-part-2-b5dfd0b1e946" "experiment conclusion"
             , blueOutlineNewTabLink dProfile "https://github.com/coinop-logan/toastycoin" "github"
             ]
