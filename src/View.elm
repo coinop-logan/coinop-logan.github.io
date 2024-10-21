@@ -470,6 +470,28 @@ viewAboutPage dProfile =
             ]
             [ pageSectionHeader dProfile "Current Projects"
             , portfolioEntryEl dProfile
+                "portfolio"
+                (Element.el
+                    [ Font.size <| responsiveVal dProfile 20 60
+                    , Font.bold
+                    , Fonts.poppins
+                    , Font.color Theme.lightBlue
+                    ]
+                 <|
+                    Element.text "Portfolio / Job Search"
+                )
+                Nothing
+                (List.map (Element.text >> List.singleton >> Element.paragraph []) <|
+                    [ "I'm currently looking for a job I can commit to, eager to move on from entrepreneurship and short term contracts to something more reliable. At this point I'm confident in my ability to bring a lot of value to a rockstar team."
+                    , "I decided a polished, unique portfolio would strengthen my application package, and it felt right given my goal of finding that perfect fit. I built this portfolio with Elm - had a lot of fun with the bricks animation in the back. Partway through I hired a visual designer to spice things up - something that in retrospect I should have done first!"
+                    , "With the portfolio essentially finished and the resume sharpened up, I'm looking and asking around for any company that has the right culture fit, is working on challenging tasks, and is looking for a high-value architect/developer like myself."
+                    , "My hope is to find a place where I can work hard and passionately over the long term, where I can show up every day excited to throw my full power and creativity at the problems in front of us."
+                    ]
+                )
+                [ blueOutlineNewTabLink dProfile "https://github.com/coinop-logan/coinop-logan.github.io" "portfolio code repo"
+                , blueOutlineNewTabLink dProfile "/LoganBrutsche_resume.pdf" "resume"
+                ]
+            , portfolioEntryEl dProfile
                 "zaptrails"
                 (Element.el
                     [ Font.size <| responsiveVal dProfile 20 60
