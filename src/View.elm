@@ -434,7 +434,7 @@ viewAboutPage dProfile =
             [ Element.width Element.fill
             , Element.spacing <| responsiveVal dProfile 15 30
             ]
-            [ ytVidEl dProfile
+            [ introVidEl dProfile
             , Element.el [ Element.centerX ] <| viewContactLinks dProfile
             ]
         , Element.column
@@ -636,6 +636,35 @@ nameElement name =
             ]
         <|
             [ Html.text name ]
+
+
+introVidEl =
+    htmlEmbeddedVidEl
+
+
+htmlEmbeddedVidEl : DisplayProfile -> Element Msg
+htmlEmbeddedVidEl dProfile =
+    Element.column
+        [ Element.width Element.fill
+        , Element.spacing 15
+        ]
+        [ Element.el
+            [ Element.centerX ]
+          <|
+            Element.html <|
+                Html.video
+                    [ Html.Attributes.width <| Config.bodyContentWidth dProfile
+                    , Html.Attributes.height <| floor <| toFloat (Config.bodyContentWidth dProfile) / 1.8
+                    , Html.Attributes.poster "portfolio-intro-preview.png"
+                    , Html.Attributes.controls True
+                    ]
+                    [ Html.source
+                        [ Html.Attributes.src "portfolio-intro.mp4"
+                        , Html.Attributes.type_ "video/mp4"
+                        ]
+                        [ Html.text "Your browser does not support the video tag." ]
+                    ]
+        ]
 
 
 ytVidEl : DisplayProfile -> Element Msg
