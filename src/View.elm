@@ -478,7 +478,7 @@ viewAboutPage dProfile =
                     , Font.color Theme.lightBlue
                     ]
                  <|
-                    Element.text "Portfolio / Job Search"
+                    Element.text "This Portfolio / Job Search"
                 )
                 Nothing
                 (List.map (Element.text >> List.singleton >> Element.paragraph []) <|
