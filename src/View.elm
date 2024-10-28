@@ -353,7 +353,7 @@ contactModalEl dProfile scrollbarWidth =
                 , Element.paddingXY 20 0
                 ]
                 [ Element.text "Rockstar developer"
-                , Element.text "looing for a rockstar team"
+                , Element.text "looking for a rockstar team"
                 , Element.text "and challenging work"
                 ]
             , viewContactLinks dProfile
