@@ -777,7 +777,7 @@ viewPortfolioElements dProfile nymDemoModel =
                 [ [ "C++", "Multiplayer Networking" ], [ "Blockchain Integration" ], [ "Game Design", "Entrepreneurship" ] ]
                 [ [ "C++", "Multiplayer Networking", "Blockchain Integration" ], [ "Game Design", "Entrepreneurship" ] ]
             )
-            (Just ( "2022 / 2023", "Solo Project" ))
+            (Just ( "2022 / 2023", "Entrepreneur/Developer" ))
             (List.map (Element.text >> List.singleton >> Element.paragraph []) <|
                 [ "An RTS game where users fight over stablecoins in-game, on the battlefield. Players must invest real crypto into their units (i.e. $1.50 for a Fighter, $0.50 for a worker); if these units are killed, this investment is dropped onto the battlefield for anyone else to pick up, capture, and withdraw. This is a zero-sum game where the goal is to get more out than you put in. \"Like Poker, but the chips shoot at each other!\""
                 , "Coinfight was a successful POC that delivered the experience of fighting over real money in real time, something the crypto/gaming industry has still not delivered commercially. This was largely achieved by implementing the game itself with traditional server/client architecture (specifically, a deterministic lockstep protocol). the blockchain is only used to process withdrawals/deposits - a rare but rewarding approach to web3 gaming."
@@ -856,7 +856,7 @@ viewPortfolioElements dProfile nymDemoModel =
                         ]
                     )
                     [ [ "Elm", "Solidity", "NFTs" ], [ "Generative 3D Modelling" ] ]
-                    (Just ( "2021", "Solo Project" ))
+                    (Just ( "2021", "Senior Developer" ))
                     (Element.el
                         [ Element.width <| Element.px (NymDemo.Config.nymDemoRenderDimensions dProfile |> Tuple.first)
                         , Element.centerX
@@ -909,7 +909,7 @@ viewPortfolioElements dProfile nymDemoModel =
                         [ [ "Elm", "Solidity" ], [ "Cryptographic Protocol Design" ], [ "Game Theory Design", "Tech Lead" ] ]
                         [ [ "Elm", "Solidity", "Cryptographic Protocol Design" ], [ "Game Theory Design", "Tech Lead" ] ]
                     )
-                    (Just ( "2019 / 2020", "Solo Developer" ))
+                    (Just ( "2019 / 2020", "Senior Developer" ))
                     (List.map (Element.text >> List.singleton >> Element.paragraph []) <|
                         [ "DAIHard was a crypto/fiat exchange built entirely with Ethereum smart contracts, so that there was no central server anyone could take down. The application was designed to continue to function even in adversarial jurisdictions."
                         , "Traders find and engage with each other by depositing crypto and entering into a \"burnable payment\" contract (described in the game theory link below, and prototyped in the Toastycoin project further down). This contract moved through various stages of the deal and allowed users to punish bad actors by burning any funds they might receive as a result of a scam."
