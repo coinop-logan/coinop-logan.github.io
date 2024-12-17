@@ -473,9 +473,9 @@ viewAboutPage dProfile =
                 dProfile
                 "eestisse"
                 (Element.row
-                    [ Element.spacing 15 ]
+                    [ Element.spacing <| responsiveVal dProfile 5 15 ]
                     [ Element.image
-                        [ Element.width <| Element.px <| responsiveVal dProfile 120 220 ]
+                        [ Element.width <| Element.px <| responsiveVal dProfile 100 220 ]
                         { src = "eestisse-title.png"
                         , description = "eestisse"
                         }
@@ -483,14 +483,14 @@ viewAboutPage dProfile =
                         [ Element.alignTop ]
                         { url = "https://eestisse.ee/"
                         , label =
-                            Element.image [ Element.height <| Element.px <| responsiveVal dProfile 25 25 ]
+                            Element.image [ Element.height <| Element.px <| responsiveVal dProfile 15 25 ]
                                 { src = "external-link.png"
                                 , description = "external link"
                                 }
                         }
                     ]
                 )
-                [ [ "Lamdera/Elm", "Prompt Engineering" ], [ "UX Design", "Entrepreneurship" ] ]
+                [ [ "Lamdera/Elm", "Entrepreneurship" ], [ "UX Design", "Prompt Engineering" ] ]
                 Nothing
                 (List.map (Element.text >> List.singleton >> Element.paragraph []) <|
                     [ "An LLM-powered tool that explains the counter-intuitive Estonian grammar to English speakers (for example, why \"eestisse\" means \"into Estonia\"). The tool takes English or Estonian text, translates it, and explains word by word how the Estonian is constructed."
@@ -755,9 +755,9 @@ viewPortfolioElements dProfile nymDemoModel =
         [ portfolioEntryEl dProfile
             "coinfight"
             (Element.row
-                [ Element.spacing 15 ]
+                [ Element.spacing <| responsiveVal dProfile 5 15 ]
                 [ Element.image
-                    [ Element.width <| Element.px <| responsiveVal dProfile 140 330
+                    [ Element.width <| Element.px <| responsiveVal dProfile 110 330
                     ]
                     { src = "coinfight-title.png"
                     , description = "coinfight"
@@ -766,18 +766,21 @@ viewPortfolioElements dProfile nymDemoModel =
                     [ Element.alignTop ]
                     { url = "https://coinfight.io/"
                     , label =
-                        Element.image [ Element.height <| Element.px <| responsiveVal dProfile 25 25 ]
+                        Element.image [ Element.height <| Element.px <| responsiveVal dProfile 15 25 ]
                             { src = "external-link.png"
                             , description = "link"
                             }
                     }
                 ]
             )
-            [ [ "C++", "Multiplayer Networking", "Blockchain Integration" ], [ "Game Design", "Entrepreneurship" ] ]
+            (responsiveVal dProfile
+                [ [ "C++", "Multiplayer Networking" ], [ "Blockchain Integration" ], [ "Game Design", "Entrepreneurship" ] ]
+                [ [ "C++", "Multiplayer Networking", "Blockchain Integration" ], [ "Game Design", "Entrepreneurship" ] ]
+            )
             (Just ( "2022 / 2023", "Solo Project" ))
             (List.map (Element.text >> List.singleton >> Element.paragraph []) <|
-                [ "An RTS game where users fight over crypto in-game. Players must invest real crypto into their units (i.e. $1.50 for a Fighter, $0.50 for a worker); if these units are killed, this investment is dropped onto the battlefield for anyone else to pick up, capture, and withdraw. This is a zero-sum game where the goal is to get more out than you put in. \"Like Poker, but the chips shoot at each other!\""
-                , "The goal of Coinfight was to give players the experience of fighting over real money in real time. To avoid the cumbersome limits of blockchain processing, Coinfight only used the blockchain to process deposits and withdrawals, a rare but rewarding architectural approach among web3 games."
+                [ "An RTS game where users fight over stablecoins in-game, on the battlefield. Players must invest real crypto into their units (i.e. $1.50 for a Fighter, $0.50 for a worker); if these units are killed, this investment is dropped onto the battlefield for anyone else to pick up, capture, and withdraw. This is a zero-sum game where the goal is to get more out than you put in. \"Like Poker, but the chips shoot at each other!\""
+                , "Coinfight was a successful POC that delivered the experience of fighting over real money in real time, something the crypto/gaming industry has still not delivered commercially. This was largely achieved by implementing the game itself with traditional server/client architecture (specifically, a deterministic lockstep protocol). the blockchain is only used to process withdrawals/deposits - a rare but rewarding approach to web3 gaming."
                 ]
             )
             [ blueOutlineNewTabLink dProfile "https://www.youtube.com/watch?v=7tw10KUO1_U" "demo video"
@@ -832,7 +835,7 @@ viewPortfolioElements dProfile nymDemoModel =
                 [ portfolioEntryEl dProfile
                     "nyms"
                     (Element.row
-                        [ Element.spacing 15 ]
+                        [ Element.spacing <| responsiveVal dProfile 5 15 ]
                         [ Element.el
                             [ Font.size <| responsiveVal dProfile 20 60
                             , Font.bold
@@ -845,7 +848,7 @@ viewPortfolioElements dProfile nymDemoModel =
                             [ Element.alignTop ]
                             { url = "https://team-toast.github.io/nym/"
                             , label =
-                                Element.image [ Element.height <| Element.px <| responsiveVal dProfile 25 25 ]
+                                Element.image [ Element.height <| Element.px <| responsiveVal dProfile 15 25 ]
                                     { src = "external-link.png"
                                     , description = "link"
                                     }
@@ -854,15 +857,18 @@ viewPortfolioElements dProfile nymDemoModel =
                     )
                     [ [ "Elm", "Solidity", "NFTs" ], [ "Generative 3D Modelling" ] ]
                     (Just ( "2021", "Solo Project" ))
-                    [ Element.el
+                    (Element.el
                         [ Element.width <| Element.px (NymDemo.Config.nymDemoRenderDimensions dProfile |> Tuple.first)
                         , Element.centerX
                         ]
                         (NymDemo.view dProfile nymDemoModel |> Element.map NymDemoMsg)
-                    , Element.paragraph
-                        []
-                        [ Element.text "An experimental NFT/identicon project that consumes 113 bits of entropy (72 for structure and 41 for color) to produce over one thousand quintillion (1,000,000,000,000,000,000,000,000,000,000,000) visually distinct 3D mammalian faces." ]
-                    ]
+                        :: (List.map (Element.text >> List.singleton >> Element.paragraph []) <|
+                                [ "An experimental NFT/identicon project intended to provide cryprographically secure but visually recognizeable identicons."
+                                , "The above are generated on-the-fly from 113 bits of entropy (72 for structure and 41 for color) to produce over one thousand quintillion (1,000,000,000,000,000,000,000,000,000,000,000) visually distinct 3D mammalian faces."
+                                , "You could stay on this page for millions of years and refresh as many times as you want, and you won't see a repeated face."
+                                ]
+                           )
+                    )
                     [ blueOutlineNewTabLink dProfile "https://team-toast.github.io/nym/" "more info"
                     , blueOutlineNewTabLink dProfile "https://opensea.io/collection/alpha-nyms" "Alpha Nym NFT set"
                     ]
@@ -874,12 +880,14 @@ viewPortfolioElements dProfile nymDemoModel =
                         , description = "smokesignal"
                         }
                     )
-                    [ [ "Elm", "Solidity" ], [ "Game Theory Design", "Tech Lead" ] ]
+                    (responsiveVal dProfile
+                        [ [ "Elm", "Solidity" ], [ "Game Theory Design" ], [ "Tech Lead" ] ]
+                        [ [ "Elm", "Solidity" ], [ "Game Theory Design", "Tech Lead" ] ]
+                    )
                     (Just ( "2020 / 2021", "Tech Lead" ))
                     (List.map (Element.text >> List.singleton >> Element.paragraph []) <|
-                        [ "SmokeSignal was an uncensorable, global chat forum. It implemented Reddit-like functionality (nested comments in topical forums) and allowed users to tip each other for posts."
-                        , "As with DAIHard, below, a major goal of SmokeSignal was to be both radically free (no censorship or moderation) and unkillable (no central organization or nation-state could stop it)."
-                        , "Thus, the main technical challenge was in making something suitably decentralized so as to not be attackable, while still integrating with traditional frameworks and services for the purposes of marketing and usability. For example, while all core functionality was implemented on the Ethereum blockchain and an interface hosted on IPFS, a traditional web server was used to serve SEO information for the otherwise decentralized content."
+                        [ "SmokeSignal was an uncensorable, global chat forum. It offered Reddit-like functionality (nested comments in topical forums) and allowed users to tip each other for posts. The backend was entirely implemented with Ethereum smart contracts (other than supporting architecture for things like SEO and analytics); the frontend was a page hosted on IPFS and used an ENS domain."
+                        , "As with DAIHard, below, a major goal of SmokeSignal was to be both radically free (no censorship or moderation) and unkillable (no central organization or nation-state could stop it); hence the motivation for the above architecture."
                         ]
                     )
                     [ blueOutlineNewTabLink dProfile "https://medium.com/daihard-buidlers/introducing-smokesignal-da8f19bc27af" "intro post"
@@ -897,15 +905,20 @@ viewPortfolioElements dProfile nymDemoModel =
                      <|
                         Element.text "DAIHard"
                     )
-                    [ [ "Elm", "Solidity" ], [ "Game Theory Design", "Tech Lead" ] ]
+                    (responsiveVal dProfile
+                        [ [ "Elm", "Solidity" ], [ "Cryptographic Protocol Design" ], [ "Game Theory Design", "Tech Lead" ] ]
+                        [ [ "Elm", "Solidity", "Cryptographic Protocol Design" ], [ "Game Theory Design", "Tech Lead" ] ]
+                    )
                     (Just ( "2019 / 2020", "Solo Developer" ))
                     (List.map (Element.text >> List.singleton >> Element.paragraph []) <|
-                        [ "DAIHard was a crypto/fiat exchange built entirely with Ethereum smart contracts, so that there was no central server anyone could take down. The application was designed to continue to function even in adversarial jurisdictions. Note that this app used no backend server at all, even for encrypted chat between users."
+                        [ "DAIHard was a crypto/fiat exchange built entirely with Ethereum smart contracts, so that there was no central server anyone could take down. The application was designed to continue to function even in adversarial jurisdictions."
+                        , "Traders find and engage with each other by depositing crypto and entering into a \"burnable payment\" contract (described in the game theory link below, and prototyped in the Toastycoin project further down). This contract moved through various stages of the deal and allowed users to punish bad actors by burning any funds they might receive as a result of a scam."
+                        , "To enable secure communication between traders without any central server, I designed and implemented a messaging protocol that leverages Ethereum event logs as the transport layer. Each conversation is encrypted using dual-key cryptography, with messages visible but unreadable on the public blockchain. Thus, Ethereum's public ledger was used in lieu of a centralized backend server to facilitate secure, pseudonymous communication between strangers - a necessary feature of any p2p trading marketplace."
                         , "As part of this project, I spent two months in Zimbabwe researching the viability of crypto adoption in the face of a hyperinflated currency. A summary of my findings can be found in the below-linked ZimDai paper \"ZimDai: Blueprint for an Economic Jailbreak\"."
-                        , "(The visual design for this project was contracted out.)"
                         ]
                     )
-                    [ blueOutlineNewTabLink dProfile "https://www.youtube.com/watch?v=WR4WovM0qwg" "demo video"
+                    [ blueOutlineNewTabLink dProfile "https://github.com/team-toast/DAIHard/blob/master/smart-contracts/DAIHard/contracts/DAIHard.sol" "DAIHard Contract (Solidity)"
+                    , blueOutlineNewTabLink dProfile "https://www.youtube.com/watch?v=WR4WovM0qwg" "demo video"
                     , blueOutlineNewTabLink dProfile "https://medium.com/@coinop.logan/daihard-game-theory-21a456ef224e" "game theory writeup"
                     , blueOutlineNewTabLink dProfile "https://github.com/team-toast/DAIHard" "github"
                     , blueOutlineNewTabLink dProfile "https://github.com/coinop-logan/ZimDai/blob/master/whitepaper.pdf" "ZimDai paper"
@@ -923,7 +936,10 @@ viewPortfolioElements dProfile nymDemoModel =
              <|
                 Element.text "Toastycoin"
             )
-            [ [ "Javascript", "Solidity" ], [ "Game Theory Design", "Research/Prototyping" ] ]
+            (responsiveVal dProfile
+                [ [ "Javascript", "Solidity" ], [ "Game Theory Design" ], [ "Research/Prototyping" ] ]
+                [ [ "Javascript", "Solidity" ], [ "Game Theory Design", "Research/Prototyping" ] ]
+            )
             (Just ( "2017", "Solo Project" ))
             (List.map (Element.text >> List.singleton >> Element.paragraph []) <|
                 [ "Toastycoin was an experimental dapp that used \"burnable payment\" contracts on the Ethereum blockchain to allow users to contract work from strangers on the Internet, without any previous trust or association."
@@ -996,18 +1012,16 @@ portfolioEntryEl dProfile idStr titleEl skillsRows maybeDateAndRoleString bodyEl
         ]
 
 
-viewSkill : String -> Element Msg
-viewSkill skillString =
+viewSkill : DisplayProfile -> String -> Element Msg
+viewSkill dProfile skillString =
     Element.el
-        [ Element.padding 8
-
-        -- , Border.rounded 3
-        -- , Border.width 1
+        [ Element.padding <| responsiveVal dProfile 4 8
         , Border.color <| Theme.lightBlue
         , Background.color <| Element.rgba 0.8 0.8 1 0.2
         , Font.italic
         , Font.extraLight
         , Font.color <| Element.rgb 0.9 0.9 0.9
+        , Font.size <| responsiveVal dProfile 10 16
         ]
     <|
         Element.text skillString
@@ -1034,7 +1048,7 @@ projectHeaderEl dProfile titleEl skillsLists maybeDateAndRoleString =
                                 [ Element.spacing <| responsiveVal dProfile 7 16
                                 , Element.alignRight
                                 ]
-                                (List.map viewSkill skillsRow)
+                                (List.map (viewSkill dProfile) skillsRow)
                         )
                 )
             ]
