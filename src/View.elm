@@ -469,48 +469,81 @@ viewAboutPage dProfile =
             , Element.centerX
             ]
             [ pageSectionHeader dProfile "Current Projects"
-            , portfolioEntryEl dProfile
-                "portfolio"
-                (Element.el
-                    [ Font.size <| responsiveVal dProfile 20 60
-                    , Font.bold
-                    , Fonts.poppins
-                    , Font.color Theme.lightBlue
+            , portfolioEntryEl
+                dProfile
+                "eestisse"
+                (Element.row
+                    [ Element.spacing 15 ]
+                    [ Element.image
+                        [ Element.width <| Element.px <| responsiveVal dProfile 120 220 ]
+                        { src = "eestisse-title.png"
+                        , description = "eestisse"
+                        }
+                    , Element.newTabLink
+                        [ Element.alignTop ]
+                        { url = "https://eestisse.ee/"
+                        , label =
+                            Element.image [ Element.height <| Element.px <| responsiveVal dProfile 25 25 ]
+                                { src = "external-link.png"
+                                , description = "external link"
+                                }
+                        }
                     ]
-                 <|
-                    Element.text "This Portfolio / Job Search"
                 )
+                [ [ "Lamdera/Elm", "Prompt Engineering" ], [ "UX Design", "Entrepreneurship" ] ]
                 Nothing
                 (List.map (Element.text >> List.singleton >> Element.paragraph []) <|
-                    [ "I'm currently looking for a job I can commit to, eager to move on from entrepreneurship and short term contracts to something more reliable. At this point I'm confident in my ability to bring a lot of value to a rockstar team."
-                    , "I decided a polished, unique portfolio would strengthen my application package, and it felt right given my goal of finding that perfect fit. I built this portfolio with Elm - had a lot of fun with the bricks animation in the back. Partway through I hired a visual designer to spice things up - something that in retrospect I should have done first!"
-                    , "With the portfolio essentially finished and the resume sharpened up, I'm looking and asking around for any company that has the right culture fit, is working on challenging tasks, and is looking for a high-value architect/developer like myself."
-                    , "My hope is to find a place where I can work hard and passionately over the long term, where I can show up every day excited to throw my full power and creativity at the problems in front of us."
-                    , "(The visual design for this project was contracted out.)"
+                    [ "An LLM-powered tool that explains the counter-intuitive Estonian grammar to English speakers (for example, why \"eestisse\" means \"into Estonia\"). The tool takes English or Estonian text, translates it, and explains word by word how the Estonian is constructed."
+                    , "The app is mostly a thin wrapper around the surprisingly high competence of LLMs when providing translations and explanations of the translations. The LLM is primed by providing a few examples of expected responses - both content and JSON structure. The app then decodes this and provides the information in a user-friendly manner, word-by-word, and also keeps a history for the user of their previous translations."
+                    , "Future work will add flashcard functionality, to strengthen the product as a learning tool."
                     ]
                 )
-                [ blueOutlineNewTabLink dProfile "https://github.com/coinop-logan/coinop-logan.github.io" "portfolio code repo"
-                , blueOutlineNewTabLink dProfile "/LoganBrutsche_resume.pdf" "resume"
+                [ blueOutlineNewTabLink dProfile "https://eestisse.ee" "eestisse.ee"
+                , blueOutlineNewTabLink dProfile "https://github.com/eestisse/eestisse" "github"
                 ]
-            , portfolioEntryEl dProfile
-                "zaptrails"
-                (Element.el
-                    [ Font.size <| responsiveVal dProfile 20 60
-                    , Font.bold
-                    , Fonts.poppins
-                    , Font.color Theme.lightBlue
-                    ]
-                 <|
-                    Element.text "Zap Trails"
-                )
-                Nothing
-                (List.map (Element.text >> List.singleton >> Element.paragraph []) <|
-                    [ "I recently discovered the Nostr network, a decentralized social media platform. In practice it's something like Twitter or Medium, depending on the client you use, but without any centralized moderation or control. A complex challenge with such projects is content curation, and filtering out spam."
-                    , "I'm experimenting with a family of algorithms for content curation on Nostr, which addresses this problem by crawling the network's \"zaps\". Zaps are Bitcoin lightning payments that users on Nostr use as a financial upvote, boosting the signal's content while providing funds to the creator. This \"zap network\" is a latent data goldmine that I hope to show can be the core of an elegant solution to the data curation problem."
-                    , "My first goal is to demonstrate the basic utility of one of these algorithms, via a tool or visualizations; then I hope to get some traction from the Nostr community, and seek grant funding to pursue further application and research in this area."
-                    ]
-                )
-                [ blueOutlineNewTabLink dProfile "https://habla.news/a/naddr1qvzqqqr4gupzqyhjp3nd83hxklumz9elp6gmth2zrhr804hrcrktpmplygwtw4jjqqxnzde38q6rwwph8qcrvdpjwz7qav" "writeup on Nostr" ]
+
+            -- , portfolioEntryEl dProfile
+            --     "portfolio"
+            --     (Element.el
+            --         [ Font.size <| responsiveVal dProfile 20 60
+            --         , Font.bold
+            --         , Fonts.poppins
+            --         , Font.color Theme.lightBlue
+            --         ]
+            --      <|
+            --         Element.text "This Portfolio / Job Search"
+            --     )
+            --     Nothing
+            --     (List.map (Element.text >> List.singleton >> Element.paragraph []) <|
+            --         [ "I'm currently looking for a job I can commit to, eager to move on from entrepreneurship and short term contracts to something more reliable. At this point I'm confident in my ability to bring a lot of value to a rockstar team."
+            --         , "I decided a polished, unique portfolio would strengthen my application package, and it felt right given my goal of finding that perfect fit. I built this portfolio with Elm - had a lot of fun with the bricks animation in the back. Partway through I hired a visual designer to spice things up - something that in retrospect I should have done first!"
+            --         , "With the portfolio essentially finished and the resume sharpened up, I'm looking and asking around for any company that has the right culture fit, is working on challenging tasks, and is looking for a high-value architect/developer like myself."
+            --         , "My hope is to find a place where I can work hard and passionately over the long term, where I can show up every day excited to throw my full power and creativity at the problems in front of us."
+            --         , "(The visual design for this project was contracted out.)"
+            --         ]
+            --     )
+            --     [ blueOutlineNewTabLink dProfile "https://github.com/coinop-logan/coinop-logan.github.io" "portfolio code repo"
+            --     , blueOutlineNewTabLink dProfile "/LoganBrutsche_resume.pdf" "resume"
+            --     ]
+            -- , portfolioEntryEl dProfile
+            --     "zaptrails"
+            --     (Element.el
+            --         [ Font.size <| responsiveVal dProfile 20 60
+            --         , Font.bold
+            --         , Fonts.poppins
+            --         , Font.color Theme.lightBlue
+            --         ]
+            --      <|
+            --         Element.text "Zap Trails"
+            --     )
+            --     Nothing
+            --     (List.map (Element.text >> List.singleton >> Element.paragraph []) <|
+            --         [ "I recently discovered the Nostr network, a decentralized social media platform. In practice it's something like Twitter or Medium, depending on the client you use, but without any centralized moderation or control. A complex challenge with such projects is content curation, and filtering out spam."
+            --         , "I'm experimenting with a family of algorithms for content curation on Nostr, which addresses this problem by crawling the network's \"zaps\". Zaps are Bitcoin lightning payments that users on Nostr use as a financial upvote, boosting the signal's content while providing funds to the creator. This \"zap network\" is a latent data goldmine that I hope to show can be the core of an elegant solution to the data curation problem."
+            --         , "My first goal is to demonstrate the basic utility of one of these algorithms, via a tool or visualizations; then I hope to get some traction from the Nostr community, and seek grant funding to pursue further application and research in this area."
+            --         ]
+            --     )
+            --     [ blueOutlineNewTabLink dProfile "https://habla.news/a/naddr1qvzqqqr4gupzqyhjp3nd83hxklumz9elp6gmth2zrhr804hrcrktpmplygwtw4jjqqxnzde38q6rwwph8qcrvdpjwz7qav" "writeup on Nostr" ]
             ]
         , Input.button
             [ Element.centerX
@@ -720,31 +753,27 @@ viewPortfolioElements dProfile nymDemoModel =
         , Element.width Element.fill
         ]
         [ portfolioEntryEl dProfile
-            "eestisse"
-            (Element.image
-                [ Element.width <| Element.px <| responsiveVal dProfile 120 220 ]
-                { src = "eestisse-title.png"
-                , description = "eestisse"
-                }
-            )
-            (Just ( "2024", "Solo Project" ))
-            (List.map (Element.text >> List.singleton >> Element.paragraph []) <|
-                [ "An LLM-powered tool that explains the counter-intuitive Estonian grammar to English speakers (for example, why \"eestisse\" means \"into Estonia\"). The tool takes English or Estonian text, translates it, and explains word by word how the Estonian is constructed."
-                , "The central feature was surprisingly easy to build, due to LLM's strength in language tasks."
-                ]
-            )
-            [ blueOutlineNewTabLink dProfile "https://eestisse.ee" "eestisse.ee"
-            , blueOutlineNewTabLink dProfile "https://github.com/eestisse/eestisse" "github"
-            ]
-        , portfolioEntryEl dProfile
             "coinfight"
-            (Element.image
-                [ Element.width <| Element.px <| responsiveVal dProfile 140 330
+            (Element.row
+                [ Element.spacing 15 ]
+                [ Element.image
+                    [ Element.width <| Element.px <| responsiveVal dProfile 140 330
+                    ]
+                    { src = "coinfight-title.png"
+                    , description = "coinfight"
+                    }
+                , Element.newTabLink
+                    [ Element.alignTop ]
+                    { url = "https://coinfight.io/"
+                    , label =
+                        Element.image [ Element.height <| Element.px <| responsiveVal dProfile 25 25 ]
+                            { src = "external-link.png"
+                            , description = "link"
+                            }
+                    }
                 ]
-                { src = "coinfight-title.png"
-                , description = "coinfight"
-                }
             )
+            [ [ "C++", "Multiplayer Networking", "Blockchain Integration" ], [ "Game Design", "Entrepreneurship" ] ]
             (Just ( "2022 / 2023", "Solo Project" ))
             (List.map (Element.text >> List.singleton >> Element.paragraph []) <|
                 [ "An RTS game where users fight over crypto in-game. Players must invest real crypto into their units (i.e. $1.50 for a Fighter, $0.50 for a worker); if these units are killed, this investment is dropped onto the battlefield for anyone else to pick up, capture, and withdraw. This is a zero-sum game where the goal is to get more out than you put in. \"Like Poker, but the chips shoot at each other!\""
@@ -802,15 +831,28 @@ viewPortfolioElements dProfile nymDemoModel =
                 [ Element.spacing itemSpacing ]
                 [ portfolioEntryEl dProfile
                     "nyms"
-                    (Element.el
-                        [ Font.size <| responsiveVal dProfile 20 60
-                        , Font.bold
-                        , Fonts.poppins
-                        , Font.color Theme.lightBlue
+                    (Element.row
+                        [ Element.spacing 15 ]
+                        [ Element.el
+                            [ Font.size <| responsiveVal dProfile 20 60
+                            , Font.bold
+                            , Fonts.poppins
+                            , Font.color Theme.lightBlue
+                            ]
+                          <|
+                            Element.text "Nyms"
+                        , Element.newTabLink
+                            [ Element.alignTop ]
+                            { url = "https://team-toast.github.io/nym/"
+                            , label =
+                                Element.image [ Element.height <| Element.px <| responsiveVal dProfile 25 25 ]
+                                    { src = "external-link.png"
+                                    , description = "link"
+                                    }
+                            }
                         ]
-                     <|
-                        Element.text "Nyms"
                     )
+                    [ [ "Elm", "Solidity", "NFTs" ], [ "Generative 3D Modelling" ] ]
                     (Just ( "2021", "Solo Project" ))
                     [ Element.el
                         [ Element.width <| Element.px (NymDemo.Config.nymDemoRenderDimensions dProfile |> Tuple.first)
@@ -832,6 +874,7 @@ viewPortfolioElements dProfile nymDemoModel =
                         , description = "smokesignal"
                         }
                     )
+                    [ [ "Elm", "Solidity" ], [ "Game Theory Design", "Tech Lead" ] ]
                     (Just ( "2020 / 2021", "Tech Lead" ))
                     (List.map (Element.text >> List.singleton >> Element.paragraph []) <|
                         [ "SmokeSignal was an uncensorable, global chat forum. It implemented Reddit-like functionality (nested comments in topical forums) and allowed users to tip each other for posts."
@@ -854,6 +897,7 @@ viewPortfolioElements dProfile nymDemoModel =
                      <|
                         Element.text "DAIHard"
                     )
+                    [ [ "Elm", "Solidity" ], [ "Game Theory Design", "Tech Lead" ] ]
                     (Just ( "2019 / 2020", "Solo Developer" ))
                     (List.map (Element.text >> List.singleton >> Element.paragraph []) <|
                         [ "DAIHard was a crypto/fiat exchange built entirely with Ethereum smart contracts, so that there was no central server anyone could take down. The application was designed to continue to function even in adversarial jurisdictions. Note that this app used no backend server at all, even for encrypted chat between users."
@@ -879,6 +923,7 @@ viewPortfolioElements dProfile nymDemoModel =
              <|
                 Element.text "Toastycoin"
             )
+            [ [ "Javascript", "Solidity" ], [ "Game Theory Design", "Research/Prototyping" ] ]
             (Just ( "2017", "Solo Project" ))
             (List.map (Element.text >> List.singleton >> Element.paragraph []) <|
                 [ "Toastycoin was an experimental dapp that used \"burnable payment\" contracts on the Ethereum blockchain to allow users to contract work from strangers on the Internet, without any previous trust or association."
@@ -925,8 +970,8 @@ blueBorderedText dProfile text =
         (Element.text text)
 
 
-portfolioEntryEl : DisplayProfile -> String -> Element Msg -> Maybe ( String, String ) -> List (Element Msg) -> List (Element Msg) -> Element Msg
-portfolioEntryEl dProfile idStr titleEl maybeDateAndRoleString bodyEls linkOutEls =
+portfolioEntryEl : DisplayProfile -> String -> Element Msg -> List (List String) -> Maybe ( String, String ) -> List (Element Msg) -> List (Element Msg) -> Element Msg
+portfolioEntryEl dProfile idStr titleEl skillsRows maybeDateAndRoleString bodyEls linkOutEls =
     Element.column
         [ addId idStr
         , Background.color <| Element.rgba255 217 217 217 0.2
@@ -938,7 +983,7 @@ portfolioEntryEl dProfile idStr titleEl maybeDateAndRoleString bodyEls linkOutEl
         , Element.width <| Element.px (Config.bodyContentWidth dProfile)
         , Element.centerX
         ]
-        [ projectHeaderEl dProfile titleEl maybeDateAndRoleString
+        [ projectHeaderEl dProfile titleEl skillsRows maybeDateAndRoleString
         , Element.column
             [ Element.width Element.fill
             , Element.spacing <| responsiveVal dProfile 40 50
@@ -951,13 +996,48 @@ portfolioEntryEl dProfile idStr titleEl maybeDateAndRoleString bodyEls linkOutEl
         ]
 
 
-projectHeaderEl : DisplayProfile -> Element Msg -> Maybe ( String, String ) -> Element Msg
-projectHeaderEl dProfile titleEl maybeDateAndRoleString =
+viewSkill : String -> Element Msg
+viewSkill skillString =
+    Element.el
+        [ Element.padding 8
+
+        -- , Border.rounded 3
+        -- , Border.width 1
+        , Border.color <| Theme.lightBlue
+        , Background.color <| Element.rgba 0.8 0.8 1 0.2
+        , Font.italic
+        , Font.extraLight
+        , Font.color <| Element.rgb 0.9 0.9 0.9
+        ]
+    <|
+        Element.text skillString
+
+
+projectHeaderEl : DisplayProfile -> Element Msg -> List (List String) -> Maybe ( String, String ) -> Element Msg
+projectHeaderEl dProfile titleEl skillsLists maybeDateAndRoleString =
     Element.column
         [ Element.spacing <| responsiveVal dProfile 21 30
         , Element.width Element.fill
         ]
-        [ titleEl
+        [ Element.row
+            [ Element.width Element.fill
+            ]
+            [ titleEl
+            , Element.column
+                [ Element.spacing <| responsiveVal dProfile 7 16
+                , Element.alignRight
+                ]
+                (skillsLists
+                    |> List.map
+                        (\skillsRow ->
+                            Element.row
+                                [ Element.spacing <| responsiveVal dProfile 7 16
+                                , Element.alignRight
+                                ]
+                                (List.map viewSkill skillsRow)
+                        )
+                )
+            ]
         , hbreak 3 <| Element.rgb 1 1 1
         , case maybeDateAndRoleString of
             Just ( dateString, roleString ) ->
